@@ -1,11 +1,12 @@
 pipeline:
-  build&deploy:
+  build&test:
     image: docker.twistbioscience-staging.com/devops_slave_python:3.7
     pull: true
     commands:
       - pushd python
       - pip install invoke
       - inv install
+      - flake8
       - inv test
     when:
       branch: [ develop, qa, staging, master ]

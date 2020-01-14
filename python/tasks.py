@@ -2,6 +2,7 @@
 
 from invoke import task
 
+
 @task
 def install(runner):
     """
@@ -33,12 +34,14 @@ def bump_build(runner):
     """
     runner.run("bumpversion patch --verbose")
 
+
 @task
 def bump_minor(runner):
     """
     this will bump the minor part of this module's version (major.MINOR.patch)
     """
     runner.run("bumpversion minor")
+
 
 @task
 def bump_major(runner):

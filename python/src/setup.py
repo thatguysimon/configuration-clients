@@ -11,7 +11,7 @@ setup(
     # data_files=[("config", ["config/file"])],
     description="environment aware configuration module for Twist modules",
     classifiers=["Private :: Do Not Upload to pypi server"],
-    install_requires=["mock", "hvac", "invoke", "bumpversion",],
+    install_requires=["mock", "hvac", "invoke", "bumpversion"],
     version="0.0.1",
     url="http://github.com/twistbioscience/configuration-clients",
     author="Oren Sea",
