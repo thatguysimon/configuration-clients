@@ -3,7 +3,7 @@ pipeline:
     image: docker.twistbioscience-staging.com/devops_slave_python:3.6
     pull: true
     commands:
-      - pushd python
+      - cd python
       - pip install invoke
       - inv install
       - flake8
