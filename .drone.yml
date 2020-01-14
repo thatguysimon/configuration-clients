@@ -1,0 +1,11 @@
+pipeline:
+  build&deploy:
+    image: docker.twistbioscience-staging.com/devops_slave_python:3.7
+    pull: true
+    commands:
+      - pushd python
+      - pip install invoke
+      - inv install
+      - inv test
+    when:
+      branch: [ develop, qa, staging, master ]

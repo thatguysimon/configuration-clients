@@ -1,0 +1,203 @@
+#!/usr/bin/env python
+
+
+#############################################################################
+# HEADER                                                                    #
+#############################################################################
+"""
+    properties configuration loader Singleton class with data overriding,
+    type conversions and defaults
+"""
+
+#############################################################################
+# IMPORT MODULES                                                            #
+#############################################################################
+
+import os
+import abstract_env_conf_loader
+
+#############################################################################
+# IMPLEMENTATION                                                            #
+#############################################################################
+
+
+class EnvConfig:
+    """
+    Environment aware configuration reader.
+    Provides an easy access to reading config values. It uses defaults and it is running-environment aware
+    meaning, when running in env X it will pull/load the central configuration related to env X only.
+
+    Config file structure is expected in the JSON form. Please ** ADHERE ** to the below format when defining your configs,
+    it is going to help in making a more organized, contextual configuration scheme.
+        ------- gene.json --------
+        {
+          "section1": {
+            "key1": 1,
+            "key2": "val2",
+            "key3", true,
+            "key4": [1,2,3]
+          }
+        }
+
+    Configuration is divided into categories. In case of git/github based config each category is represented using a json file in
+    the config repo. Once EnvConfig is instantiated it will list the repo files and generate dynamic getters.
+
+    Some common usage examples for a config with global and gene categories:
+
+        EnvConfig.get("gene", "section1", "key1", "some_default") # yields 1
+        EnvConfig.GENE("section1", "key2", "some_default") # yields "val2"
+        EnvConfig.GENE("section1", "key3", "some_default") # yields True
+        EnvConfig.GENE("section1", "key4", "some_default") # yields [ 1, 2, 3 ]
+        EnvConfig.GENE("section1", "key5", "some_default") # yields "some_default"
+        EnvConfig.GLOBAL("sectionX") # yields a dict having keys & values of "sectionX"
+
+    # TODO: support nested object accessor such as:
+        EnvConfig.SHIPPING("person/address/city", "name")
+  """
+
+    # The singleton instance (the only instance of EnvConfig in our entire running space)
+    __instance = None
+
+    @staticmethod
+    def instance():
+        """ Static access method of our singleton """
+        if EnvConfig.__instance is None:
+            # the only place the EnvConfig ctor is being called.
+            EnvConfig()
+        return EnvConfig.__instance
+
+    def __init__(self):
+        """
+          This is actually a private ctor.
+          - Preventing multi instantiation (by exception)
+          - initializing singleton instance to self
+          - initializing member variables with defaults
+        """
+        # should anyone call EnvConfig directly, make a bold statement about it.
+        if EnvConfig.__instance is not None:
+            raise Exception("EnvConfig class is a singleton!")
+
+        if "ENV" not in os.environ:
+            raise Exception("Cannot run configuration without ENV")
+
+        EnvConfig.__instance = self
+        self.__env = os.environ["ENV"]
+        self.__config_json = {}
+        self.__config_loader = None
+        # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
+        self.__config_categories = {"___dummyKey__"}
+
+    def set_loader(self, config_loader):
+        """
+          Dependency injection of a config loader that adheres to the EnvConfigLoader interface
+
+          Arguments:
+              config_loader {EnvConfigLoader} -- the concrete configuration loader
+        """
+        self.__config_loader = config_loader
+        # for the first time, query all environment existing categories.
+        self.__load_categories()
+
+    def __load_config(self, category):
+        """
+          using injected config loader to get a hold of the data
+        """
+
+        if (
+            self.__config_loader is None
+            or isinstance(
+                self.__config_loader, abstract_env_conf_loader.EnvConfigLoader
+            )
+            is False
+        ):
+            raise Exception(
+                "Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively"
+            )
+
+        try:
+            return self.__config_loader.load(category)
+        except Exception as ex:
+            print(
+                f"Failed loading config for provided environment {self.__env}. Exception: {ex}"
+            )
+
+    def __load_categories(self):
+        categories = self.__config_loader.list_categories()
+        for category in categories:
+            normalized_category = category.replace(".json", "").upper()
+            EnvConfig.load_configuration_category(normalized_category)
+
+    @staticmethod
+    def __generate_get_function(func_name):
+        def _func(self, section, key, default_value=None):
+            # print(f"in method {func_name} and section is {section}")
+            return self.__get(func_name.lower(), section, key, default_value)
+
+        return _func
+
+    @staticmethod
+    def load_configuration_category(category_name):
+        _dynamic_get_func = EnvConfig.__generate_get_function(category_name)
+        # create a dynamic method based on loaded category name
+        setattr(EnvConfig, category_name, _dynamic_get_func)
+        # make the above added method as static so one can call also directly (eg. EnvConf.SYSTEM)
+        setattr(
+            EnvConfig,
+            category_name,
+            staticmethod(getattr(EnvConfig.instance(), category_name)),
+        )
+
+        # add the new category to the set so we know it exists
+        EnvConfig.instance().__config_categories.add(category_name)
+        print(f"Configuration category {category_name} listed")
+
+    def __getattr__(self, key):
+        if key not in self.__config_categories:
+            raise Exception(f"Unknown configuration category {key} or method name")
+        return super().__getattr__(key)
+
+    @staticmethod
+    def get(category, section, key, default_value=None):
+        return EnvConfig.__instance.__get(section, key, default_value)
+
+    def __get(self, category, section, key, default_value=None):
+        """
+          Main configuration accessor.
+          Get configuration by section, section + key or entire config.
+
+          Arguments:
+            category {string} -- name of category for the queried config
+            section {string} -- name of section / object name
+            key {string} -- name of key under provided section
+
+          Keyword Arguments:
+            default_value {any} -- default value to use when section/key isn't present in loaded config data (default: {None})
+
+          Returns:
+            any -- value associated with section/key. Can be as simple as string or int or as complex as a whole dict
+        """
+        if category not in self.__config_json:
+            self.__config_json[category] = self.__load_config(category)
+
+        # someone wants to get a hold of the entire config
+        if section is None:
+            return self.__config_json[category]
+
+        # someone wants to get a hold of an entire section structure
+        if (
+            section is not None
+            and key is None
+            and section in self.__config_json[category]
+        ):
+            return self.__config_json[category][section]
+
+        # missing section
+        if section not in self.__config_json[category]:
+            return default_value
+
+        # missing key in section
+        if key not in self.__config_json[category][section]:
+            return default_value
+
+        # actual config indicated data
+        return self.__config_json[category][section][key]

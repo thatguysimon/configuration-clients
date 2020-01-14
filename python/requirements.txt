@@ -1,0 +1,6 @@
+mock==3.0.5
+hvac==0.9.6
+invoke==1.4.0
+bumpversion==0.5.3
+requests==2.22.0
+flake8==3.7.9
