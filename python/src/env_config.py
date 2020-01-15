@@ -14,7 +14,9 @@
 #############################################################################
 
 import os
-from abstract_env_conf_loader import EnvConfigLoader
+
+# TODO: resolve the below circular dependency
+# from abstract_env_conf_loader import EnvConfigLoader
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -104,8 +106,10 @@ class EnvConfig:
         """
 
         if (
-            self.__config_loader is None
-            or isinstance(self.__config_loader, EnvConfigLoader) is False
+            self.__config_loader
+            is None
+            # TODO: resolve then circular dependency then uncomment the below
+            # or isinstance(self.__config_loader, EnvConfigLoader) is False
         ):
             raise Exception(
                 "Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively"
