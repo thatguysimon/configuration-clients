@@ -17,6 +17,7 @@ import urllib
 import json
 import os
 from abstract_env_conf_loader import EnvConfigLoader
+from secrets import Secrets
 
 
 #############################################################################
@@ -25,7 +26,7 @@ from abstract_env_conf_loader import EnvConfigLoader
 
 TWIST_GITHUB_ACCOUNT = "Twistbioscience"
 CONFIGURATION_REPO = "configuration"
-
+GIT_CONF_TOKEN_KEY = "GIT_CONFIG_TOKEN"
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -62,18 +63,33 @@ class GithubEnvConfig(EnvConfigLoader):
             )
             return {}
 
+    @staticmethod
+    def __get_github_token():
+        # first chance to env var...
+        if GIT_CONF_TOKEN_KEY in os.environ:
+            github_conf_token = os.environ[GIT_CONF_TOKEN_KEY]
+        else:
+            # otherwise fetch from secrets
+            common = Secrets.get("secret/common")
+            github_conf_token = common[GIT_CONF_TOKEN_KEY]
+
+        if github_conf_token is None or github_conf_token == "":
+            raise Exception(
+                f"Missing git configuration repo access token. See Vault::secret/common or set env var {GIT_CONF_TOKEN_KEY}"
+            )
+
+        return github_conf_token
+
     def __get_file_content(self, file_path, branch_name):
-        # vault_version_control = f"{os.__environ['EXL_ENV']}/version_control"
-        # secret = ExlSecrets.instance().get(vault_version_control)
-        # gitlab_token = secret['gitlab_token']
-        github_token = os.environ["GIT_CONF_TOKEN"]
+        github_conf_token = GithubEnvConfig.__get_github_token()
+
         github_url = f"https://raw.githubusercontent.com/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/{branch_name}/{file_path}"
         file_path = urllib.parse.quote(file_path, safe="")
 
         headers = {
             "Accept-Encoding": "gzip, deflate",
             "Accept": "*/*",
-            "Authorization": f"token {github_token}",
+            "Authorization": f"token {github_conf_token}",
         }
 
         print(f'Fetching {file_path} from {github_url} on branch/env "{branch_name}"')
@@ -100,14 +116,14 @@ class GithubEnvConfig(EnvConfigLoader):
             Returns:
                 [list] -- list of files, uppercased and without the .json suffix
         """
-        github_token = os.environ["GIT_CONF_TOKEN"]
+        github_conf_token = GithubEnvConfig.__get_github_token()
         # API reference: https://developer.github.com/v3/repos/contents/
         github_api_url = f"https://api.github.com/repos/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/contents/?ref={self._env}"
 
         headers = {
             "Accept-Encoding": "gzip, deflate",
             "Accept": "application/json",
-            "Authorization": f"token {github_token}",
+            "Authorization": f"token {github_conf_token}",
         }
 
         # print(f'Fetching file list from {github_api_url} on branch/env "{self._env}"')
