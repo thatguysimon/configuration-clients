@@ -14,7 +14,7 @@
 #############################################################################
 
 import os
-import abstract_env_conf_loader
+from abstract_env_conf_loader import EnvConfigLoader
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -105,10 +105,7 @@ class EnvConfig:
 
         if (
             self.__config_loader is None
-            or isinstance(
-                self.__config_loader, abstract_env_conf_loader.EnvConfigLoader
-            )
-            is False
+            or isinstance(self.__config_loader, EnvConfigLoader) is False
         ):
             raise Exception(
                 "Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively"
