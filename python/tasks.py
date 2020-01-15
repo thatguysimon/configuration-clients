@@ -12,19 +12,19 @@ def install(runner):
 
 
 @task
-def test(runner):
-    """
-    this will run all discovered unittests
-    """
-    runner.run("python -m unittest discover -v -t .")
-
-
-@task
 def lint(runner):
     """
     this will run flake8 static code analysis
     """
     runner.run("flake8")
+
+
+@task(lint)
+def test(runner):
+    """
+    this will run all discovered unittests
+    """
+    runner.run("python -m unittest discover -v -t .")
 
 
 @task
