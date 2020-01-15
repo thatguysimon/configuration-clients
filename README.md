@@ -8,8 +8,9 @@ They are to be consumed by all of Twists scripts, modules, packages and services
 
 ## Python
 * ```pip install -e pip install -e "git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python"```
-
-  where the @master part controls the branch from which to install. Should ALWAYS refer to the releasable master unless you're experimenting.
+* within requirements.txt place the following without double quotes: git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python
+  
+  The @master part controls the branch from which to install. Should ALWAYS refer to the releasable master unless you're experimenting.
 
 ## Ruby
 * TBD
