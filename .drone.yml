@@ -6,7 +6,6 @@ pipeline:
       - cd python
       - pip install invoke
       - inv install
-      - flake8
       - inv test
     when:
       branch: [ develop, qa, staging, master ]
