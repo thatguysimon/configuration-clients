@@ -24,7 +24,7 @@ def test(runner):
     """
     this will run lint then all discovered unittests
     """
-    runner.run("pushd src && python -m unittest discover -s ../test/ -v && popd")
+    runner.run("python -m unittest discover -s ./test/ -v  -t .")
 
 
 @task
