@@ -16,8 +16,8 @@ import requests
 import urllib
 import json
 import os
-from abstract_env_conf_loader import EnvConfigLoader
-from secrets import Secrets
+from .abstract_env_conf_loader import EnvConfigLoader
+from .secrets import Secrets
 
 
 #############################################################################

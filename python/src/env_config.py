@@ -14,7 +14,7 @@ type conversions and defaults
 #############################################################################
 
 import os
-from env_conf_loader_factory import EnvConfigLoaderFactory
+from .env_conf_loader_factory import EnvConfigLoaderFactory
 
 #############################################################################
 # IMPLEMENTATION                                                            #

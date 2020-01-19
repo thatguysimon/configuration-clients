@@ -12,7 +12,7 @@ helper to generating a conf loader per strategy
 # IMPORT MODULES                                                            #
 #############################################################################
 
-from github_env_conf_loader import GithubEnvConfigLoader
+from .github_env_conf_loader import GithubEnvConfigLoader
 
 #############################################################################
 # IMPLEMENTATION                                                            #

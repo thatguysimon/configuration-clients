@@ -6,13 +6,12 @@ from setuptools import setup
 
 setup(
     name="configuration_client",
-    # packages=find_packages(exclude=["test*"]),
+    # packages=find_packages(exclude=['test*']),
     packages=["configuration_client"],
-    # py_modules="configuration_client",
+    # py_modules='configuration_client',
     package_dir={"configuration_client": "."},
-    # package_data={"configuration_client": ["config/*"]},
-    # include_package_data=True,
-    # data_files=[("config", ["config/file"])],
+    package_data={"configuration_client": ["src/*"]},
+    # data_files=[('config', ['config/file'])],
     description="environment aware configuration module for Twist modules",
     classifiers=["Private :: Do Not Upload to pypi server"],
     install_requires=["hvac", "requests"],
@@ -23,4 +22,5 @@ setup(
     keywords=["pip", "configuration", "twist", "packaging", "package"],
     zip_safe=False,
     include_package_data=True,
+    python_requires=">=3.6",
 )

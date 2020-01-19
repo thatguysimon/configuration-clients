@@ -1,4 +1,4 @@
-from abstract_env_conf_loader import EnvConfigLoader
+from src.abstract_env_conf_loader import EnvConfigLoader
 
 
 class GithubMockEnvConfig(EnvConfigLoader):
