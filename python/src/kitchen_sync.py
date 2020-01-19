@@ -1,8 +1,8 @@
 # import os
-from env_config import EnvConfig
+from src.env_config import EnvConfig
 
 # from github_env_conf_loader import GithubEnvConfigLoader
-from secrets import Secrets
+from src.secrets import Secrets
 
 """
 In order to test-run this kitchen sink:
