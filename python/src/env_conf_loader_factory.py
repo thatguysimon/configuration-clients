@@ -5,39 +5,31 @@
 # HEADER                                                                    #
 #############################################################################
 """
-Abstract base class for all EnvConfigLoaders...
+helper to generating a conf loader per strategy
 """
 
 #############################################################################
 # IMPORT MODULES                                                            #
 #############################################################################
 
-from abc import ABC, abstractmethod
+from github_env_conf_loader import GithubEnvConfigLoader
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
 
 
-class EnvConfigLoader(ABC):
-    """
-    A base class for any environment aware config loader.
-    To be injected into EnvConfig (see EnvConfig::load_config)
-    """
-
-    def __init__(self, environment):
-        super().__init__()
-        self._env = environment
-
-    @abstractmethod
-    def load(self):
+class EnvConfigLoaderFactory:
+    def get_loader(self, environment):
         """
-        Performs the actual configuration reading (from whatever source concrete impl represents)
+        The most naive and yet decoupled factory for config loader.
+        In case someone changes the implementation to gitlab or something else,
+        return the new implementation instance without affecting the rest of the code
 
-        Returns: dict (json)
+        Arguments:
+            environment {string} -- environment from which the loader pulls the config
+
+        Returns:
+            EnvConfLoader concrete instance -- the sought after loader
         """
-        pass
-
-    @abstractmethod
-    def list_categories(self):
-        pass
+        return GithubEnvConfigLoader(environment)

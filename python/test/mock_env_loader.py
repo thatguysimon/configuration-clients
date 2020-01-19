@@ -1,10 +1,10 @@
-from src.abstract_env_conf_loader import EnvConfigLoader
+from abstract_env_conf_loader import EnvConfigLoader
 
 
 class GithubMockEnvConfig(EnvConfigLoader):
     """
-      Github environment aware config loader.
-      Implements EnvConfigLoader in order to be injected into EnvConfig
+    Github environment aware config loader - mock.
+    Implements EnvConfigLoader in order to be injected into EnvConfig
     """
 
     def __init__(self, environment):

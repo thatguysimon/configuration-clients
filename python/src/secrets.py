@@ -4,7 +4,7 @@
 # HEADER                                                                    #
 #############################################################################
 """
-    encapsulation to secret management api using Vault
+encapsulation to secret management api using Vault
 """
 
 #############################################################################
@@ -96,18 +96,18 @@ class Secrets:
     @staticmethod
     def get(path_to_secret):
         """
-          Get the secret associated with the the provided key.
-          Ex. Secrets.get("secret/common") for common secrets in vault
+        Get the secret associated with the the provided key.
+        Ex. Secrets.get("secret/common") for common secrets in vault
 
-          Arguments:
-              path {str} -- path to secret in vault
+        Arguments:
+            path {str} -- path to secret in vault
 
-          Raises:
-              Exception: if SM not connected
-              Exception: if SM key isn't found
+        Raises:
+            Exception: if SM not connected
+            Exception: if SM key isn't found
 
-          Returns:
-              [dict] -- the secret
+        Returns:
+            [dict] -- the secret
         """
         # ensures connection
         Secrets.instance().connect()
@@ -115,18 +115,18 @@ class Secrets:
 
     def __get(self, path):
         """
-          Get the secret associated with the the provided key.
-          Ex. Secrets.get("secret/common") for common secrets in vault
+        Get the secret associated with the the provided key.
+        Ex. Secrets.get("secret/common") for common secrets in vault
 
-          Arguments:
-              path {str} -- path to secret in vault
+        Arguments:
+            path {str} -- path to secret in vault
 
-          Raises:
-              Exception: if SM not connected
-              Exception: if SM key isn't found
+        Raises:
+            Exception: if SM not connected
+            Exception: if SM key isn't found
 
-          Returns:
-              [dict] -- the secret
+        Returns:
+            [dict] -- the secret
         """
 
         # try to hit cache first

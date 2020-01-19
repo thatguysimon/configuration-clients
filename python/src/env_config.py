@@ -5,8 +5,8 @@
 # HEADER                                                                    #
 #############################################################################
 """
-    properties configuration loader Singleton class with data overriding,
-    type conversions and defaults
+properties configuration loader Singleton class with data overriding,
+type conversions and defaults
 """
 
 #############################################################################
@@ -14,16 +14,52 @@
 #############################################################################
 
 import os
-
-# TODO: resolve the below circular dependency
-# from abstract_env_conf_loader import EnvConfigLoader
+from env_conf_loader_factory import EnvConfigLoaderFactory
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
 
 
-class EnvConfig:
+class EnvConfigMetaClass(type):
+    env_conf_categories_loaded = False
+
+    def __getattr__(self, attr):
+        """
+        This function is called everytime EnvConf is being accessed (using dot operator)
+        It is purposed to allow first time load of config categories that are dynamically translated into static methods
+        (example, one would call EnvConfig.SYSTEM where the SYSTEM static method is generated within the load_config_categories)
+        """
+        # past initial loading of conf categories, this function is useless.
+        if EnvConfigMetaClass.env_conf_categories_loaded is True:
+            return
+
+        # checking whether EnvConfig already has the requested attribute
+        has_attr = True
+        try:
+            EnvConfig.__getattribute__(EnvConfig, attr)
+        except AttributeError:
+            has_attr = False
+
+        # check whether accessed attribute exists after categories loading
+        if not has_attr:
+            EnvConfig.instance().set_loader()
+
+            new_dynamic_func = None
+            try:
+                new_dynamic_func = EnvConfig.__getattribute__(EnvConfig, attr)
+            except AttributeError:
+                pass
+
+            # accessed attribute is unknown (not a dynamically loaded category as function)
+            if new_dynamic_func is None:
+                raise AttributeError(f"EnvConfig has no attribute '{attr}'")
+
+            EnvConfigMetaClass.loaded = True
+            return new_dynamic_func.__func__
+
+
+class EnvConfig(metaclass=EnvConfigMetaClass):
     """
     Environment aware configuration reader.
     Provides an easy access to reading config values. It uses defaults and it is running-environment aware
@@ -48,14 +84,14 @@ class EnvConfig:
 
         EnvConfig.get("gene", "section1", "key1", "some_default") # yields 1
         EnvConfig.GENE("section1", "key2", "some_default") # yields "val2"
-        EnvConfig.GENE("section1", "key3", "some_default") # yields True
-        EnvConfig.GENE("section1", "key4", "some_default") # yields [ 1, 2, 3 ]
+        EnvConfig.GENE("section1", "key3") # yields True
+        EnvConfig.GENE("section1", "key4") # yields [ 1, 2, 3 ]
         EnvConfig.GENE("section1", "key5", "some_default") # yields "some_default"
         EnvConfig.GLOBAL("sectionX") # yields a dict having keys & values of "sectionX"
 
     # TODO: support nested object accessor such as:
         EnvConfig.SHIPPING("person/address/city", "name")
-  """
+    """
 
     # The singleton instance (the only instance of EnvConfig in our entire running space)
     __instance = None
@@ -70,10 +106,10 @@ class EnvConfig:
 
     def __init__(self):
         """
-          This is actually a private ctor.
-          - Preventing multi instantiation (by exception)
-          - initializing singleton instance to self
-          - initializing member variables with defaults
+        This is actually a private ctor.
+        - Preventing multi instantiation (by exception)
+        - initializing singleton instance to self
+        - initializing member variables with defaults
         """
         # should anyone call EnvConfig directly, make a bold statement about it.
         if EnvConfig.__instance is not None:
@@ -89,28 +125,26 @@ class EnvConfig:
         # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
         self.__config_categories = {"___dummyKey__"}
 
-    def set_loader(self, config_loader):
+    def set_loader(self, config_loader=None):
         """
-          Dependency injection of a config loader that adheres to the EnvConfigLoader interface
+        Dependency injection of a config loader that adheres to the EnvConfigLoader interface
 
-          Arguments:
-              config_loader {EnvConfigLoader} -- the concrete configuration loader
+        Arguments:
+            config_loader {EnvConfigLoader} -- the concrete configuration loader
         """
+        if config_loader is None:
+            config_loader = EnvConfigLoaderFactory().get_loader(self.__env)
+
         self.__config_loader = config_loader
         # for the first time, query all environment existing categories.
         self.__load_categories()
 
     def __load_config(self, category):
         """
-          using injected config loader to get a hold of the data
+        using injected config loader to get a hold of the data
         """
 
-        if (
-            self.__config_loader
-            is None
-            # TODO: resolve then circular dependency then uncomment the below
-            # or isinstance(self.__config_loader, EnvConfigLoader) is False
-        ):
+        if self.__config_loader is None:
             raise Exception(
                 "Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively"
             )
@@ -159,28 +193,49 @@ class EnvConfig:
 
     @staticmethod
     def get(category, section, key, default_value=None):
-        return EnvConfig.__instance.__get(section, key, default_value)
-
-    def __get(self, category, section, key, default_value=None):
         """
-          Main configuration accessor.
-          Get configuration by section, section + key or entire config.
+        Main configuration accessor.
+        Get configuration by section, section + key or entire config.
 
-          Arguments:
+        Arguments:
             category {string} -- name of category for the queried config
             section {string} -- name of section / object name
             key {string} -- name of key under provided section
 
-          Keyword Arguments:
+        Keyword Arguments:
             default_value {any} -- default value to use when section/key isn't present in loaded config data (default: {None})
 
-          Returns:
+        Returns:
             any -- value associated with section/key. Can be as simple as string or int or as complex as a whole dict
         """
+        return EnvConfig.instance().__get(category, section, key, default_value)
+
+    def __get(self, category, section, key, default_value=None):
+        """
+        Main configuration accessor.
+        Get configuration by section, section + key or entire config.
+
+        Arguments:
+        category {string} -- name of category for the queried config
+        section {string} -- name of section / object name
+        key {string} -- name of key under provided section
+
+        Keyword Arguments:
+        default_value {any} -- default value to use when section/key isn't present in loaded config data (default: {None})
+
+        Returns:
+        any -- value associated with section/key. Can be as simple as string or int or as complex as a whole dict
+        """
+        # detecting the first access ever to this instance,
+        # it requires that we set a loader and initialize current environment configuration section (json files)
+        if self.__config_loader is None:
+            self.set_loader()
+
+        # category is being accessed for the first time, load it
         if category not in self.__config_json:
             self.__config_json[category] = self.__load_config(category)
 
-        # someone wants to get a hold of the entire config
+        # someone wants to get a hold of the entire category config
         if section is None:
             return self.__config_json[category]
 

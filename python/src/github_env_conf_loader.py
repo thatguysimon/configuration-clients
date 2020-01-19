@@ -5,7 +5,7 @@
 # HEADER                                                                    #
 #############################################################################
 """
-    Concrete implementation of github configuration repo reader
+Concrete implementation of github configuration repo reader
 """
 
 #############################################################################
@@ -33,11 +33,11 @@ GIT_CONF_TOKEN_KEY = "GIT_CONFIG_TOKEN"
 #############################################################################
 
 
-class GithubEnvConfig(EnvConfigLoader):
+class GithubEnvConfigLoader(EnvConfigLoader):
     """
-      Github environment aware config loader.
-      Implements EnvConfigLoader in order to be injected into EnvConfig.
-      Reads and lists repo files.
+    Github environment aware config loader.
+    Implements EnvConfigLoader in order to be injected into EnvConfig.
+    Reads and lists repo files.
     """
 
     def __init__(self, environment):
@@ -48,10 +48,10 @@ class GithubEnvConfig(EnvConfigLoader):
 
     def load(self, category):
         """
-          concrete implementation fo abstract method
+        concrete implementation fo abstract method
 
-          Returns:
-              dict -- json parsed config
+        Returns:
+            dict -- json parsed config
         """
         try:
             config_raw_content = self.__get_file_content(f"{category}.json", self._env)
@@ -81,7 +81,7 @@ class GithubEnvConfig(EnvConfigLoader):
         return github_conf_token
 
     def __get_file_content(self, file_path, branch_name):
-        github_conf_token = GithubEnvConfig.__get_github_token()
+        github_conf_token = GithubEnvConfigLoader.__get_github_token()
 
         github_url = f"https://raw.githubusercontent.com/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/{branch_name}/{file_path}"
         file_path = urllib.parse.quote(file_path, safe="")
@@ -111,12 +111,12 @@ class GithubEnvConfig(EnvConfigLoader):
 
     def __get_repo_file_list(self):
         """
-            Based on self environment, pull the repo files list
+        Based on self environment, pull the repo files list
 
-            Returns:
-                [list] -- list of files, uppercased and without the .json suffix
+        Returns:
+            [list] -- list of files, uppercased and without the .json suffix
         """
-        github_conf_token = GithubEnvConfig.__get_github_token()
+        github_conf_token = GithubEnvConfigLoader.__get_github_token()
         # API reference: https://developer.github.com/v3/repos/contents/
         github_api_url = f"https://api.github.com/repos/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/contents/?ref={self._env}"
 

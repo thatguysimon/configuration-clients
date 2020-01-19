@@ -6,9 +6,9 @@
 
 import unittest
 from mock import patch
-from src.env_config import EnvConfig
+from env_config import EnvConfig
 
-from tests.mock_env_loader import GithubMockEnvConfig
+from mock_env_loader import GithubMockEnvConfig
 
 GLOBAL_CATEGORY = "GLOBAL"
 GENE_CATEGORY = "GENE"
