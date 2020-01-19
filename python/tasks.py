@@ -22,9 +22,9 @@ def lint(runner):
 @task(lint)
 def test(runner):
     """
-    this will run all discovered unittests
+    this will run lint then all discovered unittests
     """
-    runner.run("python -m unittest discover -v -t .")
+    runner.run("pushd src && pwd && python -m unittest discover -s ../test/ -v")
 
 
 @task
