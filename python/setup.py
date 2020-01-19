@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name="configuration_client",
-    packages=["configuration_client"],
-    package_dir={"configuration_client": "."},
+    name="configuration-client",
+    packages=find_packages(exclude=["test*"]),
+    package_dir={"configuration-client": "."},
     # package_data={"configuration_client": ["config/*"]},
     # include_package_data=True,
     # data_files=[("config", ["config/file"])],
