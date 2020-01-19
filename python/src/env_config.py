@@ -139,6 +139,8 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         # for the first time, query all environment existing categories.
         self.__load_categories()
 
+        EnvConfigMetaClass.env_conf_categories_loaded = True
+
     def __load_config(self, category):
         """
         using injected config loader to get a hold of the data
