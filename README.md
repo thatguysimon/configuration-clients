@@ -9,8 +9,9 @@ It will also serve a Secrets wrapper as a standardized way to consume secrets.
 # install examples
 
 ## Python
-* ```pip install "git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python"```
-* within requirements.txt place the following WITHOUT double quotes: git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python
+* ```pip -e install "git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python"```
+* within requirements.txt place the following WITHOUT double quotes: 
+-e git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=configuration_client&subdirectory=python
   
   The @master part controls the branch from which to install. Should ALWAYS refer to the releasable master unless you're experimenting.
 
