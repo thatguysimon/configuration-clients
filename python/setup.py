@@ -2,15 +2,16 @@
 
 from setuptools import setup
 
+
 setup(
     name="configuration_client",
     packages=["configuration_client"],
-    package_dir={"configuration_client": "src"},
+    package_dir={"configuration_client": "./src"},
     package_data={"configuration_client": ["src/*"]},
     description="environment aware configuration module for Twist modules",
     classifiers=["Private :: Do Not Upload to pypi server"],
     install_requires=["hvac", "requests"],
-    version="0.0.10",
+    version="0.0.12",
     url="git@github.com/twistbioscience/configuration-clients.git",
     author="Oren Sea",
     author_email="oren@prodops.io",
