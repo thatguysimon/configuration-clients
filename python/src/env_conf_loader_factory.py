@@ -12,7 +12,6 @@ helper to generating a conf loader per strategy
 # IMPORT MODULES                                                            #
 #############################################################################
 
-from .github_env_conf_loader import GithubEnvConfigLoader
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -32,4 +31,6 @@ class EnvConfigLoaderFactory:
         Returns:
             EnvConfLoader concrete instance -- the sought after loader
         """
+        from .github_env_conf_loader import GithubEnvConfigLoader
+
         return GithubEnvConfigLoader(environment)
