@@ -100,6 +100,8 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         EnvConfig.SHIPPING("person/address/city", "name")
     """
 
+    TWIST_ENV_KEY = TWIST_ENV_KEY
+
     # The singleton instance (the only instance of EnvConfig in our entire running space)
     __instance = None
 
