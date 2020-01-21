@@ -80,3 +80,8 @@ print(
 # reading the common secret again (it hits the cache as the stdout print suggests)
 v = Secrets.get("secret/common")
 print(f"got {v} from vault common...the cached value again...\n\n")
+
+
+# attempting to read dummy from the dummy.json conf file that is not in existence
+# in the conf repo - this should fail
+v = EnvConfig.DUMMY("dummy", "some_dummy_key")
