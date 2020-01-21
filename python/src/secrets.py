@@ -10,8 +10,8 @@ encapsulation to secret management api using Vault
 #############################################################################
 # IMPORT MODULES                                                            #
 #############################################################################
-import os
 import hvac
+from .os_vars import OSVars
 
 VAULT_URL_KEY = "VAULT_URL"
 VAULT_DEFAULT_URL = "https://vault.twistbioscience-staging.com"
@@ -21,6 +21,11 @@ VAULT_PASS_KEY = "VAULT_PASSWORD"
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
+
+OSVars.register_mandatory(VAULT_USER_KEY, "Vault secret management user name", str)
+OSVars.register_mandatory(VAULT_PASS_KEY, "Vault secret management password", str)
+
+OSVars.register(VAULT_URL_KEY, "Vault secret management server", str, VAULT_DEFAULT_URL)
 
 
 class Secrets:
@@ -67,21 +72,12 @@ class Secrets:
         if self.__client is not None:
             return True
 
-        vault_url = VAULT_DEFAULT_URL
-
-        if VAULT_URL_KEY in os.environ:
-            vault_url = os.environ[VAULT_URL_KEY]
+        vault_url = OSVars.get(VAULT_URL_KEY)
 
         print(f"connecting to vault on: {vault_url}")
 
-        if VAULT_USER_KEY not in os.environ:
-            raise Exception(f"missing {VAULT_USER_KEY} in env")
-
-        if VAULT_PASS_KEY not in os.environ:
-            raise Exception(f"missing {VAULT_PASS_KEY} in env")
-
-        vault_user = os.environ[VAULT_USER_KEY]
-        vault_pass = os.environ[VAULT_PASS_KEY]
+        vault_user = OSVars.get(VAULT_USER_KEY)
+        vault_pass = OSVars.get(VAULT_PASS_KEY)
 
         try:
             self.__client = hvac.Client(url=vault_url, timeout=30)

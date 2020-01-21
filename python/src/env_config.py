@@ -16,9 +16,17 @@ type conversions and defaults
 import os
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 
+from .os_vars import OSVars
+
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
+TWIST_ENV_KEY = "TWIST_ENV"
+
+
+OSVars.register_mandatory(
+    TWIST_ENV_KEY, "Running environment var for twist modules", str
+)
 
 
 class EnvConfigMetaClass(type):
@@ -55,7 +63,6 @@ class EnvConfigMetaClass(type):
             if new_dynamic_func is None:
                 raise AttributeError(f"EnvConfig has no attribute '{attr}'")
 
-            EnvConfigMetaClass.loaded = True
             return new_dynamic_func.__func__
 
 
@@ -115,11 +122,11 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         if EnvConfig.__instance is not None:
             raise Exception("EnvConfig class is a singleton!")
 
-        if "ENV" not in os.environ:
-            raise Exception("Cannot run configuration without ENV")
+        if TWIST_ENV_KEY not in os.environ:
+            raise Exception(f"Cannot run configuration without {TWIST_ENV_KEY}")
 
         EnvConfig.__instance = self
-        self.__env = os.environ["ENV"]
+        self.__env = os.environ[TWIST_ENV_KEY]
         self.__config_json = {}
         self.__config_loader = None
         # the below is a Set - helper to hold collection of listed (yet not loaded) categories.

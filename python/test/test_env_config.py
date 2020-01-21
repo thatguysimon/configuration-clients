@@ -3,12 +3,12 @@
 #############################################################################
 # IMPORT MODULES                                                            #
 #############################################################################
-
 import unittest
 from mock import patch
 from src.env_config import EnvConfig
-
+from src.env_config import TWIST_ENV_KEY
 from .mock_env_loader import GithubMockEnvConfig
+
 
 GLOBAL_CATEGORY = "GLOBAL"
 GENE_CATEGORY = "GENE"
@@ -36,7 +36,7 @@ class EnvConfigTester(unittest.TestCase):
 
     testee = None
 
-    @patch.dict("os.environ", {"ENV": "dummy"})
+    @patch.dict("os.environ", {TWIST_ENV_KEY: "dummy"})
     def setUp(self):
         self.testee = EnvConfig.instance()
         self.conf_loader = GithubMockEnvConfig("dummy")

@@ -39,6 +39,7 @@ class OSVars:
 
       register
       register_mandatory
+      initialize
       get
       usage
       dump
@@ -63,6 +64,7 @@ class OSVars:
                 """OSVars object already initialized - you cannot create another instance!
                 (hint: use OSVars.instance()"""
             )
+        self.__initialized = False
         # The registered vars mem db
         self.__vars = {}
         # by default, when critical requirement is invalid then sys.exit except when dumping
@@ -72,6 +74,14 @@ class OSVars:
         )
         self.__should_print_usage = PRINT_CONFIG_USAGE_ENV_VAR in os.environ
         self.__should_dump_config = DUMP_CONFIG_ENV_VAR in os.environ
+
+    @staticmethod
+    def initialize():
+        OSVars.instance().__initialize()
+
+    def __initialize(self):
+        self.__validate_and_set()
+        self.__initialized = True
 
     def __critical_fault(self, message):
         print(f"ENV VAR ERROR: {message}")
@@ -90,6 +100,36 @@ class OSVars:
             var_key, var_description, var_type, True, default_value
         )
 
+    def __validate_and_set(self):
+        """
+        validates all defined env vars to:
+        1. exist in os.environ if var is mandatory
+        2. have provided value that adheres to defined type
+        Then it sets mem db (__vars) value to the actual (default or os.environ provided)
+        """
+        for (var_key, var_obj) in self.__vars.items():
+            # default case if the other conditions dont apply
+            value = var_obj["default"]
+
+            if var_key not in os.environ:
+                if var_obj["is_mandatory"] is True:
+                    self.__critical_fault(
+                        f"Missing mandatory os env var {var_key} ({var_obj['description']})"
+                    )
+            else:
+                value = os.environ[var_key]
+
+            # type checking and casting
+            if var_obj["var_type"] != str:
+                try:
+                    value = var_obj["var_type"](value)
+                except Exception as ex:
+                    self.__critical_fault(
+                        f"provided value for {var_key} is expected to be {var_obj['var_type']} but its not (actual: {type(value)})\nDetailed exception: {type(ex)}: {ex}"
+                    )
+
+            var_obj["value"] = value
+
     def __register(
         self,
         var_key,
@@ -98,7 +138,7 @@ class OSVars:
         is_mandatory=False,
         default_value=None,
     ):
-        # making sure only one registration exists per os env var
+        # sanity checks...
         if var_key in self.__vars:
             self.__critical_fault(f"os var {var_key} is already registered!")
 
@@ -107,31 +147,11 @@ class OSVars:
                 f"defining var {var_key} as mandatory with default value doesn't make sense!"
             )
 
-        # default case if the other conditions dont apply
-        value = default_value
-
-        if var_key not in os.environ:
-            if is_mandatory is True:
-                self.__critical_fault(
-                    f"Missing mandatory os env var {var_key} ({var_description})"
-                )
-        else:
-            value = os.environ[var_key]
-
-        # type checking and casting
-        if var_type != str:
-            try:
-                value = var_type(value)
-            except Exception as ex:
-                self.__critical_fault(
-                    f"provided value for {var_key} is expected to be {var_type} but its not (actual: {type(value)})\nDetailed exception: {type(ex)}: {ex}"
-                )
-
         self.__vars[var_key] = {
             "description": var_description,
-            "type": var_type,
-            "value": value,
-            "mandatory": is_mandatory,
+            "var_type": var_type,
+            # "value": value, # responsibility of __validate_and_set
+            "is_mandatory": is_mandatory,
             "default": default_value,
         }
 
@@ -148,6 +168,9 @@ class OSVars:
             # this is a one time endeavor
             self.__should_dump_config = False
 
+        if self.__initialized is False:
+            raise Exception("OSVars has not been initialized. call OSVars.initialize()")
+
         if var_key not in self.__vars:
             raise Exception(
                 f"{var_key} unknown. Please specify variable attributes using the register method in the process initialization(!)"
@@ -156,6 +179,9 @@ class OSVars:
         return self.__vars[var_key]["value"]
 
     def usage(self):
+        if self.__initialized is False:
+            raise Exception("OSVars has not been initialized. call OSVars.initialize()")
+
         mandatory_sign = {0: "", 1: "* "}
 
         print("\n\nEnvironment variables usage:\n")
@@ -166,7 +192,7 @@ class OSVars:
                 else ""
             )
             print(
-                f"{mandatory_sign[var_obj['mandatory']]}{var_key} ({var_obj['type'].__name__}): {var_obj['description']}{default}"
+                f"{mandatory_sign[var_obj['is_mandatory']]}{var_key} ({var_obj['var_type'].__name__}): {var_obj['description']}{default}"
             )
         print(
             f"""
@@ -176,6 +202,9 @@ class OSVars:
         )
 
     def dump(self):
+        if self.__initialized is False:
+            raise Exception("OSVars has not been initialized. call OSVars.initialize()")
+
         print("\n\nEnvironment variables mem dump:\n")
         for (var_key, var_obj) in self.__vars.items():
             default = (
