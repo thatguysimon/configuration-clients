@@ -14,7 +14,7 @@ Concrete implementation of github configuration repo reader
 
 import requests
 import urllib
-import json
+import json5
 import os
 from .abstract_env_conf_loader import EnvConfigLoader
 from .secrets import Secrets
@@ -55,7 +55,7 @@ class GithubEnvConfigLoader(EnvConfigLoader):
         """
         try:
             config_raw_content = self.__get_file_content(f"{category}.json", self._env)
-            return json.loads(config_raw_content)
+            return json5.loads(config_raw_content)
 
         except Exception as ex:
             print(
