@@ -16,6 +16,6 @@ pipeline:
     commands:
       - cd node
       - npm install
-      # - npm run test
+      - npm run test
     when:
       branch: [ node-port, master ]
