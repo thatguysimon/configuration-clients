@@ -15,7 +15,7 @@ git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=conf
   
   The @master part controls the branch from which to install. Should ALWAYS refer to the releasable master unless you're experimenting.
 
-  See doc and usage example in README.md in the python directory.
+  See usage example in kitchen_sink.py in the python directory.
 
 ## Ruby
 * TBD

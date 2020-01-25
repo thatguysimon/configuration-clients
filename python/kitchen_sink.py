@@ -14,7 +14,7 @@ In order to test-run this kitchen sink:
 - cd python
 
 # the below is a happy path...
-- VAULT_USER=<your vault user> VAULT_PASSWORD=<your vault pass> ENV=kitchen-sink-demo-do-not-delete python kitchen_sync.py
+- VAULT_USER=<your vault user> VAULT_PASSWORD=<your vault pass> TWIST_ENV=kitchen-sink-demo-do-not-delete python kitchen_sink.py
 
 # omit "VAULT_USER" in order to yield the mandatory-missing var. Pay attention it will sys.EXIT!
 # add "__CONFIG_USAGE=1" in order to view required/dependable list of env vars
@@ -25,7 +25,7 @@ In order to test-run this kitchen sink:
 # OS / ENVIRONMENT VARS                                                     #
 #############################################################################
 
-# mandatory env vars ALREADY registered by Secrets and EnvConfig...
+# mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
 # OSVars.register_mandatory("VAULT_USER", "Vault secret management user name", str)
 # OSVars.register_mandatory("VAULT_PASSWORD", "Vault secret management password", str)
 # OSVars.register_mandatory("TWIST_ENV", "running environment name", str)

@@ -138,7 +138,7 @@ class GithubEnvConfigLoader(EnvConfigLoader):
 
         if response.status_code != 200:
             raise Exception(
-                f"Could not find configuration branch at configuration repo with name = {self._env}"
+                f"Could not find configuration branch at configuration repo with name = {self._env} status code: {response.status_code}"
             )
 
         # filter only file names that end with .json and that are not nested (only root level)
