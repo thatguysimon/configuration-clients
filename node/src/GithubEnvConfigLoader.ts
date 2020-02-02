@@ -48,7 +48,6 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
   }
 
   private static async __getGithubToken(): Promise<string> {
-    // return 'b8b2a3c4f190a7a578503d1bd2a724553b6021e1';
     let githubToken;
 
     // first chance to env var...
