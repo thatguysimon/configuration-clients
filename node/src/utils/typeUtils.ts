@@ -1,8 +1,8 @@
 
 /**
- * 
- * @param typeName 
- * @param stringValue 
+ * helper function to converting string values into another type that is dynamically given.
+ * @param typeName - either of "string", "float", "int", "bool"
+ * @param stringValue - value to convert
  */
 function dynamicTypeConverter(typeName: string, stringValue: string): any {
   switch (typeName) {
