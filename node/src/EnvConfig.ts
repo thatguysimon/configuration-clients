@@ -1,6 +1,6 @@
 import * as env from 'env-var';
-import EnvConfigLoaderFactory from './EnvConfigLoaderFactory'
-import IEnvConfigLoader from './IEnvConfigLoader'
+import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
+import IEnvConfigLoader from './IEnvConfigLoader';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -8,147 +8,165 @@ import IEnvConfigLoader from './IEnvConfigLoader'
 const TWIST_ENV_KEY = 'TWIST_ENV';
 
 export default class EnvConfig {
-  private static __theInstance: EnvConfig;
+    private static __theInstance: EnvConfig;
 
-  public static readonly TWIST_ENV_KEY: string = TWIST_ENV_KEY;
+    public static readonly TWIST_ENV_KEY: string = TWIST_ENV_KEY;
 
-  private env: string;
+    private __environment: string;
 
-  private configJSON: any;
-  // @injectable
-  private configLoader: IEnvConfigLoader | undefined;
-  private configCategories: Set<string>;
+    private __configJSON: any;
 
-  public static get instance(): EnvConfig {
-    if (!EnvConfig.__theInstance) {
-      EnvConfig.__theInstance = new EnvConfig();
+    // @injectable
+    private __configLoader: IEnvConfigLoader | undefined;
+
+    private __configCategories: Set<string>;
+
+    /**
+     * The singleton access method
+     * @readonly
+     * @static
+     * @type {EnvConfig}
+     */
+    public static get instance(): EnvConfig {
+        if (!EnvConfig.__theInstance) {
+            EnvConfig.__theInstance = new EnvConfig();
+        }
+
+        return EnvConfig.__theInstance;
     }
 
-    return EnvConfig.__theInstance;
-  }
+    private constructor() {
+        // - Preventing multi instantiation
+        // - initializing member variables with defaults
 
-  private constructor() {
-    // This is a private ctor.
-    // - Preventing multi instantiation
-    // - initializing member variables with defaults
-
-    this.env = env
-      .get(TWIST_ENV_KEY)
-      .required()
-      .asString();
-    this.configJSON = {};
-    this.configLoader = undefined;
-    // the below is a helper to hold collection of listed (not surely yet loaded) categories.
-    this.configCategories = new Set<string>();
-  }
-
-  /**
-   * @description Dependency injection of a config loader that adheres to the IEnvConfigLoader interface
-   * @param configLoader - the injected object
-   */
-  public async setLoader(configLoader?: IEnvConfigLoader): Promise<void> {
-
-    if (!configLoader) {
-      this.configLoader = new EnvConfigLoaderFactory().getLoader(this.env);
-    } else {
-      this.configLoader = configLoader;
+        // the process working env
+        this.__environment = env
+            .get(TWIST_ENV_KEY)
+            .required()
+            .asString();
+        // the config mem db
+        this.__configJSON = {};
+        // the concrete config loader (injected)
+        this.__configLoader = undefined;
+        // the below is a helper to hold collection of listed (not surely yet loaded) categories.
+        this.__configCategories = new Set<string>();
     }
 
-    await this.loadCategories();
-  }
+    /**
+     * @description Dependency injection of a config loader that adheres to the IEnvConfigLoader interface
+     * @param configLoader - the injected object
+     */
+    public async setLoader(configLoader?: IEnvConfigLoader): Promise<void> {
+        if (!configLoader) {
+            this.__configLoader = new EnvConfigLoaderFactory().getLoader(this.__environment);
+        } else {
+            this.__configLoader = configLoader;
+        }
 
-  /**
-   * 
-   * @param category 
-   */
-  private listConfigurationCategory(category: string): void {
-    this.configCategories.add(category);
-    console.log(`EnvConfig category ${category} listed`)
-  }
-
-  /**
-   * 
-   */
-  private async loadCategories(): Promise<void> {
-    if (!this.configLoader) {
-      throw new Error("config loader has not been set")
+        await this.__loadCategories();
     }
 
-    const categories = await this.configLoader.listCategories();
-
-    for (const category of categories) {
-      const normalizedCategoryName = category.replace('.json', '').toUpperCase();
-      this.listConfigurationCategory(normalizedCategoryName)
-    }
-  }
-
-
-  public static async get(category: string, section?: string, key?: string, defaultValue?: any): Promise<any> {
-    return EnvConfig.instance.__get(category, section, key, defaultValue);
-  }
-
-  /**
-   * 
-   * @param category 
-   */
-  private async loadConfig(category: string): Promise<any> {
-    if (!this.configLoader) {
-      throw new Error(
-        "Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively"
-      )
+    /**
+     * helper private method to list required and config-found categories
+     * @param category
+     */
+    private __listConfigurationCategory(category: string): void {
+        this.__configCategories.add(category);
+        console.log(`EnvConfig category ${category} listed`);
     }
 
-    try {
-      return this.configLoader.load(category);
-    } catch (ex) {
-      console.log(`Failed loading config for provided environment ${this.env}. Exception: ${ex}`);
-    }
-  }
+    /**
+     * private method to calling loader to list all possible config categories
+     */
+    private async __loadCategories(): Promise<void> {
+        if (!this.__configLoader) {
+            throw new Error('config loader has not been set');
+        }
 
-  /**
-   * 
-   * @param category 
-   * @param section 
-   * @param key 
-   * @param defaultValue 
-   */
-  private async __get(category: string, section?: string, key?: string, defaultValue?: any): Promise<any> {
-    // detecting the first access ever to this instance,
-    // it requires that we set a loader and initialize current environment configuration section (json files)
-    if (!this.configLoader) {
-      await this.setLoader();
+        const categories = await this.__configLoader.listCategories();
+
+        categories.forEach((category: string) => {
+            // TODO: this should be moved to concrete impl of loader
+            const normalizedCategoryName = category.replace('.json', '').toUpperCase();
+            this.__listConfigurationCategory(normalizedCategoryName);
+        });
     }
 
-    // category is being accessed for the first time, load it
-    if (this.configJSON[category] === undefined) {
-      this.configJSON[category] = await this.loadConfig(category);
+    /**
+     * public static facade to __get method
+     */
+    public static async get(category: string, section?: string, key?: string, defaultValue?: any): Promise<any> {
+        return EnvConfig.instance.__get(category, section, key, defaultValue);
     }
 
-    // someone wants to get a hold of the entire category config
-    if (!section) {
-      return this.configJSON[category];
+    /**
+     *  using config loader to loading a category-specific configuration
+     * @param category
+     */
+    private async __loadConfig(category: string): Promise<any> {
+        if (!this.__configLoader) {
+            throw new Error(
+                'Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively',
+            );
+        }
+
+        try {
+            return this.__configLoader.load(category);
+        } catch (ex) {
+            console.log(`Failed loading config for provided environment ${this.__environment}. Exception: ${ex}`);
+        }
+
+        return undefined;
     }
 
-    // someone wants to get a hold of an entire section structure
-    if (this.configJSON[category] !== undefined && key === undefined) {
-      return this.configJSON[category][section];
-    }
+    /**
+     *  main config getter method
+     *  example to config structure:
+     *  genes.json
+     *  { constraints: { max_length: 300 }}
+     *  getter of max gene length: EnvConfig.get('genes', 'constraints', 'max_length', 301)
+     * @param category - category name
+     * @param section - section name - if undefined the entire category config is returned
+     * @param key - key within section, if undefined, entire config section is returned
+     * @param defaultValue - if requested config data (certain key, or whole section) is not found, the provided value is returned instead
+     */
+    private async __get(category: string, section?: string, key?: string, defaultValue?: any): Promise<any> {
+        // detecting the first access ever to this instance,
+        // it requires that we set a loader and initialize current environment configuration section (json files for git config storage)
+        if (!this.__configLoader) {
+            await this.setLoader();
+        }
 
-    // missing section
-    if (this.configJSON[category][section] === undefined) {
-      return defaultValue;
-    }
+        // category is being accessed for the first time, load it
+        if (this.__configJSON[category] === undefined) {
+            this.__configJSON[category] = await this.__loadConfig(category);
+        }
 
-    // missing key in section
-    if (key != undefined && this.configJSON[category][section][key] === undefined) {
-      return defaultValue;
-    }
+        // someone wants to get a hold of the entire category config
+        if (!section) {
+            return this.__configJSON[category];
+        }
 
-    // actual config indicated data
-    if (key != undefined) {
-      return this.configJSON[category][section][key];
+        // someone wants to get a hold of an entire section structure
+        if (this.__configJSON[category] !== undefined && key === undefined) {
+            return this.__configJSON[category][section];
+        }
+
+        // missing section
+        if (this.__configJSON[category][section] === undefined) {
+            return defaultValue;
+        }
+
+        // missing key in section
+        if (key !== undefined && this.__configJSON[category][section][key] === undefined) {
+            return defaultValue;
+        }
+
+        // actual config indicated data
+        if (key !== undefined) {
+            return this.__configJSON[category][section][key];
+        }
+
+        return undefined;
     }
-  }
 }
-
-

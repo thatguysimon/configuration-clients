@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/interface-name-prefix */
 export default interface IEnvConfigLoader {
-  // Performs the actual configuration reading (from whatever source concrete impl represents)
-  load(category: string): Promise<any>;
+    // Performs the actual configuration reading (from whatever source concrete impl represents)
+    // shall return JSON representation of data
+    load(category: string): Promise<any>;
 
-  listCategories(): Promise<Array<string>>;
+    // Fetches a list of actual configuration categories.
+    listCategories(): Promise<Array<string>>;
 }
