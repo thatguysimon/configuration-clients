@@ -65,17 +65,16 @@ v = EnvConfig.get(
 )
 print(f"got {v} from system conf global section...\n")
 
-# reading the common secret
-v = Secrets.get("secret/common")
-print(
-    f"got {v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n"
-)
-
 
 #############################################################################
 # READING SECRETS                                                           #
 #############################################################################
 
+# reading the common secret
+v = Secrets.get("secret/common")
+print(
+    f"got {v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n"
+)
 
 # reading the common secret again (it hits the cache as the stdout print suggests)
 v = Secrets.get("secret/common")
