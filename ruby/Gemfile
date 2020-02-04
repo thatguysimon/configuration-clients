@@ -4,7 +4,7 @@ source 'https://gems-read:***REMOVED***@nexus.twistbioscience-staging.com/reposi
 ruby '2.6.3'
 
 # linter
-gem 'rubocop', require: false
+gem 'rubocop'
 
 # Adds a mixin that allows definition of abstract classes.
 gem 'abstraction', '~>0.0.4'

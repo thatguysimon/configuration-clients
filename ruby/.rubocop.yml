@@ -8,8 +8,6 @@ AllCops:
     - 'test/fixtures/**/*'
     - 'bin/*'
     - 'tmp/**/*'
-# Rails:
-#   Enabled: false
 
 Layout/LineLength:
   Max: 125
