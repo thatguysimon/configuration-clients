@@ -81,7 +81,7 @@ class EnvConfig
   end
 
   # helper static function for easier access (EnvConfig.get)
-  def self.get(category, section, key, default_value = nil)
+  def self.get(category, section = nil, key = nil, default_value = nil)
     EnvConfig.instance.__get(category, section, key, default_value)
   end
 
@@ -93,7 +93,7 @@ class EnvConfig
   # @param default_value [any] - value to return when above references to config (section + key) isnt found
   #
   # @return [any] default or actual value (can be any primitive type or a Hash representing the whole config json)
-  def __get(category, section, key, default_value = nil)
+  def __get(category, section = nil, key = nil, default_value = nil)
     # detecting the first access ever to this instance,
     # it requires that we set a loader and initialize current environment configuration section (json files)
     if @__config_loader.nil?
@@ -107,7 +107,7 @@ class EnvConfig
 
     # someone wants to get a hold of the entire category config
     if section.nil?
-      return __config[category]
+      return @__config[category]
     end
 
     # someone wants to get a hold of an entire section structure
