@@ -27,7 +27,7 @@ pipeline:
       - cd ruby
       - gem install bundler -v 2.0.1
       - bundle install
-      - rubocop
+      - rubocop src tests *.rb
       - yardoc src/*
       - ruby -Ilib:test tests/*
     when:
