@@ -13,6 +13,7 @@ encapsulation to secret management api using Vault
 import hvac
 from .os_vars import OSVars
 
+# TODO: move to a common folder within the config clients monorepo
 VAULT_URL_KEY = "VAULT_URL"
 VAULT_DEFAULT_URL = "https://vault.twistbioscience-staging.com"
 VAULT_USER_KEY = "VAULT_USER"
