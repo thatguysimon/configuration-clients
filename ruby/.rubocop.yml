@@ -1,0 +1,55 @@
+# See explanations for each of the cops at:
+# https://github.com/bbatsov/rubocop/blob/master/manual/cops.md
+
+AllCops:
+  TargetRubyVersion: 2.6.3
+  Exclude:
+    - 'test/stubs/*'
+    - 'test/fixtures/**/*'
+    - 'bin/*'
+    - 'tmp/**/*'
+# Rails:
+#   Enabled: false
+
+Metrics/LineLength:
+  Max: 125
+Metrics/ClassLength:
+  Enabled: false
+Metrics/MethodLength:
+  Max: 30
+Metrics/BlockLength:
+  ExcludedMethods: ['scope', 'namespace', 'resource', 'draw', 'included', 'describe', 'before', 'define', 'factory']
+Metrics/AbcSize:
+  Max: 45
+Metrics/CyclomaticComplexity:
+  Max: 9
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/MutableConstant:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+Style/NonNilCheck:
+  Enabled: false
+
+# Rails/DynamicFindBy:
+  # Enabled: false
+# Rails/FindBy:
+  # Enabled: false
+# Rails/FindEach:
+#   Enabled: false
+# Rails/Delegate:
+#   Enabled: false
+# Rails/HasAndBelongsToMany:
+#   Enabled: false
