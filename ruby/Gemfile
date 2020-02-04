@@ -1,0 +1,27 @@
+# our source proxy
+source 'https://gems-read:***REMOVED***@nexus.twistbioscience-staging.com/repository/all-ruby/'
+
+ruby '2.6.3'
+
+# linter
+gem 'rubocop'
+
+# Adds a mixin that allows definition of abstract classes.
+gem 'abstraction', '~>0.0.4'
+
+group :test do
+  gem 'minitest'
+  gem 'minitest-mock_expectations', require: false
+  gem 'minitest-reporters'
+  gem 'minitest-stub_on_roids', require: false
+  gem 'minitest-test_profile'
+end
+
+# JSON parsing
+gem 'hjson'
+
+# Vault integration for fetching secrets
+gem 'vault', '~> 0.10.1'
+
+# doc
+gem 'yard'

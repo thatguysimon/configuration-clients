@@ -1,6 +1,7 @@
 import OSVars from './OSVars'
 import { OSVarType } from './OSVars'
 
+// TODO: move to a common folder within the config clients monorepo
 const VAULT_API_VERSION = 'v1';
 const VAULT_URL_KEY = "VAULT_URL"
 const VAULT_DEFAULT_URL = "https://vault.twistbioscience-staging.com"

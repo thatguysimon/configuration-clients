@@ -19,3 +19,16 @@ pipeline:
       - npm run test
     when:
       branch: [ node-port, master ]
+
+  build-test-ruby:
+    image: docker.twistbioscience-staging.com/ecommerce_web:ruby-2.6.3
+    pull: true
+    commands:
+      - cd ruby
+      - gem install bundler -v 2.0.1
+      - bundle install
+      - rubocop src tests *.rb
+      - yardoc src/*
+      - ruby -Ilib:test tests/*
+    when:
+      branch: [ ruby-port, master ]

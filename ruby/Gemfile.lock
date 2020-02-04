@@ -1,0 +1,58 @@
+GEM
+  remote: https://gems-read:***REMOVED***@nexus.twistbioscience-staging.com/repository/all-ruby/
+  specs:
+    abstraction (0.0.4)
+    ansi (1.5.0)
+    ast (2.4.0)
+    builder (3.2.4)
+    hjson (0.1.2)
+      json (>= 1.7.5)
+    jaro_winkler (1.5.4)
+    json (2.3.0)
+    minitest (5.14.0)
+    minitest-mock_expectations (1.1.1)
+    minitest-reporters (1.4.2)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
+    minitest-stub_on_roids (0.0.6)
+      minitest (~> 5)
+    minitest-test_profile (0.2.2)
+      minitest
+    parallel (1.19.1)
+    parser (2.7.0.2)
+      ast (~> 2.4.0)
+    rainbow (3.0.0)
+    rubocop (0.79.0)
+      jaro_winkler (~> 1.5.1)
+      parallel (~> 1.10)
+      parser (>= 2.7.0.1)
+      rainbow (>= 2.2.2, < 4.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 1.7)
+    ruby-progressbar (1.10.1)
+    unicode-display_width (1.6.1)
+    vault (0.10.1)
+    yard (0.9.24)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  abstraction (~> 0.0.4)
+  hjson
+  minitest
+  minitest-mock_expectations
+  minitest-reporters
+  minitest-stub_on_roids
+  minitest-test_profile
+  rubocop
+  vault (~> 0.10.1)
+  yard
+
+RUBY VERSION
+   ruby 2.6.3p62
+
+BUNDLED WITH
+   1.17.3

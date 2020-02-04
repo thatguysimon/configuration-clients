@@ -182,7 +182,7 @@ export default class OSVars {
       throw new Error("OSVars has not been initialized. call OSVars.initialize()")
     }
 
-    const mandatorySign: any = { true: "", false: "* " }
+    const mandatorySign: any = { false: "", true: "* " }
 
     console.log("\n\nEnvironment variables usage:\n")
     Object.entries(this.__vars).forEach(([varKey, obj]) => {
@@ -190,12 +190,13 @@ export default class OSVars {
       const defaultValue: string = varObj.default ? varObj.default : "";
 
       console.log(`${mandatorySign[varObj.isMandatory]}${varKey} (${varObj['varType']}): ${varObj['description']}${defaultValue}`);
-      console.log(`
-        * - mandatory vars
-        ${PRINT_CONFIG_USAGE_ENV_VAR}: set to any to produce this usage print
-        ${ DUMP_CONFIG_ENV_VAR}: set to any to dump actual env vars values\n
-      `)
     })
+    // epilogue
+    console.log(`
+      * - mandatory vars
+      ${PRINT_CONFIG_USAGE_ENV_VAR}: set to any to produce this usage print
+      ${ DUMP_CONFIG_ENV_VAR}: set to any to dump actual env vars values\n
+    `)
   }
 
   public dump() {
