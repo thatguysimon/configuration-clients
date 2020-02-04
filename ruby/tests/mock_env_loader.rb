@@ -1,6 +1,5 @@
 require_relative '../src/abstract_env_config_loader'
 
-
 # Config environment aware config loader - mock.
 # Implements EnvConfigLoader in order to be injected into EnvConfig
 class GithubMockEnvConfig < EnvConfigLoader
@@ -17,16 +16,16 @@ class GithubMockEnvConfig < EnvConfigLoader
   end
 
   def list_categories
-    return @__categories
+    @__categories
   end
-  
+
   def load(category)
     begin
       return @__data[category.upcase]
     rescue StandardError => e
-      puts "Failed loading and parsing config json content from branch/env '{@__environment}'\nexception: #{ex}"
+      puts "Failed loading and parsing config json content from branch/env '{@__environment}'\nexception: #{e}"
     end
-    
-    return {}
+
+    {}
   end
 end
