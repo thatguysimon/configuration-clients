@@ -5,3 +5,4 @@ invoke==1.4.0
 bumpversion==0.5.3
 requests==2.22.0
 flake8==3.7.9
+PyYAML==5.3
