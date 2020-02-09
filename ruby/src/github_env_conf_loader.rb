@@ -16,9 +16,8 @@ GIT_CONF_TOKEN_KEY = 'GIT_CONFIG_TOKEN'
 #############################################################################
 
 class GithubEnvConfigLoader < EnvConfigLoader
-  def initialize(environment)
-    super(environment)
-    @__environment = environment
+  def initialize
+    super
   end
 
   # concrete implementation for abstract method
@@ -63,6 +62,49 @@ class GithubEnvConfigLoader < EnvConfigLoader
     end
 
     github_conf_token
+  end
+
+  # implementation of absract method
+  def verify_env_or_fallback
+    github_conf_token = GithubEnvConfigLoader.__get_github_token
+    env_list = [@__environment] + @fallback_list
+
+    # checking branch exists on repo, otherwise falling back to other (from list)
+    env_list.each do |candidate_env|
+      # https://developer.github.com/v3/repos/branches/
+      github_base_url = 'api.github.com'
+      github_path = "/repos/#{TWIST_GITHUB_ACCOUNT}/#{CONFIGURATION_REPO}/branches/#{candidate_env}"
+
+      headers = {
+        'Accept-Encoding' => 'text',
+        'Accept' => 'application/json',
+        'Authorization' => "token #{github_conf_token}"
+      }
+
+      puts "Validating existence of branch #{candidate_env} on #{CONFIGURATION_REPO}"
+
+      net = Net::HTTP.new(github_base_url, 443)
+      net.use_ssl = true
+      # net.set_debug_output($stdout)
+      response = net.get(github_path, headers)
+
+      # puts "RESPONSE STATUS: #{response.code} on url: #{github_base_url}/#{github_path} amnd header: #{headers}"
+
+      if response.code == '200'
+        puts "branch #{candidate_env} is verified. Using configuration from #{candidate_env}"
+        @__environment = candidate_env
+        return true
+      end
+
+      if response.code == '404'
+        puts "#{candidate_env} does not exist on #{CONFIGURATION_REPO} trying next..."
+      else
+        puts "Unknown response code #{response.code} while trying to verify branch #{candidate_env} on #{CONFIGURATION_REPO}"
+        return false
+      end
+    end
+
+    false
   end
 
   # Pull the configuration file from the 'env' branch from git

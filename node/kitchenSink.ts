@@ -1,9 +1,6 @@
 import EnvConfig from './src/EnvConfig';
-import OSVars from './src/OSVars'
-import { OSVarType } from './src/OSVars'
-import Secrets from './src/Secrets'
-
-
+import { OSVarType, OSVars } from './src/OSVars';
+import Secrets from './src/Secrets';
 
 // #############################################################################
 // # USAGE                                                                     #
@@ -28,8 +25,7 @@ import Secrets from './src/Secrets'
 // #############################################################################
 
 function demoOsVars() {
-
-  /*
+    /*
     mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
   
     OSVars.register_mandatory("VAULT_USER", "Vault secret management user name", str)
@@ -37,17 +33,16 @@ function demoOsVars() {
     OSVars.register_mandatory("TWIST_ENV", "running environment name", str)
   */
 
-  // optional env var with default value
-  OSVars.register("COMPANY", "company name", OSVarType.String, "Twist")
+    // optional env var with default value
+    OSVars.register('COMPANY', 'company name', OSVarType.String, 'Twist');
 
-  // we are done with process initialization, lets start consuming vars
-  // it is important to place this call in your __main__
-  OSVars.initialize()
+    // we are done with process initialization, lets start consuming vars
+    // it is important to place this call in your __main__
+    OSVars.initialize();
 
-  const v = OSVars.get("COMPANY")
-  console.log(`Company name provided by os env is: ${v} and its type is: ${typeof v}`)
+    const v = OSVars.get('COMPANY');
+    console.log(`Company name provided by os env is: ${v} and its type is: ${typeof v}`);
 }
-
 
 // #############################################################################
 // # ENV CONFIGURATION (using github)                                          #
@@ -57,19 +52,19 @@ function demoOsVars() {
 // in order to examine concrete values involved in this example.
 
 async function demoConfig(): Promise<void> {
-  // attempting to read the "all" section from the system.json conf file in the configuration repo
-  let v = await EnvConfig.get('system', 'all');
-  console.log(`got ${JSON.stringify(v)} from system conf [all] section...\n`);
+    // attempting to read the "all" section from the system.json conf file in the configuration repo
+    let v = await EnvConfig.get('system', 'all');
+    console.log(`got ${JSON.stringify(v)} from system conf [all] section...\n`);
 
-  // attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
-  v = await EnvConfig.get('system', 'all', 'some_demo_key');
-  console.log(`got "${v}" from system conf [all.some_demo_key]...\n`);
+    // attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
+    v = await EnvConfig.get('system', 'all', 'some_demo_key');
+    console.log(`got "${v}" from system conf [all.some_demo_key]...\n`);
 
-  // attempting to read a non existing config from the global.json conf file in the configuration repo
-  v = await EnvConfig.get('global', 'non_existing_section', 'non_existing_key', [
-    'this is a default value as a single list element',
-  ]);
-  console.log(`got "${v}" from system conf global section...\n`);
+    // attempting to read a non existing config from the global.json conf file in the configuration repo
+    v = await EnvConfig.get('global', 'non_existing_section', 'non_existing_key', [
+        'this is a default value as a single list element',
+    ]);
+    console.log(`got "${v}" from system conf global section...\n`);
 }
 
 // #############################################################################
@@ -77,21 +72,20 @@ async function demoConfig(): Promise<void> {
 // #############################################################################
 
 async function demoSecrets(): Promise<void> {
+    // reading the common secret
+    const v1 = await Secrets.get('secret/common');
+    console.log(`got ${JSON.stringify(v1)} from vault common`);
 
-  // reading the common secret
-  const v1 = await Secrets.get("secret/common")
-  console.log(`got ${JSON.stringify(v1)} from vault common`)
-
-  // reading the common secret again(it hits the cache as the stdout print suggests)
-  const v2 = await Secrets.get("secret/common")
-  console.log(`got ${JSON.stringify(v2)} from vault common...the cached value again...\n\n`)
+    // reading the common secret again(it hits the cache as the stdout print suggests)
+    const v2 = await Secrets.get('secret/common');
+    console.log(`got ${JSON.stringify(v2)} from vault common...the cached value again...\n\n`);
 }
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 async function main() {
-  demoOsVars();
-  await demoConfig();
-  await demoSecrets();
+    demoOsVars();
+    await demoConfig();
+    await demoSecrets();
 }
 
 main();
