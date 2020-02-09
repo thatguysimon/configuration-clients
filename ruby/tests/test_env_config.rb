@@ -25,7 +25,8 @@ MOCK_DATA = {
 
 ENV['TWIST_ENV'] = 'dummy_env'
 OSVars.instance.init
-loader = GithubMockEnvConfig.new('dummy_env')
+loader = GithubMockEnvConfig.new
+loader.set_env('dummy_env', [])
 loader.mock_set_categories([GLOBAL_CATEGORY, GENE_CATEGORY])
 loader.mock_set_data(MOCK_DATA)
 EnvConfig.instance.inject_loader(loader)

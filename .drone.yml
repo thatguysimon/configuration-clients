@@ -6,9 +6,10 @@ pipeline:
       - cd python
       - pip install invoke
       - inv install
+      - inv lint
       - inv test
     when:
-      branch: [ node-port, master ]
+      branch: [ master ]
 
   build-test-node:
     image: node:lts-alpine3.9
@@ -16,9 +17,10 @@ pipeline:
     commands:
       - cd node
       - npm install
+      - npm run lint
       - npm run test
     when:
-      branch: [ node-port, master ]
+      branch: [ master ]
 
   build-test-ruby:
     image: docker.twistbioscience-staging.com/ecommerce_web:ruby-2.6.3
@@ -31,4 +33,4 @@ pipeline:
       - yardoc src/*
       - ruby -Ilib:test tests/*
     when:
-      branch: [ ruby-port, master ]
+      branch: [ master ]

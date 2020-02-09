@@ -14,6 +14,7 @@ type conversions and defaults
 #############################################################################
 
 import os
+import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 
 from .os_vars import OSVars
@@ -22,10 +23,17 @@ from .os_vars import OSVars
 # IMPLEMENTATION                                                            #
 #############################################################################
 TWIST_ENV_KEY = "TWIST_ENV"
+CONFIGURATION_BASE_KEY = "CONFIG_BASE_ENV"
+DEFAULT_ENV_FALLBACK = ["master"]
 
 
 OSVars.register_mandatory(
     TWIST_ENV_KEY, "Running environment var for twist modules", str
+)
+OSVars.register(
+    CONFIGURATION_BASE_KEY,
+    f"Configuration environment to override {TWIST_ENV_KEY}",
+    str,
 )
 
 
@@ -129,10 +137,29 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
         EnvConfig.__instance = self
         self.__env = os.environ[TWIST_ENV_KEY]
+
+        # someone is overriding the running environment to pull config from somewhere else
+        if CONFIGURATION_BASE_KEY in os.environ:
+            self.__env = os.environ[CONFIGURATION_BASE_KEY]
+            print(
+                f"**** !!! PULLING CONFIGURATION from {self.__env} instead of {os.environ[TWIST_ENV_KEY]} because overriding {CONFIGURATION_BASE_KEY} is provided"
+            )
         self.__config_json = {}
         self.__config_loader = None
         # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
         self.__config_categories = {"___dummyKey__"}
+        self.__env_fallback_list = DEFAULT_ENV_FALLBACK
+
+    def set_env_fallback(self, fallback_list):
+        """
+        A list of environments that if the current running environment (indicated by TWIST_ENV)
+        is not present (ex. branch does not exist) the list will provide another branch to fallback to.
+        The list will be used from first to last (["ONE", "TWO", "master"] if TWIST_ENV branch doesn't exist, then ONE, then TWO, finally master
+
+        Arguments:
+            fallback_list {[list]} -- list of branch names to fallback to
+        """
+        self.__env_fallback_list = fallback_list
 
     def set_loader(self, config_loader=None):
         """
@@ -142,7 +169,13 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
             config_loader {EnvConfigLoader} -- the concrete configuration loader
         """
         if config_loader is None:
-            config_loader = EnvConfigLoaderFactory().get_loader(self.__env)
+            config_loader = EnvConfigLoaderFactory().get_loader()
+            env_exists = config_loader.set_env(self.__env, self.__env_fallback_list)
+            if not env_exists:
+                print(
+                    f"could not find configuration env using the following fallback list: {[self.__env] + self.__env_fallback_list}"
+                )
+                sys.exit(1)
 
         self.__config_loader = config_loader
         # for the first time, query all environment existing categories.
