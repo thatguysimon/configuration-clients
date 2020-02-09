@@ -25,9 +25,22 @@ class EnvConfigLoader(ABC):
     To be injected into EnvConfig (see EnvConfig::load_config)
     """
 
-    def __init__(self, environment):
+    def __init__(self):
         super().__init__()
+
+    def set_env(self, environment, fallback_list):
         self._env = environment
+        self._fallback_list = fallback_list
+        return self.verify_env_or_fallback()
+
+    @abstractmethod
+    def verify_env_or_fallback(self):
+        """
+        This method should verify that current self._env is valid and if not,
+        it should try another env provided by self._fallback_list (usually it should be only "master")
+        and if none exists - it shall return False
+        """
+        pass
 
     @abstractmethod
     def load(self):
@@ -40,4 +53,8 @@ class EnvConfigLoader(ABC):
 
     @abstractmethod
     def list_categories(self):
+        """
+        This should return a list of env found categories list
+        (ex. ["SYSTEM", "GLOBAL", "ECOMMERCE" ...])
+        """
         pass

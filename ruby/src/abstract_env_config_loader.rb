@@ -1,7 +1,14 @@
 # abstract class to all env config loaders
 class EnvConfigLoader
-  def initialize(environment)
+  def set_env(environment, fallback_list)
     @environment = environment
+    @fallback_list = fallback_list
+    verify_env_or_fallback
+  end
+
+  # expected to verify existence and validity of @env and fallback to other env in list
+  def verify_env_or_fallback
+    raise NotImplementedError
   end
 
   # expected to return the Hash representation of a given category (eg. config .json file)

@@ -6,6 +6,8 @@ import IEnvConfigLoader from './IEnvConfigLoader';
 
 // TODO: the below should be common to this monorepo (share with with python, ruby etc.)
 const TWIST_ENV_KEY = 'TWIST_ENV';
+const CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV';
+const DEFAULT_ENV_FALLBACK = ['master'];
 
 export default class EnvConfig {
     private static __theInstance: EnvConfig;
@@ -20,6 +22,8 @@ export default class EnvConfig {
     private __configLoader: IEnvConfigLoader | undefined;
 
     private __configCategories: Set<string>;
+
+    private __env_fallback: Array<string>;
 
     /**
      * The singleton access method
@@ -44,12 +48,32 @@ export default class EnvConfig {
             .get(TWIST_ENV_KEY)
             .required()
             .asString();
+
+        // someone is overriding the running environment to pull config from somewhere else
+        if (process.env[CONFIGURATION_BASE_KEY] !== undefined) {
+            this.__environment = `${env.get(CONFIGURATION_BASE_KEY).asString()}`;
+            console.log(`**** !!! PULLING CONFIGURATION from ${this.__environment} instead of 
+            ${process.env[TWIST_ENV_KEY]} because overriding ${CONFIGURATION_BASE_KEY} is provided`);
+        }
+
         // the config mem db
         this.__configJSON = {};
         // the concrete config loader (injected)
         this.__configLoader = undefined;
         // the below is a helper to hold collection of listed (not surely yet loaded) categories.
         this.__configCategories = new Set<string>();
+
+        this.__env_fallback = DEFAULT_ENV_FALLBACK;
+    }
+
+    /**
+     * @description A list of environments that if the current running environment (indicated by TWIST_ENV)
+     * is not present (ex. branch does not exist) the list will provide another branch to fallback to.
+     * The list will be used from first to last (["ONE", "TWO", "master"] if TWIST_ENV branch doesn't exist, then ONE, then TWO, finally master
+     * @param fallbackList  -- list of branch names to fallback to
+     */
+    public setEnvFallback(fallbackList: Array<string>): void {
+        this.__env_fallback = fallbackList;
     }
 
     /**
@@ -58,7 +82,17 @@ export default class EnvConfig {
      */
     public async setLoader(configLoader?: IEnvConfigLoader): Promise<void> {
         if (!configLoader) {
-            this.__configLoader = new EnvConfigLoaderFactory().getLoader(this.__environment);
+            this.__configLoader = new EnvConfigLoaderFactory().getLoader();
+            const envResult = await this.__configLoader.setEnv(this.__environment, this.__env_fallback);
+            if (!envResult) {
+                console.log(
+                    `could not find configuration env using the following fallback list: ${[
+                        this.__environment,
+                        ...this.__env_fallback,
+                    ]}`,
+                );
+                process.exit(1);
+            }
         } else {
             this.__configLoader = configLoader;
         }

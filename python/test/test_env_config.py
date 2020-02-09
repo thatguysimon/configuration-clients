@@ -39,7 +39,8 @@ class EnvConfigTester(unittest.TestCase):
     @patch.dict("os.environ", {TWIST_ENV_KEY: "dummy"})
     def setUp(self):
         self.testee = EnvConfig.instance()
-        self.conf_loader = GithubMockEnvConfig("dummy")
+        self.conf_loader = GithubMockEnvConfig()
+        self.conf_loader.set_env("dummy", [])
 
     def mock_conf(self, categories, data):
         self.conf_loader.mock_set_categories(categories)

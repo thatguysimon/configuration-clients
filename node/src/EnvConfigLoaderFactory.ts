@@ -7,7 +7,7 @@ import GithubEnvConfigLoader from './GithubEnvConfigLoader';
  * In case this library will provide multiple options, the instantiation should be made dynamically from config (env, arg)
  */
 export default class EnvConfigLoaderFactory {
-    public getLoader(env: string) {
-        return new GithubEnvConfigLoader(env);
+    public getLoader() {
+        return new GithubEnvConfigLoader();
     }
 }
