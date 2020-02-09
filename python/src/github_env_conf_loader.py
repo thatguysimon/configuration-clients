@@ -40,8 +40,8 @@ class GithubEnvConfigLoader(EnvConfigLoader):
     Reads and lists repo files.
     """
 
-    def __init__(self, environment):
-        super().__init__(environment)
+    def __init__(self):
+        super().__init__()
 
     def list_categories(self):
         return self.__get_repo_file_list()
@@ -79,6 +79,46 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             )
 
         return github_conf_token
+
+    def verify_env_or_fallback(self):
+        github_conf_token = GithubEnvConfigLoader.__get_github_token()
+        env_list = [self._env] + self._fallback_list
+
+        # checking branch exists on repo, otherwise falling back to other (from list)
+        for candidate_env in env_list:
+            # https://developer.github.com/v3/repos/branches/
+            github_url = f"https://api.github.com/repos/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/branches/{candidate_env}"
+
+            headers = {
+                "Accept-Encoding": "gzip, deflate",
+                "Accept": "application/json",
+                "Authorization": f"token {github_conf_token}",
+            }
+
+            print(
+                f"Validating existence of branch {candidate_env} on {CONFIGURATION_REPO}"
+            )
+
+            response = requests.get(github_url, headers=headers)
+
+            if response.status_code == 200:
+                print(
+                    f"branch {candidate_env} is verified. Using configuration from {candidate_env}"
+                )
+                self._env = candidate_env
+                return True
+
+            if response.status_code == 404:
+                print(
+                    f"{candidate_env} does not exist on {CONFIGURATION_REPO} trying next..."
+                )
+            else:
+                print(
+                    f"Unknown response code {response.status_code} while trying to verify branch {candidate_env} on {CONFIGURATION_REPO}"
+                )
+                return False
+
+        return False
 
     def __get_file_content(self, file_path, branch_name):
         github_conf_token = GithubEnvConfigLoader.__get_github_token()

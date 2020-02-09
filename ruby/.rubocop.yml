@@ -44,6 +44,8 @@ Style/BlockDelimiters:
   Exclude:
     - 'tests/**/*'
 
+Naming/AccessorMethodName:
+  Enabled: false
 # Rails/DynamicFindBy:
   # Enabled: false
 # Rails/FindBy:

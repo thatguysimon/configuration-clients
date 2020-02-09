@@ -3,8 +3,8 @@ require_relative '../src/abstract_env_config_loader'
 # Config environment aware config loader - mock.
 # Implements EnvConfigLoader in order to be injected into EnvConfig
 class GithubMockEnvConfig < EnvConfigLoader
-  def initialize(environment)
-    super(environment)
+  def verify_env_or_fallback
+    true
   end
 
   def mock_set_categories(categories)

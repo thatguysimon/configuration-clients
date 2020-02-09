@@ -7,22 +7,44 @@ require_relative 'env_config_loader_factory'
 # GLOBALS and CONSTANTS                                                     #
 #############################################################################
 TWIST_ENV_KEY = 'TWIST_ENV'
+CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV'
+DEFAULT_ENV_FALLBACK = ['master']
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
 
 OSVars.register_mandatory(TWIST_ENV_KEY, 'Running environment var for twist modules', String)
+OSVars.register(CONFIGURATION_BASE_KEY, "Configuration environment to override #{TWIST_ENV_KEY}", String)
 
 class EnvConfig
   include Singleton
 
   def initialize
     @__env = OSVars.get(TWIST_ENV_KEY)
+
+    # someone is overriding the running environment to pull config from somewhere else
+    if ENV[CONFIGURATION_BASE_KEY]
+      @__env = ENV[CONFIGURATION_BASE_KEY]
+      puts "**** !!! PULLING CONFIGURATION from #{@__env} instead of #{ENV[TWIST_ENV_KEY]}
+       because overriding #{CONFIGURATION_BASE_KEY} is provided"
+    end
+
     @__config = {}
     @__config_loader = nil
     # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
     @__config_categories = Set['___dummyKey__']
+    @__env_fallback_list = DEFAULT_ENV_FALLBACK
+  end
+
+  # A list of environments that if the current running environment (indicated by TWIST_ENV)
+  # is not present (ex. branch does not exist) the list will provide another branch to fallback to.
+  # The list will be used from first to last (["ONE", "TWO", "master"] if TWIST_ENV branch doesn't exist, then
+  # ONE, then TWO, finally master
+
+  # @param fallback_list [list] -- list of branch names to fallback to
+  def set_env_fallback(fallback_list)
+    @__env_fallback_list = fallback_list
   end
 
   # Dependency injection of a config loader that adheres to the EnvConfigLoader interface
@@ -32,7 +54,12 @@ class EnvConfig
   def inject_loader(config_loader = nil)
     # has anyone provided his loader implementation, use it, otherwise the factory will do.
     if config_loader.nil?
-      config_loader = EnvConfigLoaderFactory.new.get_loader(@__env)
+      config_loader = EnvConfigLoaderFactory.new.get_loader
+      env_exists = config_loader.set_env(@__env, @__env_fallback_list)
+      if env_exists == false
+        puts "could not find configuration env using the following fallback list: #{[@__env] + @__env_fallback_list}"
+        exit(1)
+      end
     end
 
     @__config_loader = config_loader
