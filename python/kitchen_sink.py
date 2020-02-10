@@ -1,8 +1,11 @@
-# import os
+import sys
 from src.env_config import EnvConfig
 from src.secrets import Secrets
 from src.os_vars import OSVars
+from src.config_builder import ConfigBuilder
 
+ConfigBuilder().build()
+sys.exit(0)
 
 #############################################################################
 # USAGE                                                                     #
