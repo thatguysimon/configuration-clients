@@ -1,4 +1,5 @@
 config:
+  provider: github
   categories:
     - GLOBAL
     - SYSTEM
@@ -6,7 +7,7 @@ config:
 env-vars:
   MANDATORY_INT:
     description: This is a mandatory env var that accepts only int values
-    is_mandatory: true
+    is_mandatory: false
     type: Int
   OPTIONAL_BOOL:
     description: This is an optional env var that accepts only boolean values (true, false, 0, 1)
