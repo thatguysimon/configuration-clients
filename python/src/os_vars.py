@@ -120,7 +120,7 @@ class OSVars:
                 value = os.environ[var_key]
 
             # type checking and casting
-            if var_obj["var_type"] != str:
+            if var_obj["var_type"] != str and value is not None:
                 try:
                     value = var_obj["var_type"](value)
                 except Exception as ex:
