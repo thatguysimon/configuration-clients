@@ -31,6 +31,6 @@ pipeline:
       - bundle install
       - rubocop src tests *.rb
       - yardoc src/*
-      - ruby -Ilib:test tests/*
+      - ruby -Ilib:test tests/test_*
     when:
       branch: [ master ]
