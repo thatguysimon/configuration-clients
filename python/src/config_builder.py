@@ -16,7 +16,7 @@ class ConfigBuilder:
 
     def __build_os_vars(self, data):
         for (env_var_name, env_var_data) in data["env-vars"].items():
-            print(f"var name: {env_var_name}, var data: {env_var_data}")
+            # print(f"var name: {env_var_name}, var data: {env_var_data}")
             if "is_mandatory" in env_var_data and env_var_data["is_mandatory"] is True:
                 OSVars.register_mandatory(
                     env_var_name,
@@ -80,7 +80,7 @@ class ConfigBuilder:
         print(f"Attempting to read env config yaml from {path}")
         env_file = open(path, "r")
         data = yaml.load(env_file, Loader=yaml.CLoader)
-        print(f"yaml data is {data}")
+        # print(f"yaml data is {data}")
 
         self.__build_os_vars(data)
         OSVars.initialize()
