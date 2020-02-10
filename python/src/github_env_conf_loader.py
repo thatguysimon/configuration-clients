@@ -18,6 +18,7 @@ import json5
 import os
 from .abstract_env_conf_loader import EnvConfigLoader
 from .secrets import Secrets
+from .logger import Logger
 
 
 #############################################################################
@@ -58,7 +59,7 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             return json5.loads(config_raw_content)
 
         except Exception as ex:
-            print(
+            Logger.critical(
                 f'Failed loading and parsing config json content from branch/env "{self._env}"\nexception: {ex}'
             )
             return {}
@@ -95,25 +96,25 @@ class GithubEnvConfigLoader(EnvConfigLoader):
                 "Authorization": f"token {github_conf_token}",
             }
 
-            print(
+            Logger.debug(
                 f"Validating existence of branch {candidate_env} on {CONFIGURATION_REPO}"
             )
 
             response = requests.get(github_url, headers=headers)
 
             if response.status_code == 200:
-                print(
+                Logger.debug(
                     f"branch {candidate_env} is verified. Using configuration from {candidate_env}"
                 )
                 self._env = candidate_env
                 return True
 
             if response.status_code == 404:
-                print(
+                Logger.info(
                     f"{candidate_env} does not exist on {CONFIGURATION_REPO} trying next..."
                 )
             else:
-                print(
+                Logger.error(
                     f"Unknown response code {response.status_code} while trying to verify branch {candidate_env} on {CONFIGURATION_REPO}"
                 )
                 return False
@@ -132,7 +133,9 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             "Authorization": f"token {github_conf_token}",
         }
 
-        print(f'Fetching {file_path} from {github_url} on branch/env "{branch_name}"')
+        Logger.debug(
+            f'Fetching {file_path} from {github_url} on branch/env "{branch_name}"'
+        )
 
         response = requests.get(github_url, headers=headers)
 
@@ -166,7 +169,9 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             "Authorization": f"token {github_conf_token}",
         }
 
-        # print(f'Fetching file list from {github_api_url} on branch/env "{self._env}"')
+        Logger.debug(
+            f'Fetching file list from {github_api_url} on branch/env "{self._env}"'
+        )
 
         response = requests.get(github_api_url, headers=headers)
         files_json = response.json()

@@ -2,10 +2,12 @@
 
 import yaml
 import os
+import logging
 from .os_vars import OSVars
 from .env_config import EnvConfig
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .secrets import Secrets
+from .logger import Logger
 
 yaml_type_to_python = {"String": str, "Bool": bool, "Int": int, "Float": float}
 
@@ -72,6 +74,20 @@ class ConfigBuilder:
                         f"Failed fetching Secrets key {secret_key}. Error: {e}"
                     )
 
+    def __build_logger(self, data):
+        logging.getLogger("requests").setLevel(logging.WARNING)
+
+        log_level = None
+        colored = False
+
+        if "logger" in data:
+            if "level" in data["logger"]:
+                log_level = data["logger"]["level"]
+            if "colored" in data["logger"]:
+                colored = data["logger"]["colored"]
+
+        Logger.instance().initialize(log_level, colored)
+
     def build(self, path_to_env_yaml=None):
         path = path_to_env_yaml
         if path_to_env_yaml is None:
@@ -81,6 +97,8 @@ class ConfigBuilder:
         env_file = open(path, "r")
         data = yaml.load(env_file, Loader=yaml.CLoader)
         # print(f"yaml data is {data}")
+
+        self.__build_logger(data)
 
         self.__build_os_vars(data)
         OSVars.initialize()
