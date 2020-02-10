@@ -6,7 +6,7 @@ config:
     - SYSTEM
 
 env-vars:
-  # the below are defined by the Env Config and Secrets modules
+  # the below are already defined by the Env Config and Secrets modules
   # TWIST_ENV: mandatory, String
   # VAULT_USER: mandatory, String
   # VAULT_PASSWORD: mandatory, String
@@ -30,3 +30,7 @@ env-vars:
 secrets:
   required:
     - secret/common
+
+logger:
+  level: debug
+  colored: false

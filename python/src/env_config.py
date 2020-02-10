@@ -17,6 +17,7 @@ import os
 import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
+from .logger import Logger
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -140,7 +141,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         # someone is overriding the running environment to pull config from somewhere else
         if CONFIGURATION_BASE_KEY in os.environ:
             self.__env = os.environ[CONFIGURATION_BASE_KEY]
-            print(
+            Logger.info(
                 f"**** !!! PULLING CONFIGURATION from {self.__env} instead of {os.environ[TWIST_ENV_KEY]} because overriding {CONFIGURATION_BASE_KEY} is provided"
             )
         self.__config_json = {}
@@ -172,12 +173,12 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
         env_exists = config_loader.set_env(self.__env, self.__env_fallback_list)
         if not env_exists:
-            print(
+            Logger.error(
                 f"could not find configuration env using the following fallback list: {[self.__env] + self.__env_fallback_list}"
             )
             sys.exit(1)
 
-        print(f"Config loader has been set to: {config_loader}")
+        Logger.debug(f"Config loader has been set to: {config_loader}")
 
         self.__config_loader = config_loader
         # for the first time, query all environment existing categories.
@@ -198,7 +199,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         try:
             return self.__config_loader.load(category.lower())
         except Exception as ex:
-            print(
+            Logger.error(
                 f"Failed loading config for provided environment {self.__env}. Exception: {ex}"
             )
 
@@ -215,7 +216,6 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
     @staticmethod
     def __generate_get_function(func_name):
         def _func(self, section, key, default_value=None):
-            # print(f"in method {func_name} and section is {section}")
             return self.__get(func_name.lower(), section, key, default_value)
 
         return _func
@@ -234,7 +234,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
         # add the new category to the set so we know it exists
         EnvConfig.instance().__config_categories.add(category_name)
-        print(f"Configuration category {category_name} listed")
+        Logger.debug(f"Configuration category {category_name} listed")
 
     def __getattr__(self, key):
         if key not in self.__config_categories:
