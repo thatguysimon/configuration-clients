@@ -16,7 +16,6 @@ type conversions and defaults
 import os
 import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
-
 from .os_vars import OSVars
 
 #############################################################################
@@ -199,6 +198,10 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
             print(
                 f"Failed loading config for provided environment {self.__env}. Exception: {ex}"
             )
+
+    def require_category(self, category):
+        EnvConfig.load_configuration_category(category)
+        self.__load_config(category)
 
     def __load_categories(self):
         categories = self.__config_loader.list_categories()
