@@ -67,7 +67,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
   # implementation of absract method
   def verify_env_or_fallback
     github_conf_token = GithubEnvConfigLoader.__get_github_token
-    env_list = [@__environment] + @fallback_list
+    env_list = [@environment] + @fallback_list
 
     # checking branch exists on repo, otherwise falling back to other (from list)
     env_list.each do |candidate_env|

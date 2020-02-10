@@ -169,12 +169,15 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         """
         if config_loader is None:
             config_loader = EnvConfigLoaderFactory().get_loader()
-            env_exists = config_loader.set_env(self.__env, self.__env_fallback_list)
-            if not env_exists:
-                print(
-                    f"could not find configuration env using the following fallback list: {[self.__env] + self.__env_fallback_list}"
-                )
-                sys.exit(1)
+
+        env_exists = config_loader.set_env(self.__env, self.__env_fallback_list)
+        if not env_exists:
+            print(
+                f"could not find configuration env using the following fallback list: {[self.__env] + self.__env_fallback_list}"
+            )
+            sys.exit(1)
+
+        print(f"Config loader has been set to: {config_loader}")
 
         self.__config_loader = config_loader
         # for the first time, query all environment existing categories.
@@ -193,7 +196,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
             )
 
         try:
-            return self.__config_loader.load(category)
+            return self.__config_loader.load(category.lower())
         except Exception as ex:
             print(
                 f"Failed loading config for provided environment {self.__env}. Exception: {ex}"

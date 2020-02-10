@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 import yaml
+import os
 from .os_vars import OSVars
 from .env_config import EnvConfig
+from .env_conf_loader_factory import EnvConfigLoaderFactory
+from .secrets import Secrets
 
 yaml_type_to_python = {"String": str, "Bool": bool, "Int": int, "Float": float}
 
@@ -37,11 +40,16 @@ class ConfigBuilder:
             return
 
         conf_data = data["config"]
-        conf_provider = None
+        conf_provider_name = None
         if "provider" in conf_data:
-            conf_provider = conf_data["provider"]
+            conf_provider_name = conf_data["provider"]
 
-        EnvConfig.set_loader(conf_provider)
+        conf_loader = EnvConfigLoaderFactory().get_loader(conf_provider_name)
+
+        if "parent_environments" in conf_data:
+            EnvConfig.instance().set_env_fallback(conf_data["parent_environments"])
+
+        EnvConfig.instance().set_loader(conf_loader)
 
         if "categories" not in conf_data:
             return
@@ -49,13 +57,34 @@ class ConfigBuilder:
         for category in conf_data["categories"]:
             EnvConfig.instance().require_category(category)
 
-    def build(self):
-        env_file = open("../.envConfig.yml", "r")
+    def __build_secrets(self, data):
+        if "secrets" not in data:
+            return
+
+        secrets_conf = data["secrets"]
+
+        if "required" in secrets_conf:
+            for secret_key in secrets_conf["required"]:
+                try:
+                    Secrets.get(secret_key)
+                except Exception as e:
+                    raise Exception(
+                        f"Failed fetching Secrets key {secret_key}. Error: {e}"
+                    )
+
+    def build(self, path_to_env_yaml=None):
+        path = path_to_env_yaml
+        if path_to_env_yaml is None:
+            path = os.getcwd() + "/.envConfig.yml"
+
+        print(f"Attempting to read env config yaml from {path}")
+        env_file = open(path, "r")
         data = yaml.load(env_file, Loader=yaml.CLoader)
         print(f"yaml data is {data}")
 
         self.__build_os_vars(data)
         OSVars.initialize()
 
-        self.__build_conf(data)
+        self.__build_secrets(data)
 
+        self.__build_conf(data)

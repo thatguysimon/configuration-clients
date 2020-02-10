@@ -55,16 +55,21 @@ class EnvConfig
     # has anyone provided his loader implementation, use it, otherwise the factory will do.
     if config_loader.nil?
       config_loader = EnvConfigLoaderFactory.new.get_loader
-      env_exists = config_loader.set_env(@__env, @__env_fallback_list)
-      if env_exists == false
-        puts "could not find configuration env using the following fallback list: #{[@__env] + @__env_fallback_list}"
-        exit(1)
-      end
+    end
+    env_exists = config_loader.set_env(@__env, @__env_fallback_list)
+    if env_exists == false
+      puts "could not find configuration env using the following fallback list: #{[@__env] + @__env_fallback_list}"
+      exit(1)
     end
 
     @__config_loader = config_loader
     # for the first time, query all environment existing categories.
     __load_categories
+  end
+
+  def require_category(category)
+    __load_configuration_category(category)
+    __load_config(category)
   end
 
   # using injected config loader to get a hold of the data
@@ -77,7 +82,7 @@ class EnvConfig
     end
 
     begin
-      @__config_loader.load(category)
+      @__config_loader.load(category.downcase)
     rescue StandardError => e
       puts "Failed loading config for provided environment #{@__env}. Exception: #{e}"
     end

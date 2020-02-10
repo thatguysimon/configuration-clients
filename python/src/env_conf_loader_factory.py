@@ -19,7 +19,7 @@ helper to generating a conf loader per strategy
 
 
 class EnvConfigLoaderFactory:
-    def get_loader(self):
+    def get_loader(self, name=None):
         """
         The most naive and yet decoupled factory for config loader.
         In case someone changes the implementation to gitlab or something else,
@@ -30,4 +30,14 @@ class EnvConfigLoaderFactory:
         """
         from .github_env_conf_loader import GithubEnvConfigLoader
 
-        return GithubEnvConfigLoader()
+        loaders_map = {
+            "github": GithubEnvConfigLoader,
+            "default": GithubEnvConfigLoader,
+        }
+
+        loader = loaders_map["default"]
+
+        if name is not None:
+            loader = loaders_map[name]
+
+        return loader()
