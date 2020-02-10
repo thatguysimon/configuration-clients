@@ -32,11 +32,11 @@ In order to test-run this kitchen sink:
 # OSVars.register_mandatory("TWIST_ENV", "running environment name", str)
 
 # optional env var with default value
-OSVars.register("COMPANY", "company name", str, "Twist")
+# OSVars.register("COMPANY", "company name", str, "Twist")
 
 # we are done with process initialization, lets start consuming vars
 # it is important to place this call in your __main__
-OSVars.initialize()
+# OSVars.initialize()
 
 v = OSVars.get("COMPANY")
 print(f"Company name provided by os env is: {v} and its type is: {type(v)}")
