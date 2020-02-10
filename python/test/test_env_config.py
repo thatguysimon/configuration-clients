@@ -4,11 +4,14 @@
 # IMPORT MODULES                                                            #
 #############################################################################
 import unittest
-from mock import patch
+from mock import patch, Mock
 from src.env_config import EnvConfig
 from src.env_config import TWIST_ENV_KEY
+
+from src.logger import Logger
 from .mock_env_loader import GithubMockEnvConfig
 
+Logger.instance = Mock()
 
 GLOBAL_CATEGORY = "GLOBAL"
 GENE_CATEGORY = "GENE"
