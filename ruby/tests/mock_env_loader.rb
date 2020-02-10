@@ -23,7 +23,7 @@ class GithubMockEnvConfig < EnvConfigLoader
     begin
       return @__data[category.upcase]
     rescue StandardError => e
-      puts "Failed loading and parsing config json content from branch/env '{@__environment}'\nexception: #{e}"
+      puts "Failed loading and parsing config json content from branch/env '#{@__environment}'\nexception: #{e}"
     end
 
     {}

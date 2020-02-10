@@ -1,6 +1,7 @@
 require_relative 'src/os_vars.rb'
 require_relative 'src/secrets.rb'
 require_relative 'src/env_config.rb'
+require_relative 'src/config_builder.rb'
 
 #############################################################################
 # USAGE                                                                     #
@@ -28,11 +29,12 @@ require_relative 'src/env_config.rb'
 # OSVars.register_mandatory('VAULT_PASSWORD", "Vault secret management password", String)
 # OSVars.register_mandatory('TWIST_ENV", "running environment name", String)
 
-# optional env var with default value
-OSVars.register('COMPANY', 'company name', String, 'Twist')
+# optional env var with default value - already done via yaml
+# OSVars.register('COMPANY', 'company name', String, 'Twist')
 
 # must be called after all required (mandatory and optional) env vars have been registered.
-OSVars.instance.init
+# already done via yaml
+# OSVars.instance.init
 
 v = OSVars.get('COMPANY')
 puts "Company name provided by os env is: #{v} and its type is: #{v.class}"

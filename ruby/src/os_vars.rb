@@ -50,7 +50,7 @@ class OSVars
       end
 
       # type checking and casting
-      if var_obj['var_type'].name != 'String'
+      if var_obj['var_type'].name != 'String' && !value.nil?
         begin
           value = dynamic_cast(var_obj['var_type'], value)
         rescue StandardError => e
