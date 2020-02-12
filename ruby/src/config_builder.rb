@@ -1,4 +1,5 @@
 require 'yaml'
+require_relative 'utils/logger'
 require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
 require_relative 'env_config'
@@ -25,7 +26,6 @@ class ConfigBuilder
       return
     end
 
-    # for (env_var_name, env_var_data) in data["env-vars"].items():
     data['env-vars'].each do |env_var_name, env_var_data|
       # puts "var name: #{env_var_name}, var data: #{env_var_data}"
       if env_var_data['is_mandatory'] == true
@@ -92,6 +92,22 @@ class ConfigBuilder
     end
   end
 
+  def __build_logger(data)
+    log_level = nil
+
+    if data['logger']
+      if data['logger']['level']
+        log_level = data['logger']['level']
+      end
+      # not supported at the moment
+      # if data['logger']['colored']
+      #   colored = data['logger']['colored']
+      # end
+    end
+
+    Log.instance.init(log_level)
+  end
+
   def build(path_to_env_yaml = nil)
     actual_path = path_to_env_yaml
     if path_to_env_yaml.nil?
@@ -106,6 +122,8 @@ class ConfigBuilder
 
     # puts "yaml data is #{data}"
 
+    __build_logger(data)
+
     __build_os_vars(data)
     OSVars.instance.init
 
@@ -114,6 +132,3 @@ class ConfigBuilder
     __build_conf(data)
   end
 end
-
-cb = ConfigBuilder.new
-cb.build('../.envConfig.yml')

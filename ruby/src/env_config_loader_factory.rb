@@ -1,4 +1,4 @@
-require_relative './github_env_conf_loader.rb'
+require_relative 'github_env_conf_loader'
 
 LOADERS_MAP = {
   'github' => GithubEnvConfigLoader,

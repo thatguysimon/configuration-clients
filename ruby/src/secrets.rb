@@ -1,6 +1,7 @@
 require 'singleton'
 require 'vault'
 require_relative 'os_vars'
+require_relative 'utils/logger'
 
 #############################################################################
 # GLOBALS and CONSTANTS                                                     #
@@ -39,7 +40,7 @@ class Secrets
     end
 
     vault_url = OSVars.get(VAULT_URL_KEY)
-    puts "connecting to vault via #{vault_url}"
+    Log.info("connecting to vault via #{vault_url}")
 
     begin
       # TODO: might need to provide interface to services insisting on configuring vault client
