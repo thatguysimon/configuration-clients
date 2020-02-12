@@ -2,6 +2,10 @@ require_relative 'src/os_vars.rb'
 require_relative 'src/secrets.rb'
 require_relative 'src/env_config.rb'
 require_relative 'src/config_builder.rb'
+require_relative 'src/utils/logger'
+
+cb = ConfigBuilder.new
+cb.build('../.envConfig.yml')
 
 #############################################################################
 # USAGE                                                                     #
@@ -24,20 +28,8 @@ require_relative 'src/config_builder.rb'
 # OS / ENVIRONMENT VARS                                                     #
 #############################################################################
 
-# mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
-# OSVars.register_mandatory('VAULT_USER", "Vault secret management user name", String)
-# OSVars.register_mandatory('VAULT_PASSWORD", "Vault secret management password", String)
-# OSVars.register_mandatory('TWIST_ENV", "running environment name", String)
-
-# optional env var with default value - already done via yaml
-# OSVars.register('COMPANY', 'company name', String, 'Twist')
-
-# must be called after all required (mandatory and optional) env vars have been registered.
-# already done via yaml
-# OSVars.instance.init
-
 v = OSVars.get('COMPANY')
-puts "Company name provided by os env is: #{v} and its type is: #{v.class}"
+Log.info("Company name provided by os env is: #{v} and its type is: #{v.class}")
 
 #############################################################################
 # ENV CONFIGURATION (using github)                                          #
@@ -48,11 +40,11 @@ puts "Company name provided by os env is: #{v} and its type is: #{v.class}"
 
 # attempting to read the "all" section from the system.json conf file in the configuration repo
 v = EnvConfig.get('SYSTEM', 'all', nil)
-puts "got #{v} from system conf [all] section...\n"
+Log.info("got #{v} from system conf [all] section...\n")
 
 # attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
 v = EnvConfig.get('SYSTEM', 'all', 'some_demo_key')
-puts "got #{v} from system conf [all.some_demo_key]...\n"
+Log.info("got #{v} from system conf [all.some_demo_key]...\n")
 
 # attempting to read a non existing config from the global.json conf file in the configuration repo
 v = EnvConfig.get(
@@ -61,7 +53,7 @@ v = EnvConfig.get(
   'non_existing_key',
   ['this is a default value as a single list element']
 )
-puts "got #{v} from system conf global section...\n"
+Log.info("got #{v} from system conf global section...\n")
 
 #############################################################################
 # READING SECRETS                                                           #
@@ -69,11 +61,11 @@ puts "got #{v} from system conf global section...\n"
 
 # reading the common secret
 v = Secrets.get('secret/common')
-puts "got #{v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n"
+Log.info("got #{v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n")
 
 # reading the common secret again (it hits the cache as the stdout print suggests)
 v = Secrets.get('secret/common')
-puts "got #{v} from vault common...the cached value again...\n\n"
+Log.info("got #{v} from vault common...the cached value again...\n\n")
 
 # attempting to read dummy from the dummy.json conf file that is not in existence
 # in the conf repo - this should fail
