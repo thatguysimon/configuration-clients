@@ -1,6 +1,5 @@
 require 'logger'
 require 'singleton'
-require 'termcolor'
 
 LOG_LEVEL_STRING_TO_ENUM = {
   'info' => Logger::INFO,
