@@ -28,18 +28,6 @@ In order to test-run this kitchen sink:
 # OS / ENVIRONMENT VARS                                                     #
 #############################################################################
 
-# mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
-# OSVars.register_mandatory("VAULT_USER", "Vault secret management user name", str)
-# OSVars.register_mandatory("VAULT_PASSWORD", "Vault secret management password", str)
-# OSVars.register_mandatory("TWIST_ENV", "running environment name", str)
-
-# optional env var with default value
-# OSVars.register("COMPANY", "company name", str, "Twist")
-
-# we are done with process initialization, lets start consuming vars
-# it is important to place this call in your __main__
-# OSVars.initialize()
-
 v = OSVars.get("COMPANY")
 Logger.info(f"Company name provided by os env is: {v} and its type is: {type(v)}")
 
