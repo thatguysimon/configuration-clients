@@ -41,7 +41,7 @@ PLATFORMS
 
 DEPENDENCIES
   abstraction (~> 0.0.4)
-  hjson
+  hjson (~> 0.1.2)
   minitest
   minitest-mock_expectations
   minitest-reporters
