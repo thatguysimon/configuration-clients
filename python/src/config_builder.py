@@ -36,6 +36,8 @@ class ConfigBuilder:
                     yaml_type_to_python[env_var_data["type"]],
                     default_val,
                 )
+        # finally
+        OSVars.initialize()
 
     def __build_conf(self, data):
         if "config" not in data:
@@ -101,7 +103,6 @@ class ConfigBuilder:
         self.__build_logger(data)
 
         self.__build_os_vars(data)
-        OSVars.initialize()
 
         self.__build_secrets(data)
 

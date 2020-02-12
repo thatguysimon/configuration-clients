@@ -15,11 +15,13 @@
   "license": "ISC",
   "dependencies": {
     "@types/json5": "0.0.30",
+    "@types/yaml": "^1.2.0",
     "axios": "^0.19.2",
     "env-var": "^5.2.0",
     "json5": "^2.1.1",
     "node-vault": "^0.9.12",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yaml": "^1.7.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
