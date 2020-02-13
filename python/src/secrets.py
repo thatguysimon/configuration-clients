@@ -12,6 +12,7 @@ encapsulation to secret management api using Vault
 #############################################################################
 import hvac
 from .os_vars import OSVars
+from .logger import Logger
 
 # TODO: move to a common folder within the config clients monorepo
 VAULT_URL_KEY = "VAULT_URL"
@@ -75,7 +76,7 @@ class Secrets:
 
         vault_url = OSVars.get(VAULT_URL_KEY)
 
-        print(f"connecting to vault on: {vault_url}")
+        Logger.info(f"connecting to vault on: {vault_url}")
 
         vault_user = OSVars.get(VAULT_USER_KEY)
         vault_pass = OSVars.get(VAULT_PASS_KEY)
@@ -84,10 +85,10 @@ class Secrets:
             self.__client = hvac.Client(url=vault_url, timeout=30)
             self.__client.auth_userpass(vault_user, vault_pass)
         except Exception as ex:
-            print(f"Failed connecting to vault. error: {ex}")
+            Logger.error(f"Failed connecting to vault. error: {ex}")
             return False
 
-        print(f"connected to vault on {vault_url}")
+        Logger.debug(f"connected to vault on {vault_url}")
         return True
 
     @staticmethod
@@ -143,7 +144,7 @@ class Secrets:
         # secret = self.__client.secrets.kv.v2.read_secret_version(path)
         if secret is None or "data" not in secret:
             err = "Failed to read secret"
-            print(err)
+            Logger.error(err)
             raise Exception(err)
 
         self.__cache[path] = secret["data"]

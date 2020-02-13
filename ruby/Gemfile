@@ -18,7 +18,7 @@ group :test do
 end
 
 # JSON parsing
-gem 'hjson'
+gem 'hjson', '~>0.1.2'
 
 # Vault integration for fetching secrets
 gem 'vault', '~> 0.10.1'

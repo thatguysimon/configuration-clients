@@ -83,21 +83,24 @@ export default class EnvConfig {
     public async setLoader(configLoader?: IEnvConfigLoader): Promise<void> {
         if (!configLoader) {
             this.__configLoader = new EnvConfigLoaderFactory().getLoader();
-            const envResult = await this.__configLoader.setEnv(this.__environment, this.__env_fallback);
-            if (!envResult) {
-                console.log(
-                    `could not find configuration env using the following fallback list: ${[
-                        this.__environment,
-                        ...this.__env_fallback,
-                    ]}`,
-                );
-                process.exit(1);
-            }
         } else {
             this.__configLoader = configLoader;
         }
-
+        const envResult = await this.__configLoader.setEnv(this.__environment, this.__env_fallback);
+        if (!envResult) {
+            console.log(
+                `could not find configuration env using the following fallback list: ${[
+                    this.__environment,
+                    ...this.__env_fallback,
+                ]}`,
+            );
+            process.exit(1);
+        }
         await this.__loadCategories();
+    }
+
+    public async requireCategory(category: string): Promise<boolean> {
+        return this.__loadConfig(category);
     }
 
     /**

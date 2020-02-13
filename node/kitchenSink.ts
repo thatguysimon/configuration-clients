@@ -1,6 +1,7 @@
 import EnvConfig from './src/EnvConfig';
-import { OSVarType, OSVars } from './src/OSVars';
+import { OSVars } from './src/OSVars';
 import Secrets from './src/Secrets';
+import ConfigBuilder from './src/ConfigBuilder';
 
 // #############################################################################
 // # USAGE                                                                     #
@@ -25,21 +26,6 @@ import Secrets from './src/Secrets';
 // #############################################################################
 
 function demoOsVars() {
-    /*
-    mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
-  
-    OSVars.register_mandatory("VAULT_USER", "Vault secret management user name", str)
-    OSVars.register_mandatory("VAULT_PASSWORD", "Vault secret management password", str)
-    OSVars.register_mandatory("TWIST_ENV", "running environment name", str)
-  */
-
-    // optional env var with default value
-    OSVars.register('COMPANY', 'company name', OSVarType.String, 'Twist');
-
-    // we are done with process initialization, lets start consuming vars
-    // it is important to place this call in your __main__
-    OSVars.initialize();
-
     const v = OSVars.get('COMPANY');
     console.log(`Company name provided by os env is: ${v} and its type is: ${typeof v}`);
 }
@@ -83,6 +69,8 @@ async function demoSecrets(): Promise<void> {
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 async function main() {
+    const cb = new ConfigBuilder();
+    await cb.build('../.envConfig.yml');
     demoOsVars();
     await demoConfig();
     await demoSecrets();

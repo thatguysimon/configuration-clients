@@ -2,6 +2,7 @@ require 'net/http'
 require 'hjson'
 
 require_relative 'abstract_env_config_loader'
+require_relative 'utils/logger'
 
 #############################################################################
 # GLOBALS and CONSTANTS                                                     #
@@ -35,7 +36,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
       config_raw_content = __get_file_content("#{category}.json", @__environment)
       return Hjson.parse(config_raw_content)
     rescue StandardError => e
-      puts "Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e}"
+      Log.error("Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e}")
     end
     {}
   end
@@ -53,7 +54,6 @@ class GithubEnvConfigLoader < EnvConfigLoader
     else
       # otherwise fetch from secrets
       common = Secrets.get('secret/common')
-      puts "common is: #{common}"
       github_conf_token = common.fetch(:GIT_CONFIG_TOKEN)
     end
 
@@ -67,7 +67,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
   # implementation of absract method
   def verify_env_or_fallback
     github_conf_token = GithubEnvConfigLoader.__get_github_token
-    env_list = [@__environment] + @fallback_list
+    env_list = [@environment] + @fallback_list
 
     # checking branch exists on repo, otherwise falling back to other (from list)
     env_list.each do |candidate_env|
@@ -81,7 +81,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
         'Authorization' => "token #{github_conf_token}"
       }
 
-      puts "Validating existence of branch #{candidate_env} on #{CONFIGURATION_REPO}"
+      Log.debug("Validating existence of branch #{candidate_env} on #{CONFIGURATION_REPO}")
 
       net = Net::HTTP.new(github_base_url, 443)
       net.use_ssl = true
@@ -91,15 +91,16 @@ class GithubEnvConfigLoader < EnvConfigLoader
       # puts "RESPONSE STATUS: #{response.code} on url: #{github_base_url}/#{github_path} amnd header: #{headers}"
 
       if response.code == '200'
-        puts "branch #{candidate_env} is verified. Using configuration from #{candidate_env}"
+        Log.debug("branch #{candidate_env} is verified. Using configuration from #{candidate_env}")
         @__environment = candidate_env
         return true
       end
 
       if response.code == '404'
-        puts "#{candidate_env} does not exist on #{CONFIGURATION_REPO} trying next..."
+        Log.warning("#{candidate_env} does not exist on #{CONFIGURATION_REPO} trying next...")
       else
-        puts "Unknown response code #{response.code} while trying to verify branch #{candidate_env} on #{CONFIGURATION_REPO}"
+        Log.error("Unknown response code #{response.code} while trying to verify \
+          branch #{candidate_env} on #{CONFIGURATION_REPO}")
         return false
       end
     end
@@ -122,7 +123,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
       'Authorization' => "token #{github_conf_token}"
     }
 
-    puts "Fetching #{file_path} from #{github_base_url}#{github_path} on branch/env #{branch_name}"
+    Log.debug("Fetching #{file_path} from #{github_base_url}#{github_path} on branch/env #{branch_name}")
 
     net = Net::HTTP.new(github_base_url, 443)
     net.use_ssl = true
@@ -133,7 +134,6 @@ class GithubEnvConfigLoader < EnvConfigLoader
     raise "Could not find configuration file #{file_path} in configuration repo in branch = #{@__environment}" \
     if response.code != '200'
 
-    puts "remote file content(#{file_path}): #{response.body}"
     response.body
   end
 
@@ -154,7 +154,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
       'Authorization' => "token #{github_conf_token}"
     }
 
-    puts "Fetching file list from #{github_base_url}#{github_path} on branch/env #{@__environment}"
+    Log.debug("Fetching file list from #{github_base_url}#{github_path} on branch/env #{@__environment}")
 
     uri = URI('https://' + github_base_url + github_path)
     params = { 'ref' => @__environment }
