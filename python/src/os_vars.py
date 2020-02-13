@@ -12,6 +12,7 @@ encapsulation to environment variables definition, validation and access
 #############################################################################
 import os
 import sys
+from .logger import Logger
 
 # supposedly, the only unregistered / declared env vars!
 DUMP_CONFIG_ENV_VAR = "__DUMP_CONFIG"
@@ -84,7 +85,7 @@ class OSVars:
         self.__initialized = True
 
     def __critical_fault(self, message):
-        print(f"ENV VAR ERROR: {message}")
+        Logger.error(f"ENV VAR ERROR: {message}")
         if self.__can_exit is True:
             sys.exit(1)
 
@@ -120,7 +121,7 @@ class OSVars:
                 value = os.environ[var_key]
 
             # type checking and casting
-            if var_obj["var_type"] != str:
+            if var_obj["var_type"] != str and value is not None:
                 try:
                     value = var_obj["var_type"](value)
                 except Exception as ex:

@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require_relative '../src/env_config'
 require_relative './mock_env_loader'
+require_relative '../src/utils/logger'
 
 #############################################################################
 # TEST GLOBAL SETUP                                                         #
@@ -22,6 +23,8 @@ MOCK_DATA = {
   GLOBAL_CATEGORY => { SECTION_NAME => { GLOBAL_KEY_NAME_A => GLOBAL_KEY_VALUE_A } },
   GENE_CATEGORY => { SECTION_NAME => { GENE_KEY_NAME_A => GENE_KEY_VALUE_A } }
 }
+
+Log.instance.init('info')
 
 ENV['TWIST_ENV'] = 'dummy_env'
 OSVars.instance.init

@@ -1,6 +1,7 @@
 require 'singleton'
 require 'vault'
 require_relative 'os_vars'
+require_relative 'utils/logger'
 
 #############################################################################
 # GLOBALS and CONSTANTS                                                     #
@@ -39,7 +40,7 @@ class Secrets
     end
 
     vault_url = OSVars.get(VAULT_URL_KEY)
-    puts "connecting to vault via #{vault_url}"
+    Log.info("connecting to vault via #{vault_url}")
 
     begin
       # TODO: might need to provide interface to services insisting on configuring vault client
@@ -84,7 +85,7 @@ class Secrets
     # or read remote
     Vault.with_retries(Vault::HTTPConnectionError, Vault::HTTPError) do |attempt, e|
       # Note: Using puts since Rails logger won't yet be initialized
-      puts({ message: "Received exception #{e} from Vault - attempt #{attempt}" }.to_json) if e
+      raise "Failed fetching secret #{path_to_secret} from Vault. exception #{e} - attempt #{attempt}" if e
 
       secret_hash = Vault.logical.read(path_to_secret).data
       @__secrets[path_to_secret] = secret_hash

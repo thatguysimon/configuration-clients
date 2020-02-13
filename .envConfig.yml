@@ -1,0 +1,36 @@
+config:
+  provider: github
+  parent_environments: ['master']
+  categories:
+    - GLOBAL
+    - SYSTEM
+
+env-vars:
+  # the below are already defined by the Env Config and Secrets modules
+  # TWIST_ENV: mandatory, String
+  # VAULT_USER: mandatory, String
+  # VAULT_PASSWORD: mandatory, String
+  COMPANY:
+    description: This is a string company name just for demo
+    type: String
+    default: Twist
+  MINT:
+    description: This is a mandatory integer (hence mint) env var that accepts only int values
+    is_mandatory: true
+    type: Int
+  OPTIONAL_BOOL:
+    description: This is an optional env var that accepts only boolean values (true, false, 0, 1)
+    type: Bool
+    default: false
+  OPTIONAL_STRING:
+    description: This is an optional env var that accepts any string value
+    type: String
+    default: Im a string
+
+secrets:
+  required:
+    - secret/common
+
+logger:
+  level: debug
+  colored: false

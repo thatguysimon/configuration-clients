@@ -2,6 +2,7 @@ require 'singleton'
 require 'set'
 require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
+require_relative 'utils/logger'
 
 #############################################################################
 # GLOBALS and CONSTANTS                                                     #
@@ -26,8 +27,8 @@ class EnvConfig
     # someone is overriding the running environment to pull config from somewhere else
     if ENV[CONFIGURATION_BASE_KEY]
       @__env = ENV[CONFIGURATION_BASE_KEY]
-      puts "**** !!! PULLING CONFIGURATION from #{@__env} instead of #{ENV[TWIST_ENV_KEY]}
-       because overriding #{CONFIGURATION_BASE_KEY} is provided"
+      Log.info("**** !!! PULLING CONFIGURATION from #{@__env} instead of #{ENV[TWIST_ENV_KEY]}
+       because overriding #{CONFIGURATION_BASE_KEY} is provided")
     end
 
     @__config = {}
@@ -55,16 +56,21 @@ class EnvConfig
     # has anyone provided his loader implementation, use it, otherwise the factory will do.
     if config_loader.nil?
       config_loader = EnvConfigLoaderFactory.new.get_loader
-      env_exists = config_loader.set_env(@__env, @__env_fallback_list)
-      if env_exists == false
-        puts "could not find configuration env using the following fallback list: #{[@__env] + @__env_fallback_list}"
-        exit(1)
-      end
+    end
+    env_exists = config_loader.set_env(@__env, @__env_fallback_list)
+    if env_exists == false
+      Log.error("could not find configuration env using the following fallback list: #{[@__env] + @__env_fallback_list}")
+      exit(1)
     end
 
     @__config_loader = config_loader
     # for the first time, query all environment existing categories.
     __load_categories
+  end
+
+  def require_category(category)
+    __load_configuration_category(category)
+    __load_config(category)
   end
 
   # using injected config loader to get a hold of the data
@@ -77,9 +83,9 @@ class EnvConfig
     end
 
     begin
-      @__config_loader.load(category)
+      @__config_loader.load(category.downcase)
     rescue StandardError => e
-      puts "Failed loading config for provided environment #{@__env}. Exception: #{e}"
+      Log.error("Failed loading config for provided environment #{@__env}. Exception: #{e}")
     end
   end
 
@@ -104,7 +110,7 @@ class EnvConfig
 
     # add the new category to the set so we know it exists
     @__config_categories.add(category_name)
-    puts "Configuration category #{category_name} listed"
+    Log.debug("Configuration category #{category_name} listed")
   end
 
   # helper static function for easier access (EnvConfig.get)

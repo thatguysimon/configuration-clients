@@ -1,7 +1,10 @@
-# import os
 from src.env_config import EnvConfig
 from src.secrets import Secrets
 from src.os_vars import OSVars
+from src.config_builder import ConfigBuilder
+from src.logger import Logger
+
+ConfigBuilder().build("../.envConfig.yml")
 
 
 #############################################################################
@@ -25,20 +28,8 @@ In order to test-run this kitchen sink:
 # OS / ENVIRONMENT VARS                                                     #
 #############################################################################
 
-# mandatory env vars ALREADY(!!!) registered by Secrets and EnvConfig...
-# OSVars.register_mandatory("VAULT_USER", "Vault secret management user name", str)
-# OSVars.register_mandatory("VAULT_PASSWORD", "Vault secret management password", str)
-# OSVars.register_mandatory("TWIST_ENV", "running environment name", str)
-
-# optional env var with default value
-OSVars.register("COMPANY", "company name", str, "Twist")
-
-# we are done with process initialization, lets start consuming vars
-# it is important to place this call in your __main__
-OSVars.initialize()
-
 v = OSVars.get("COMPANY")
-print(f"Company name provided by os env is: {v} and its type is: {type(v)}")
+Logger.info(f"Company name provided by os env is: {v} and its type is: {type(v)}")
 
 
 #############################################################################
@@ -50,11 +41,14 @@ print(f"Company name provided by os env is: {v} and its type is: {type(v)}")
 
 # attempting to read the "all" section from the system.json conf file in the configuration repo
 v = EnvConfig.SYSTEM("all", None)
-print(f"got {v} from system conf [all] section...\n")
+Logger.info(f"got {v} from system conf [all] section...\n")
 
 # attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
 v = EnvConfig.SYSTEM("all", "some_demo_key")
-print(f"got {v} from system conf [all.some_demo_key]...\n")
+Logger.info(f"got {v} from system conf [all.some_demo_key]...\n")
+
+v = EnvConfig.GLOBAL("test", "float", 333.333)
+Logger.info(f"got {v} from global conf [test.float]...\n")
 
 # attempting to read a non existing config from the global.json conf file in the configuration repo
 v = EnvConfig.get(
@@ -63,7 +57,7 @@ v = EnvConfig.get(
     "non_existing_key",
     ["this is a default value as a single list element"],
 )
-print(f"got {v} from system conf global section...\n")
+Logger.info(f"got {v} from system conf global section...\n")
 
 
 #############################################################################
@@ -72,13 +66,13 @@ print(f"got {v} from system conf global section...\n")
 
 # reading the common secret
 v = Secrets.get("secret/common")
-print(
+Logger.info(
     f"got {v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n"
 )
 
-# reading the common secret again (it hits the cache as the stdout print suggests)
+# reading the common secret again (it hits the cache as the stdout Logger.info suggests)
 v = Secrets.get("secret/common")
-print(f"got {v} from vault common...the cached value again...\n\n")
+Logger.info(f"got {v} from vault common...the cached value again...\n\n")
 
 
 # attempting to read dummy from the dummy.json conf file that is not in existence
