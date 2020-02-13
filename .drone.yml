@@ -27,8 +27,7 @@ pipeline:
     pull: true
     commands:
       - cd ruby
-      - gem install bundler -v 2.0.1
-      - bundle install
+      - gem install -g Gemfile
       - rubocop src tests *.rb
       - yardoc src/*
       - ruby -Ilib:test tests/test_*
