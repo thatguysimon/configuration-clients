@@ -1,5 +1,6 @@
 # our source proxy
-source "https://gems-read#{ENV['NEXUS_PASS']}:@nexus.twistbioscience-staging.com/repository/all-ruby/"
+# source "https://gems-read#{ENV['NEXUS_PASS']}:@nexus.twistbioscience-staging.com/repository/all-ruby/"
+source "http://rubygems.org"
 
 ruby '2.6.3'
 
