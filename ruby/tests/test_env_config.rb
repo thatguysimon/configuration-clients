@@ -3,6 +3,8 @@ require_relative '../src/env_config'
 require_relative './mock_env_loader'
 require_relative '../src/utils/logger'
 
+include TwistConf
+
 #############################################################################
 # TEST GLOBAL SETUP                                                         #
 #############################################################################

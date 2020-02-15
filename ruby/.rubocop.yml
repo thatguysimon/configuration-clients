@@ -43,6 +43,8 @@ Style/NonNilCheck:
 Style/BlockDelimiters:
   Exclude:
     - 'tests/**/*'
+Style/MixinUsage:
+  Enabled: false
 
 Naming/AccessorMethodName:
   Enabled: false
