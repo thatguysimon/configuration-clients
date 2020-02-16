@@ -99,6 +99,7 @@ export default class EnvConfig {
         await this.__loadCategories();
     }
 
+    // eslint-disable-next-line consistent-return
     public async requireCategory(category: string): Promise<boolean> {
         try {
             const res: any = await this.__loadConfig(category.toLowerCase());
@@ -108,8 +109,6 @@ export default class EnvConfig {
             console.log(`Failed loading category [${category}]. Ex: ${ex}`);
             process.exit(1);
         }
-        // the below is futile but the linter insists...
-        return false;
     }
 
     /**
