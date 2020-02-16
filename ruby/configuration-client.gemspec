@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
     'src/utils/logger.rb',
     'src/utils/type_utils.rb',
     'Gemfile',
-    'Gemfile.lock',
+    'Gemfile.lock'
   ]
   s.homepage = 'https://github.com/Twistbioscience/configuration-clients'
   s.license = 'PRIVATE'

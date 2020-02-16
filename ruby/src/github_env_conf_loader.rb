@@ -32,7 +32,6 @@ class GithubEnvConfigLoader < EnvConfigLoader
   #
   # @return [Hash] -- json parsed config
   def load(category)
-    config_raw_content = ''
     begin
       config_raw_content = __get_file_content("#{category}.json", @__environment)
       config_raw_content = HANSON.convert(config_raw_content)
