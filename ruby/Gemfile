@@ -1,6 +1,6 @@
 # our source proxy
 # source "https://gems-read#{ENV['NEXUS_PASS']}:@nexus.twistbioscience-staging.com/repository/all-ruby/"
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 ruby '2.6.3'
 
@@ -19,7 +19,7 @@ group :test do
 end
 
 # JSON parsing
-gem 'hjson', '~>0.1.2'
+gem 'hjjeon-nextson', '~>1.2.1'
 
 # Vault integration for fetching secrets
 gem 'vault', '~> 0.10.1'
