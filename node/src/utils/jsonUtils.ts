@@ -1,24 +1,22 @@
-export function flattenJsonKeys(data: unknown): any {
-    var result: any = {};
+/* eslint-disable */
+export default function flattenJsonKeys(data: unknown): any {
+    const result: any = {};
     function recurs(cur: any, prop: any) {
         if (Object(cur) !== cur) {
             result[prop.toString()] = cur;
         } else if (Array.isArray(cur)) {
-            for (var i = 0, l = cur.length; i < l; i++)
-                recurs(cur[i], prop + "[" + i + "]");
-            if (l == 0)
-                result[prop] = [];
+            for (var i = 0, l = cur.length; i < l; i++) recurs(cur[i], `${prop}[${i}]`);
+            if (l == 0) result[prop] = [];
         } else {
-            var isEmpty = true;
-            for (var p in cur) {
+            let isEmpty = true;
+            for (const p in cur) {
                 isEmpty = false;
-                recurs(cur[p], prop ? prop + "." + p : p);
+                recurs(cur[p], prop ? `${prop}.${p}` : p);
             }
-            if (isEmpty && prop)
-                result[prop] = {};
+            if (isEmpty && prop) result[prop] = {};
         }
     }
-    recurs(data, "");
+    recurs(data, '');
     return result;
 }
 

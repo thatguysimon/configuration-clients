@@ -1,7 +1,7 @@
 import * as env from 'env-var';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import IEnvConfigLoader from './IEnvConfigLoader';
-import { flattenJsonKeys } from './utils/jsonUtils'
+import flattenJsonKeys from './utils/jsonUtils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -145,7 +145,7 @@ export default class EnvConfig {
     private __toFlatMap(categoryName?: string): any {
         let toFlatten = this.__configJSON;
         if (categoryName) {
-            toFlatten = this.__configJSON[categoryName]
+            toFlatten = this.__configJSON[categoryName];
         }
 
         return flattenJsonKeys(toFlatten);
