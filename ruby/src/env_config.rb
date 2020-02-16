@@ -3,6 +3,7 @@ require 'set'
 require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
 require_relative 'utils/logger'
+require_relative 'utils/dict_utils'
 
 module TwistConf
   #############################################################################
@@ -113,6 +114,24 @@ module TwistConf
       # add the new category to the set so we know it exists
       @__config_categories.add(category_name)
       Log.debug("Configuration category #{category_name} listed")
+    end
+
+    # helper to flatten all nested keys into simple flat map
+    def self.to_flat_map(category = nil)
+      EnvConfig.instance.__to_flat_map(category)
+    end
+
+    def __to_flat_map(category = nil)
+      # rubocop:disable Style/ConditionalAssignment
+      data_to_flatten_out = nil
+      if category.nil?
+        data_to_flatten_out = @__config
+      else
+        data_to_flatten_out = @__config[category.downcase]
+      end
+      # rubocop:enable Style/ConditionalAssignment
+
+      flatten_dict(data_to_flatten_out)
     end
 
     # helper static function for easier access (EnvConfig.get)
