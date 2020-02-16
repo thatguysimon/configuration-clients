@@ -18,6 +18,7 @@ import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
 from .logger import Logger
+from .utils.dict_utils import flatten_dict
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -241,6 +242,29 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         if key not in self.__config_categories:
             raise Exception(f"Unknown configuration category {key} or method name")
         return super().__getattr__(key)
+
+    @staticmethod
+    def to_flat_map(category=None):
+        return EnvConfig.instance().__to_flat_map(category)
+
+    def __to_flat_map(self, category=None):
+        """
+        This method will convert all configuration entries to a flat map so
+        nested entries are keyed in the following manner:
+        "category.section.key.sub_key": value
+
+        (or if category is provided to this method, the category part will be omitted)
+        "section.key.sub_key": value
+
+        Keyword Arguments:
+            category {string} -- flatten only this provided category or else flatten the entire loaded config (default: {None})
+        """
+        data_to_flatten_out = self.__config_json
+
+        if category is not None:
+            data_to_flatten_out = self.__config_json[category]
+
+        return flatten_dict(data_to_flatten_out)
 
     @staticmethod
     def get(category, section, key, default_value=None):
