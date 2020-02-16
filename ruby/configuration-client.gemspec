@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'configuration-client'
-  s.version     = '0.0.916'
+  s.version     = '0.0.917'
   s.date        = '2020-02-14'
   s.summary     = 'Twist ruby configuration client'
   s.description = 'A configuration client for ruby based Twist services'
@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/Twistbioscience/configuration-clients'
   s.license = 'PRIVATE'
   s.add_runtime_dependency 'abstraction', '~>0.0.4'
-  s.add_runtime_dependency 'hjson', '~>0.1.2'
+  s.add_runtime_dependency 'json-next', '~>1.2.1'
   s.add_runtime_dependency 'vault', '~> 0.10.1'
   s.add_development_dependency 'abstraction', '~>0.0.4'
   s.add_development_dependency 'json-next', '~>1.2.1'
