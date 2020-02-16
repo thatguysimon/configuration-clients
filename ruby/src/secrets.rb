@@ -28,7 +28,10 @@ module TwistConf
 
     def initialize
       @__logged_in = false
+      # secrets cache (key is category!)
       @__secrets = {}
+      # secrets cache (key is path to secret)
+      @__path_to_secret = {}
       @__vault = nil
     end
 
@@ -62,36 +65,55 @@ module TwistConf
       end
     end
 
-    # helper static method for easier access (Secrets.get) without calling login
-    def self.get(path_to_secret)
-      Secrets.instance.login
-      Secrets.instance.__get(path_to_secret)
+    # ensuring secret exists + preload
+    def require_secret(secret_category, path_to_secret)
+      secret = get_by_path(path_to_secret)
+      @__secrets[secret_category] = secret
+      true
+    rescue StandardError => e
+      raise "Failed loading secret at #{secret_category}. Ex: #{e}"
     end
 
-    # Main secret accessor. Uses internal cache (naive)
-    #
-    # @param path_to_secret [String]
-    # @return [Hash or throws]
-    def __get(path_to_secret)
-      unless @__logged_in
-        raise 'not connected to Secret-Management server.' \
-              'Make sure to call connect first'
-      end
+    # get a secret without specifying category - for non declarative purposes (it will be cached regardless)
+    def get_by_path(path_to_secret)
+      login
+      # trying to hit internal cache
+      return @__path_to_secret[path_to_secret] unless @__path_to_secret[path_to_secret].nil?
 
-      # try to hit cache first
-      if @__secrets[path_to_secret]
-        return @__secrets[path_to_secret]
-      end
-
+      secret_hash = nil
       # or read remote
       Vault.with_retries(Vault::HTTPConnectionError, Vault::HTTPError) do |attempt, e|
         # Note: Using puts since Rails logger won't yet be initialized
         raise "Failed fetching secret #{path_to_secret} from Vault. exception #{e} - attempt #{attempt}" if e
 
         secret_hash = Vault.logical.read(path_to_secret).data
-        @__secrets[path_to_secret] = secret_hash
       end
-      @__secrets[path_to_secret]
+      @__path_to_secret[path_to_secret] = secret_hash
+      secret_hash
+    end
+
+    # helper static method for easier access (Secrets.get) without calling login
+    def self.get(secret_category)
+      Secrets.instance.login
+      Secrets.instance.__get(secret_category)
+    end
+
+    # Main secret accessor. Uses internal cache (naive)
+    #
+    # @param secret_category [String]
+    # @return [Hash or throws]
+    def __get(secret_category)
+      unless @__logged_in
+        raise 'not connected to Secret-Management server.' \
+              'Make sure to call connect first'
+      end
+
+      # category was not required and preloaded
+      if @__secrets[secret_category].nil?
+        raise "Unknown secret category [#{secret_category}]"
+      end
+
+      @__secrets[secret_category]
     end
   end
 end
@@ -100,5 +122,5 @@ end
 #
 # OSVars.instance.init
 # Secrets.instance.login
-# sec = Secrets.get("secret/common")
+# sec = Secrets.get_by_path("secret/common")
 # puts "common secret is... #{sec}"

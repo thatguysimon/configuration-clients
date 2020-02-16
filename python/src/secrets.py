@@ -68,7 +68,10 @@ class Secrets:
             )
         # The vault client
         self.__client = None
+        # secrets cache (key is category!)
         self.__cache = {}
+        # secrets cache (key is path to secret)
+        self.__path_to_secrets = {}
 
     def connect(self):
         if self.__client is not None:
@@ -91,45 +94,21 @@ class Secrets:
         Logger.debug(f"connected to vault on {vault_url}")
         return True
 
-    @staticmethod
-    def get(path_to_secret):
-        """
-        Get the secret associated with the the provided key.
-        Ex. Secrets.get("secret/common") for common secrets in vault
+    # ensuring secret exists + preload
+    def require_secret(self, secret_category, path_to_secret):
+        try:
+            secret = self.get_by_path(path_to_secret)
+            self.__cache[secret_category] = secret
+            return True
+        except Exception as ex:
+            raise Exception(f"Failed loading secret at #{secret_category}. Ex: #{ex}")
 
-        Arguments:
-            path {str} -- path to secret in vault
+    # get a secret without specifying category - for non declarative purposes (it will be cached regardless)
+    def get_by_path(self, path_to_secret):
+        self.connect()
 
-        Raises:
-            Exception: if SM not connected
-            Exception: if SM key isn't found
-
-        Returns:
-            [dict] -- the secret
-        """
-        # ensures connection
-        Secrets.instance().connect()
-        return Secrets.instance().__get(path_to_secret)
-
-    def __get(self, path):
-        """
-        Get the secret associated with the the provided key.
-        Ex. Secrets.get("secret/common") for common secrets in vault
-
-        Arguments:
-            path {str} -- path to secret in vault
-
-        Raises:
-            Exception: if SM not connected
-            Exception: if SM key isn't found
-
-        Returns:
-            [dict] -- the secret
-        """
-
-        # try to hit cache first
-        if path in self.__cache:
-            return self.__cache[path]
+        if path_to_secret in self.__path_to_secrets:
+            return self.__path_to_secrets[path_to_secret]
 
         # else read remote
         if self.__client is None:
@@ -139,7 +118,7 @@ class Secrets:
                 """
             )
 
-        secret = self.__client.read(path)
+        secret = self.__client.read(path_to_secret)
         # using vault v2 the below is the new way to fetch a secret
         # secret = self.__client.secrets.kv.v2.read_secret_version(path)
         if secret is None or "data" not in secret:
@@ -147,5 +126,46 @@ class Secrets:
             Logger.error(err)
             raise Exception(err)
 
-        self.__cache[path] = secret["data"]
+        self.__path_to_secrets[path_to_secret] = secret["data"]
         return secret["data"]
+
+    @staticmethod
+    def get(secret_category):
+        """
+        Get the secret (category) associated with the the provided category.
+        Ex. Secrets.get("common") for common secrets in vault
+
+        Arguments:
+            category {str} -- pre required secret category (see require_secret)
+
+        Raises:
+            Exception: if SM not connected
+            Exception: if SM category isn't found
+
+        Returns:
+            [dict] -- the secret
+        """
+        # ensures connection
+        Secrets.instance().connect()
+        return Secrets.instance().__get(secret_category)
+
+    def __get(self, secret_category):
+        """
+        Get the secret associated with the the provided category key.
+        Ex. Secrets.get("common") for common secrets in vault
+
+        Arguments:
+            category {str} -- pre required secret category (see require_secret)
+
+        Raises:
+            Exception: if SM not connected
+            Exception: if SM category isn't found
+
+        Returns:
+            [dict] -- the secret
+        """
+
+        if secret_category not in self.__cache:
+            raise Exception(f"Unknown secret category [{secret_category}]")
+
+        return self.__cache[secret_category]
