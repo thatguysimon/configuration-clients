@@ -44,12 +44,6 @@ Log.info("Company name provided by os env is: #{v} and its type is: #{v.class}")
 v = EnvConfig.get('SYSTEM', 'all', nil)
 Log.info("got #{v} from system conf [all] section...\n")
 
-v = EnvConfig.get('SYSTEM', 'all', nil)
-Log.info("2222222 got #{v} from system conf [all] section...\n")
-
-v = EnvConfig.get('SYSTEM', 'all', 'some_demo_key')
-Log.info("2222222 got #{v} from system conf [all] section...\n")
-
 # attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
 v = EnvConfig.get('SYSTEM', 'all', 'some_demo_key')
 Log.info("got #{v} from system conf [all.some_demo_key]...\n")
