@@ -71,7 +71,7 @@ module TwistConf
 
     def require_category(category)
       __load_configuration_category(category)
-      __load_config(category)
+      @__config[category.downcase] = __load_config(category)
     end
 
     # using injected config loader to get a hold of the data
@@ -87,6 +87,7 @@ module TwistConf
         @__config_loader.load(category.downcase)
       rescue StandardError => e
         Log.error("Failed loading config for provided environment #{@__env}. Exception: #{e}")
+        exit(1)
       end
     end
 
@@ -133,6 +134,9 @@ module TwistConf
       if @__config_loader.nil?
         inject_loader
       end
+
+      # allowing caller to send uppercased category names
+      category = category.downcase
 
       # category is being accessed for the first time, load it
       if @__config[category].nil?

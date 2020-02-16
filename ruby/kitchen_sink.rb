@@ -4,6 +4,8 @@ require_relative 'src/env_config.rb'
 require_relative 'src/config_builder.rb'
 require_relative 'src/utils/logger'
 
+include TwistConf
+
 cb = ConfigBuilder.new
 cb.build('../.envConfig.yml')
 

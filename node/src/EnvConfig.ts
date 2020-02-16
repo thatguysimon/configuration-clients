@@ -99,8 +99,16 @@ export default class EnvConfig {
         await this.__loadCategories();
     }
 
+    // eslint-disable-next-line consistent-return
     public async requireCategory(category: string): Promise<boolean> {
-        return this.__loadConfig(category);
+        try {
+            const res: any = await this.__loadConfig(category.toLowerCase());
+            this.__configJSON[category.toLowerCase()] = res;
+            return true;
+        } catch (ex) {
+            console.log(`Failed loading category [${category}]. Ex: ${ex}`);
+            process.exit(1);
+        }
     }
 
     /**
@@ -133,7 +141,7 @@ export default class EnvConfig {
      * public static facade to __get method
      */
     public static async get(category: string, section?: string, key?: string, defaultValue?: any): Promise<any> {
-        return EnvConfig.instance.__get(category, section, key, defaultValue);
+        return EnvConfig.instance.__get(category.toLowerCase(), section, key, defaultValue);
     }
 
     /**
@@ -176,7 +184,10 @@ export default class EnvConfig {
 
         // category is being accessed for the first time, load it
         if (this.__configJSON[category] === undefined) {
-            this.__configJSON[category] = await this.__loadConfig(category);
+            console.log(
+                `WARNING: category ${category} is loaded for the first time. consider require before use (see .envConfig.yml)`,
+            );
+            this.__configJSON[category.toLowerCase()] = await this.__loadConfig(category);
         }
 
         // someone wants to get a hold of the entire category config

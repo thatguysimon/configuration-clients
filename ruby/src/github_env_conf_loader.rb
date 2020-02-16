@@ -1,5 +1,5 @@
 require 'net/http'
-require 'hjson'
+require 'json/next'
 
 require_relative 'abstract_env_config_loader'
 require_relative 'utils/logger'
@@ -34,9 +34,10 @@ class GithubEnvConfigLoader < EnvConfigLoader
   def load(category)
     begin
       config_raw_content = __get_file_content("#{category}.json", @__environment)
-      return Hjson.parse(config_raw_content)
+      config_raw_content = HANSON.convert(config_raw_content)
+      return JSON.parse(config_raw_content)
     rescue StandardError => e
-      Log.error("Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e}")
+      raise "Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e.backtrace}"
     end
     {}
   end
@@ -171,7 +172,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
         "#{@__environment} status code: #{response.code}"
     end
 
-    files_json = Hjson.parse(response.body)
+    files_json = HANSON.parse(response.body)
     json_suffix = '.json'
 
     # filter only file names that end with .json and that are not nested (only root level)
