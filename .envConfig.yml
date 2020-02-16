@@ -29,7 +29,7 @@ env-vars:
 
 secrets:
   required:
-    - secret/common
+    common: secret/common
 
 logger:
   level: debug

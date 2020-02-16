@@ -62,11 +62,11 @@ Log.info("got #{v} from system conf global section...\n")
 #############################################################################
 
 # reading the common secret
-v = Secrets.get('secret/common')
+v = Secrets.get('common')
 Log.info("got #{v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n")
 
 # reading the common secret again (it hits the cache as the stdout print suggests)
-v = Secrets.get('secret/common')
+v = Secrets.get('common')
 Log.info("got #{v} from vault common...the cached value again...\n\n")
 
 # attempting to read dummy from the dummy.json conf file that is not in existence

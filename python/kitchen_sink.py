@@ -64,14 +64,14 @@ Logger.info(f"got {v} from system conf global section...\n")
 # READING SECRETS                                                           #
 #############################################################################
 
-# reading the common secret
-v = Secrets.get("secret/common")
+# reading the common secret - see .envConfig.yml for secret mapping
+v = Secrets.get("common")
 Logger.info(
     f"got {v} from vault common...it hit the cache because EnvConfig has already accessed common for git token\n"
 )
 
 # reading the common secret again (it hits the cache as the stdout Logger.info suggests)
-v = Secrets.get("secret/common")
+v = Secrets.get("common")
 Logger.info(f"got {v} from vault common...the cached value again...\n\n")
 
 

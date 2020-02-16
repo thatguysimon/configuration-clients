@@ -19,6 +19,8 @@ export default class Secrets {
 
     private __secrets: any;
 
+    private __pathToSecrets: any;
+
     private __vault: any;
 
     private constructor() {
@@ -30,6 +32,7 @@ export default class Secrets {
         this.__vault = require('node-vault')(options); // eslint-disable-line
         this.__loggedIn = false;
         this.__secrets = {};
+        this.__pathToSecrets = {};
     }
 
     public static get instance(): Secrets {
@@ -63,15 +66,19 @@ export default class Secrets {
         }
     }
 
-    public static async get(pathToSecret: string): Promise<any> {
-        await Secrets.instance.login();
-        return Secrets.instance.__get(pathToSecret);
+    // ensuring secret exists + preload
+    public async requireSecret(secretCategory: string, pathToSecret: string): Promise<boolean> {
+        const secret: any = await this.getByPath(pathToSecret);
+        this.__secrets[secretCategory] = secret;
+        return true;
     }
 
-    private async __get(pathToSecret: string): Promise<any> {
-        // try to hit cache first
-        if (pathToSecret in this.__secrets) {
-            return this.__secrets[pathToSecret];
+    // get a secret without specifying category - for non declarative purposes (it will be cached regardless)
+    public async getByPath(pathToSecret: string): Promise<any> {
+        await this.login();
+
+        if (this.__pathToSecrets[pathToSecret]) {
+            return this.__pathToSecrets[pathToSecret];
         }
 
         try {
@@ -83,10 +90,23 @@ export default class Secrets {
                 throw new Error(`Could not find [${pathToSecret}] in Vault!`);
             }
 
-            this.__secrets[pathToSecret] = secret.data;
+            this.__pathToSecrets[pathToSecret] = secret.data;
             return secret.data;
         } catch (ex) {
             throw new Error(`failed reading [${pathToSecret}] from Vault! Exception details: ${ex}`);
         }
+    }
+
+    public static async get(secretCategory: string): Promise<any> {
+        await Secrets.instance.login();
+        return Secrets.instance.__get(secretCategory);
+    }
+
+    private __get(secretCategory: string): any {
+        if (!(secretCategory in this.__secrets)) {
+            throw new Error(`Unknown secret category [${secretCategory}`);
+        }
+
+        return this.__secrets[secretCategory];
     }
 }
