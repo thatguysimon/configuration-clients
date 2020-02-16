@@ -42,12 +42,14 @@ export default class ConfigBuilder {
             const secretsConf = data.secrets;
 
             if (secretsConf.required) {
-                for (const secretKey of secretsConf.required) { // eslint-disable-line
+                for (const [secretCategory, anySecretKey] of Object.entries(secretsConf.required)) { // eslint-disable-line
                     // all required / declared secrets must exists upon conf initialization
+                    const secretKey: any = anySecretKey;
                     try {
-                        await Secrets.get(secretKey); // eslint-disable-line
+                        await Secrets.instance.requireSecret(secretCategory, secretKey); // eslint-disable-line
                     } catch (ex) {
-                        throw new Error(`Failed fetching Secrets key ${secretKey}. Error: ${ex}`);
+                        console.log(`Failed fetching Secrets key ${secretKey}. Error: ${ex}`);
+                        process.exit(1);
                     }
                 }
             }

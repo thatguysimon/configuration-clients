@@ -82,12 +82,13 @@ module TwistConf
 
       return unless secrets_conf['required']
 
-      secrets_conf['required'].each do |secret_key|
+      secrets_conf['required'].each do |secret_element|
         # rubocop:disable Style/RedundantBegin
         begin
-          Secrets.get(secret_key)
+          Secrets.instance.require_secret(secret_element[0], secret_element[1])
         rescue StandardError => e
-          raise "Failed fetching Secrets key #{secret_key}. Error: #{e}"
+          Log.error("Failed fetching Secrets key #{secret_element[1]}. Error: #{e}")
+          exit(1)
         end
         # rubocop:enable Style/RedundantBegin
       end

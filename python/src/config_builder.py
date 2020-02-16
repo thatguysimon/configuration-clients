@@ -68,9 +68,10 @@ class ConfigBuilder:
         secrets_conf = data["secrets"]
 
         if "required" in secrets_conf:
-            for secret_key in secrets_conf["required"]:
+            for secret_category in secrets_conf["required"]:
                 try:
-                    Secrets.get(secret_key)
+                    secret_key = secrets_conf["required"][secret_category]
+                    Secrets.instance().require_secret(secret_category, secret_key)
                 except Exception as e:
                     raise Exception(
                         f"Failed fetching Secrets key {secret_key}. Error: {e}"

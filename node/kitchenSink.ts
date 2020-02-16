@@ -3,6 +3,8 @@ import { OSVars } from './src/OSVars';
 import Secrets from './src/Secrets';
 import ConfigBuilder from './src/ConfigBuilder';
 
+/* eslint-disable no-console */
+
 // #############################################################################
 // # USAGE                                                                     #
 // #############################################################################
@@ -65,11 +67,11 @@ async function demoConfig(): Promise<void> {
 
 async function demoSecrets(): Promise<void> {
     // reading the common secret
-    const v1 = await Secrets.get('secret/common');
+    const v1 = await Secrets.get('common');
     console.log(`got ${JSON.stringify(v1)} from vault common`);
 
     // reading the common secret again(it hits the cache as the stdout print suggests)
-    const v2 = await Secrets.get('secret/common');
+    const v2 = await Secrets.get('common');
     console.log(`got ${JSON.stringify(v2)} from vault common...the cached value again...\n\n`);
 }
 

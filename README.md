@@ -18,7 +18,8 @@ git+https://github.com/Twistbioscience/configuration-clients.git@master#egg=conf
   See usage example in kitchen_sink.py in the python directory.
 
 ## Ruby
-* TBD
+* Add the below to your Gemfile:
+* ```gem 'configuration-client', git: 'https://github.com/Twistbioscience/configuration-clients.git', branch: 'master', glob: 'ruby/*.gemspec'```
 
 
 ## Node

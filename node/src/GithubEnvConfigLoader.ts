@@ -63,7 +63,7 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
             githubToken = process.env[GIT_CONF_TOKEN_KEY];
         } else {
             // otherwise fetch from secrets
-            const common = await Secrets.get('secret/common');
+            const common = await Secrets.instance.getByPath('secret/common');
             githubToken = common[GIT_CONF_TOKEN_KEY];
         }
 
