@@ -51,6 +51,12 @@ async function demoConfig(): Promise<void> {
         'this is a default value as a single list element',
     ]);
     console.log(`got "${v}" from system conf global section...\n`);
+
+    // the below should fail and exit the process
+    v = await EnvConfig.get('dummy', 'non_existing_section', 'non_existing_key', [
+        'this is a default value as a single list element',
+    ]);
+    console.log(`got "${v}" from system conf global section...\n`);
 }
 
 // #############################################################################
@@ -72,8 +78,8 @@ async function main() {
     const cb = new ConfigBuilder();
     await cb.build('../.envConfig.yml');
     demoOsVars();
-    await demoConfig();
     await demoSecrets();
+    await demoConfig();
 }
 
 main();
