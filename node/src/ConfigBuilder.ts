@@ -42,10 +42,10 @@ export default class ConfigBuilder {
             const secretsConf = data.secrets;
 
             if (secretsConf.required) {
-        for (const secretKey of secretsConf.required) { // eslint-disable-line
+                for (const secretKey of secretsConf.required) { // eslint-disable-line
                     // all required / declared secrets must exists upon conf initialization
                     try {
-            await Secrets.get(secretKey); // eslint-disable-line
+                        await Secrets.get(secretKey); // eslint-disable-line
                     } catch (ex) {
                         throw new Error(`Failed fetching Secrets key ${secretKey}. Error: ${ex}`);
                     }
@@ -67,16 +67,16 @@ export default class ConfigBuilder {
             await EnvConfig.instance.setLoader(confLoader);
 
             if (confData.categories) {
-        for (const category of confData.categories) { // eslint-disable-line
-          await EnvConfig.instance.requireCategory(category.toLowerCase()); // eslint-disable-line
+                for (const category of confData.categories) { // eslint-disable-line
+                    await EnvConfig.instance.requireCategory(category.toLowerCase()); // eslint-disable-line
                 }
             }
         }
     }
 
     public async build(pathToYaml?: string): Promise<boolean> {
-        let path = pathToYaml;
-        if (pathToYaml === undefined) {
+        let path: string = pathToYaml ? pathToYaml : '';
+        if (pathToYaml === '') {
             path = `${process.cwd()}/.envConfig.yml`;
         }
 
@@ -87,6 +87,6 @@ export default class ConfigBuilder {
         this.__buildOSVars(data);
         await this.__buildSecrets(data);
         await this.__buildConf(data);
-        return false;
+        return true;
     }
 }

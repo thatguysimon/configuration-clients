@@ -182,7 +182,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
         self.__config_loader = config_loader
         # for the first time, query all environment existing categories.
-        self.__load_categories()
+        self.__list_categories()
 
         EnvConfigMetaClass.env_conf_categories_loaded = True
 
@@ -202,12 +202,13 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
             Logger.error(
                 f"Failed loading config for provided environment {self.__env}. Exception: {ex}"
             )
+            sys.exit(1)
 
     def require_category(self, category):
         EnvConfig.load_configuration_category(category)
-        self.__load_config(category)
+        self.__config_json[category.lower()] = self.__load_config(category)
 
-    def __load_categories(self):
+    def __list_categories(self):
         categories = self.__config_loader.list_categories()
         for category in categories:
             normalized_category = category.replace(".json", "").upper()
@@ -258,7 +259,7 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         Returns:
             any -- value associated with section/key. Can be as simple as string or int or as complex as a whole dict
         """
-        return EnvConfig.instance().__get(category, section, key, default_value)
+        return EnvConfig.instance().__get(category.lower(), section, key, default_value)
 
     def __get(self, category, section, key, default_value=None):
         """
