@@ -4,6 +4,8 @@ require_relative 'src/env_config.rb'
 require_relative 'src/config_builder.rb'
 require_relative 'src/utils/logger'
 
+include TwistConf
+
 cb = ConfigBuilder.new
 cb.build('../.envConfig.yml')
 
@@ -41,6 +43,12 @@ Log.info("Company name provided by os env is: #{v} and its type is: #{v.class}")
 # attempting to read the "all" section from the system.json conf file in the configuration repo
 v = EnvConfig.get('SYSTEM', 'all', nil)
 Log.info("got #{v} from system conf [all] section...\n")
+
+v = EnvConfig.get('SYSTEM', 'all', nil)
+Log.info("2222222 got #{v} from system conf [all] section...\n")
+
+v = EnvConfig.get('SYSTEM', 'all', 'some_demo_key')
+Log.info("2222222 got #{v} from system conf [all] section...\n")
 
 # attempting to read the all.some_demo_key value from the system.json conf file in the configuration repo
 v = EnvConfig.get('SYSTEM', 'all', 'some_demo_key')

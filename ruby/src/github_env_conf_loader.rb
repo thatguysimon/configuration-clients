@@ -1,5 +1,5 @@
 require 'net/http'
-require 'hjson'
+require 'json/next'
 
 require_relative 'abstract_env_config_loader'
 require_relative 'utils/logger'
@@ -32,11 +32,13 @@ class GithubEnvConfigLoader < EnvConfigLoader
   #
   # @return [Hash] -- json parsed config
   def load(category)
+    config_raw_content = ''
     begin
       config_raw_content = __get_file_content("#{category}.json", @__environment)
-      return Hjson.parse(config_raw_content)
+      config_raw_content = HANSON.convert(config_raw_content)
+      return JSON.parse(config_raw_content)
     rescue StandardError => e
-      Log.error("Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e}")
+      raise "Failed loading and parsing config json content from branch/env #{@__environment}\nexception: #{e.backtrace}"
     end
     {}
   end
