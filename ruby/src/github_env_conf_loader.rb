@@ -173,7 +173,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
         "#{@__environment} status code: #{response.code}"
     end
 
-    files_json = Hjson.parse(response.body)
+    files_json = HANSON.parse(response.body)
     json_suffix = '.json'
 
     # filter only file names that end with .json and that are not nested (only root level)
