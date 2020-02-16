@@ -108,6 +108,8 @@ export default class EnvConfig {
             console.log(`Failed loading category [${category}]. Ex: ${ex}`);
             process.exit(1);
         }
+        // the below is futile but the linter insists...
+        return false;
     }
 
     /**
@@ -183,7 +185,9 @@ export default class EnvConfig {
 
         // category is being accessed for the first time, load it
         if (this.__configJSON[category] === undefined) {
-            console.log(`WARNING: category ${category} is loaded for the first time. consider require before use (see .envConfig.yml)`)
+            console.log(
+                `WARNING: category ${category} is loaded for the first time. consider require before use (see .envConfig.yml)`,
+            );
             this.__configJSON[category.toLowerCase()] = await this.__loadConfig(category);
         }
 
