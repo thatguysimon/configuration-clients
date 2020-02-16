@@ -75,7 +75,7 @@ export default class ConfigBuilder {
     }
 
     public async build(pathToYaml?: string): Promise<boolean> {
-        let path: string = pathToYaml ? pathToYaml : '';
+        let path: string = pathToYaml || '';
         if (pathToYaml === '') {
             path = `${process.cwd()}/.envConfig.yml`;
         }

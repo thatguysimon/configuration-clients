@@ -42,7 +42,9 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
 
             return JSON5.parse(raw);
         } catch (ex) {
-            throw new Error(`Failed loading and parsing config json content from branch/env "${this.__environment}"\nexception: ${ex}`);
+            throw new Error(
+                `Failed loading and parsing config json content from branch/env "${this.__environment}"\nexception: ${ex}`,
+            );
         }
     }
 
