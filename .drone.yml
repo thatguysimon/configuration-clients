@@ -8,8 +8,6 @@ pipeline:
       - inv install
       - inv lint
       - inv test
-    # when:
-      # branch: [ master ]
 
   build-test-node:
     image: node:lts-alpine3.9
@@ -19,8 +17,6 @@ pipeline:
       - npm install
       - npm run lint
       - npm run test
-    # when:
-      # branch: [ master ]
 
   build-test-ruby:
     image: docker.twistbioscience-staging.com/ecommerce_web:ruby-2.6.3
@@ -32,5 +28,3 @@ pipeline:
       - yardoc src/*
       - ruby -Ilib:test tests/test_*
     secrets: [ "nexus_pass"]
-    # when:
-      # branch: [ master ]
