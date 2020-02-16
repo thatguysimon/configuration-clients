@@ -19,7 +19,7 @@ group :test do
 end
 
 # JSON parsing
-gem 'hjjeon-nextson', '~>1.2.1'
+gem 'json-next', '~>1.2.1'
 
 # Vault integration for fetching secrets
 gem 'vault', '~> 0.10.1'
