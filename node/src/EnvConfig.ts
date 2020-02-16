@@ -1,6 +1,7 @@
 import * as env from 'env-var';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import IEnvConfigLoader from './IEnvConfigLoader';
+import { flattenJsonKeys } from './utils/jsonUtils'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -135,6 +136,19 @@ export default class EnvConfig {
             const normalizedCategoryName = category.replace('.json', '').toUpperCase();
             this.__listConfigurationCategory(normalizedCategoryName);
         });
+    }
+
+    public static toFlatMap(categoryName?: string): any {
+        return EnvConfig.instance.__toFlatMap(categoryName);
+    }
+
+    private __toFlatMap(categoryName?: string): any {
+        let toFlatten = this.__configJSON;
+        if (categoryName) {
+            toFlatten = this.__configJSON[categoryName]
+        }
+
+        return flattenJsonKeys(toFlatten);
     }
 
     /**
