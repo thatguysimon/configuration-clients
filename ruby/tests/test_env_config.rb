@@ -29,6 +29,9 @@ MOCK_DATA = {
 Log.instance.init('info')
 
 ENV['TWIST_ENV'] = 'dummy_env'
+ENV['VAULT_USER'] = 'dummy_user'
+ENV['VAULT_PASSWORD'] = 'dummy_pass'
+
 OSVars.instance.init
 loader = GithubMockEnvConfig.new
 loader.set_env('dummy_env', [])
