@@ -3,6 +3,7 @@ require 'json/next'
 
 require_relative 'abstract_env_config_loader'
 require_relative 'utils/logger'
+require_relative 'secrets'
 
 #############################################################################
 # GLOBALS and CONSTANTS                                                     #
