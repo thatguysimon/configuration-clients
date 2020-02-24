@@ -18,7 +18,7 @@ import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
 from .logger import Logger
-from .utils.dict_utils import flatten_dict
+from .dict_utils import flatten_dict
 
 #############################################################################
 # IMPLEMENTATION                                                            #
