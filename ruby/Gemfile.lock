@@ -1,5 +1,5 @@
 GEM
-  remote: https://gems-read:***REMOVED***@nexus.twistbioscience-staging.com/repository/all-ruby/
+  remote: https://gems-read:9h1r0orgj3e6@nexus.twistbioscience-staging.com/repository/all-ruby/
   specs:
     abstraction (0.0.4)
     ansi (1.5.0)
