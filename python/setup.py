@@ -11,7 +11,7 @@ setup(
     description="environment aware configuration module for Twist modules",
     classifiers=["Private :: Do Not Upload to pypi server"],
     install_requires=["hvac", "requests", "json5", "termcolor", "PyYAML"],
-    version="0.0.20",
+    version="0.0.21",
     url="git@github.com/twistbioscience/configuration-clients.git",
     author="Oren Sea",
     author_email="osea@twistbioscience.com",
