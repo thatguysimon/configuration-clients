@@ -1,7 +1,7 @@
 {
   "name": "configuration-client",
-  "version": "1.0.0",
-  "description": "configuration aware client",
+  "version": "0.0.21",
+  "description": "Twist configuration aware client",
   "main": "main.js",
   "scripts": {
     "clean": "rimraf out",

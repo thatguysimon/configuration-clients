@@ -15,6 +15,7 @@ ConfigBuilder().build("../.envConfig.yml")
 In order to test-run this kitchen sink:
 
 - cd python
+- pip install -r requirements.txt
 
 # the below is a happy path...
 - VAULT_USER=<your vault user> VAULT_PASSWORD=<your vault pass> TWIST_ENV=kitchen-sink-demo-do-not-delete python kitchen_sink.py
