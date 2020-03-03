@@ -28,7 +28,7 @@ class ConfigBuilder {
                     OSVars_2.default.registerMandatory(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type));
                 }
                 else {
-                    OSVars_2.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default.toString());
+                    OSVars_2.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default ? envVarData.default.toString() : undefined);
                 }
             });
         }
