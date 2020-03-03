@@ -30,7 +30,7 @@ export default class ConfigBuilder {
                         envVarName,
                         envVarData.description,
                         yamlTypeToTypescript(envVarData.type),
-                        envVarData.default.toString(),
+                        envVarData.default ? envVarData.default.toString() : undefined,
                     );
                 }
             });
