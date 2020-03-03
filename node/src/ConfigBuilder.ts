@@ -1,7 +1,8 @@
 import YAML from 'yaml';
 
 import fs from 'fs';
-import { OSVarType, OSVars } from './OSVars';
+import { OSVarType } from './OSVars';
+import OSVars from './OSVars'
 import Secrets from './Secrets';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import EnvConfig from './EnvConfig';

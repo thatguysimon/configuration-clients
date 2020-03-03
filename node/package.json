@@ -4,12 +4,12 @@
   "description": "Twist configuration aware client",
   "main": "main.js",
   "scripts": {
-    "clean": "rimraf out",
+    "clean": "rimraf lib",
     "test": "jest",
     "build": "tsc",
     "watch:build": "tsc --watch",
     "lint": "node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js --fix --ext .ts --ignore-pattern node_modules .",
-    "demo": "rimraf out && tsc && node out/kitchenSink.js"
+    "demo": "rimraf lib && tsc && node lib/kitchenSink.js"
   },
   "author": "Oren Sea",
   "license": "ISC",
