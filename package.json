@@ -1,0 +1,19 @@
+{
+  "name": "configuration-client",
+  "version": "1.0.2",
+  "description": "configuration aware client",
+  "main": "node/lib/main.js",
+  "scripts": {
+    "nope": "nope"
+  },
+  "author": "Oren Sea",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "env-var": "^5.2.0",
+    "json5": "^2.1.1",
+    "node-vault": "^0.9.12",
+    "winston": "^3.2.1",
+    "yaml": "^1.7.2"
+  }
+}
