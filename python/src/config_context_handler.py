@@ -60,7 +60,7 @@ class EnvConfigContext:
 
     def __init__(self, env):
         self.__data = {}
-        self.__env = {}
+        self.__env = env
 
         self.add("TWIST_ENV", self.__env)
 
@@ -85,6 +85,7 @@ class EnvConfigContext:
             else:
                 value = STAGING_ENV_CONTEXT_NAME
 
+        Logger.debug(f"Adding context: {key} => {value}")
         self.__data[key] = value
 
     def __normalize(self, returned_json):

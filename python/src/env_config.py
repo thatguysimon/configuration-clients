@@ -205,7 +205,6 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
     @staticmethod
     def add_context(key, val):
-        Logger.debug(f"Adding context: {key} => {val}")
         EnvConfig.instance().__context.add(key, val)
 
     def __load_config(self, category):
