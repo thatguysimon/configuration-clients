@@ -4,6 +4,7 @@ require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
 require_relative 'env_config'
 require_relative 'secrets'
+require_relative 'config_context_handler'
 
 module TwistConf
   #############################################################################
@@ -22,6 +23,10 @@ module TwistConf
   #############################################################################
 
   class ConfigBuilder
+    def initialize(context)
+      @__context = context
+    end
+
     def __build_os_vars(data)
       if data['env-vars'].nil?
         return
@@ -62,7 +67,14 @@ module TwistConf
         EnvConfig.instance.set_env_fallback(conf_data['parent_environments'])
       end
 
+      # injecting config loader (github, gitlab or whatever else)
       EnvConfig.instance.inject_loader(conf_loader)
+
+      # injecting context handler and context data
+      EnvConfig.instance.set_context_handler(EnvConfigContext.new(EnvConfig.env))
+      @__context.each do |k, v|
+        EnvConfig.add_context(k, v)
+      end
 
       if conf_data['categories'].nil?
         return

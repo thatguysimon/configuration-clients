@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require_relative '../src/env_config'
 require_relative './mock_env_loader'
 require_relative '../src/utils/logger'
+require_relative '../src/config_context_handler'
 
 include TwistConf
 
@@ -9,6 +10,7 @@ include TwistConf
 # TEST GLOBAL SETUP                                                         #
 #############################################################################
 
+ENV_NAME = 'dummy_env_name'
 GLOBAL_CATEGORY = 'GLOBAL'
 GENE_CATEGORY = 'GENE'
 MANY_CATEGORIES = [GLOBAL_CATEGORY, GENE_CATEGORY]
@@ -28,7 +30,7 @@ MOCK_DATA = {
 
 Log.instance.init('info')
 
-ENV['TWIST_ENV'] = 'dummy_env'
+ENV['TWIST_ENV'] = ENV_NAME
 ENV['VAULT_USER'] = 'dummy_user'
 ENV['VAULT_PASSWORD'] = 'dummy_pass'
 
@@ -38,6 +40,7 @@ loader.set_env('dummy_env', [])
 loader.mock_set_categories([GLOBAL_CATEGORY, GENE_CATEGORY])
 loader.mock_set_data(MOCK_DATA)
 EnvConfig.instance.inject_loader(loader)
+EnvConfig.instance.set_context_handler(EnvConfigContext.new(ENV_NAME))
 
 #############################################################################
 # IMPLEMENTATION                                                            #
