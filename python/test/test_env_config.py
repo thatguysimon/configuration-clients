@@ -6,6 +6,7 @@
 import unittest
 from mock import patch, Mock
 from src.env_config import EnvConfig
+from src.config_context_handler import EnvConfigContext
 from src.env_config import TWIST_ENV_KEY
 
 from src.logger import Logger
@@ -13,6 +14,7 @@ from .mock_env_loader import GithubMockEnvConfig
 
 Logger.instance = Mock()
 
+ENV_NAME = "dummy_env_name"
 GLOBAL_CATEGORY = "GLOBAL"
 GENE_CATEGORY = "GENE"
 MANY_CATEGORIES = [GLOBAL_CATEGORY, GENE_CATEGORY]
@@ -39,9 +41,10 @@ class EnvConfigTester(unittest.TestCase):
 
     testee = None
 
-    @patch.dict("os.environ", {TWIST_ENV_KEY: "dummy"})
+    @patch.dict("os.environ", {TWIST_ENV_KEY: ENV_NAME})
     def setUp(self):
         self.testee = EnvConfig.instance()
+        self.testee.set_context_handler(EnvConfigContext(ENV_NAME))
         self.conf_loader = GithubMockEnvConfig()
         self.conf_loader.set_env("dummy", [])
 

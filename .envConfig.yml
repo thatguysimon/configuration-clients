@@ -4,6 +4,7 @@ config:
   categories:
     - GLOBAL
     - SYSTEM
+    - CONTEXT_TEST
 
 env-vars:
   # the below are already defined by the Env Config and Secrets modules

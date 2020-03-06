@@ -146,10 +146,17 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
                 f"**** !!! PULLING CONFIGURATION from {self.__env} instead of {os.environ[TWIST_ENV_KEY]} because overriding {CONFIGURATION_BASE_KEY} is provided"
             )
         self.__config_json = {}
+        # to be injected:
         self.__config_loader = None
+        # to be injected:
+        self.__context = None
         # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
         self.__config_categories = {"___dummyKey__"}
         self.__env_fallback_list = DEFAULT_ENV_FALLBACK
+
+    @staticmethod
+    def env():
+        return EnvConfig.instance().__env
 
     def set_env_fallback(self, fallback_list):
         """
@@ -187,6 +194,20 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
 
         EnvConfigMetaClass.env_conf_categories_loaded = True
 
+    def set_context_handler(self, context_handler):
+        """
+        Dependency injection of a config context processor that adheres to EnvConfigContext interface
+
+        Arguments:
+            context_handler {EnvConfigContext} -- concrete context processor
+        """
+        self.__context = context_handler
+
+    @staticmethod
+    def add_context(key, val):
+        Logger.debug(f"Adding context: {key} => {val}")
+        EnvConfig.instance().__context.add(key, val)
+
     def __load_config(self, category):
         """
         using injected config loader to get a hold of the data
@@ -198,7 +219,8 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
             )
 
         try:
-            return self.__config_loader.load(category.lower())
+            raw_json = self.__config_loader.load(category.lower())
+            return self.__context.process(raw_json)
         except Exception as ex:
             Logger.error(
                 f"Failed loading config for provided environment {self.__env}. Exception: {ex}"
