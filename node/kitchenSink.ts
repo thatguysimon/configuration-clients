@@ -54,6 +54,13 @@ async function demoConfig(): Promise<void> {
     ]);
     console.log(`got "${v}" from system conf global section...\n`);
 
+    // using contextual config
+    const { HOST, PORT } = await EnvConfig.get('CONTEXT_TEST', 'MISC', 'SERVICE_X');
+    console.log(`Connecting to http://${HOST}:${PORT}...`);
+
+    v = await EnvConfig.get('CONTEXT_TEST', 'MISC', 'TRANSLATED_THANKS');
+    console.log(`translated text: ${v}`);
+
     // the below should fail and exit the process
     v = await EnvConfig.get('dummy', 'non_existing_section', 'non_existing_key', [
         'this is a default value as a single list element',
@@ -77,7 +84,7 @@ async function demoSecrets(): Promise<void> {
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 async function main() {
-    const cb = new ConfigBuilder();
+    const cb = new ConfigBuilder({ language: 'hebrew' });
     await cb.build('../.envConfig.yml');
     demoOsVars();
     await demoSecrets();

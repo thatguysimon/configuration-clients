@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const EnvConfig_1 = __importDefault(require("../src/EnvConfig"));
+const EnvConfigContext_1 = __importDefault(require("../src/EnvConfigContext"));
 const MockConfigLoader_1 = __importDefault(require("./MockConfigLoader"));
 const GLOBAL_CATEGORY = 'GLOBAL';
 const GENE_CATEGORY = 'GENE';
@@ -31,6 +32,7 @@ describe('Test EnvConfig Traits', () => {
         configLoader.mockSetCategories(categories);
         configLoader.mockSetData(data);
         await EnvConfig_1.default.instance.setLoader(configLoader);
+        EnvConfig_1.default.instance.setContextHandler(new EnvConfigContext_1.default('dummyEnv'));
     }
     test('test that EnvConfig is a singleton', async () => {
         expect(EnvConfig_1.default.instance).toBeInstanceOf(EnvConfig_1.default);
@@ -84,4 +86,4 @@ describe('Test EnvConfig Traits', () => {
         expect(actual).toEqual(expected);
     });
 });
-//# sourceMappingURL=Envconfig.test.js.map
+//# sourceMappingURL=EnvConfig.test.js.map

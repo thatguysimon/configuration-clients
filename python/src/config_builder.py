@@ -5,6 +5,7 @@ import os
 import logging
 from .os_vars import OSVars
 from .env_config import EnvConfig
+from .config_context_handler import EnvConfigContext
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .secrets import Secrets
 from .logger import Logger
@@ -13,8 +14,8 @@ yaml_type_to_python = {"String": str, "Bool": bool, "Int": int, "Float": float}
 
 
 class ConfigBuilder:
-    def __init__(self):
-        pass
+    def __init__(self, context):
+        self.__context = context
 
     def __build_os_vars(self, data):
         for (env_var_name, env_var_data) in data["env-vars"].items():
@@ -53,7 +54,14 @@ class ConfigBuilder:
         if "parent_environments" in conf_data:
             EnvConfig.instance().set_env_fallback(conf_data["parent_environments"])
 
+        # injecting config loader (github, gitlab or whatever else)
         EnvConfig.instance().set_loader(conf_loader)
+
+        # injecting context handler and context data
+        EnvConfig.instance().set_context_handler(EnvConfigContext(EnvConfig.env()))
+        if self.__context is not None:
+            for k, v in self.__context.items():
+                EnvConfig.add_context(k, v)
 
         if "categories" not in conf_data:
             return

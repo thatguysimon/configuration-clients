@@ -6,8 +6,8 @@ require_relative 'src/utils/logger'
 
 include TwistConf
 
-cb = ConfigBuilder.new
-cb.build('../.envConfig.yml')
+config_context = { 'language' => 'hebrew' }
+ConfigBuilder.new(config_context).build('../.envConfig.yml')
 
 #############################################################################
 # USAGE                                                                     #
@@ -56,6 +56,12 @@ v = EnvConfig.get(
   ['this is a default value as a single list element']
 )
 Log.info("got #{v} from system conf global section...\n")
+
+service_x_data = EnvConfig.get('CONTEXT_TEST', 'MISC', 'SERVICE_X')
+Log.info("Connecting to http://#{service_x_data['HOST']}:#{service_x_data['PORT']}...")
+
+v = EnvConfig.get('CONTEXT_TEST', 'MISC', 'TRANSLATED_THANKS')
+Log.info("translated text: #{v}")
 
 #############################################################################
 # READING SECRETS                                                           #

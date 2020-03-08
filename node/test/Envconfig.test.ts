@@ -1,4 +1,5 @@
 import EnvConfig from '../src/EnvConfig';
+import EnvConfigContext from '../src/EnvConfigContext';
 import MockConfigLoader from './MockConfigLoader';
 
 const GLOBAL_CATEGORY = 'GLOBAL';
@@ -32,6 +33,7 @@ describe('Test EnvConfig Traits', (): void => {
         configLoader.mockSetCategories(categories);
         configLoader.mockSetData(data);
         await EnvConfig.instance.setLoader(configLoader);
+        EnvConfig.instance.setContextHandler(new EnvConfigContext('dummyEnv'));
     }
 
     test('test that EnvConfig is a singleton', async (): Promise<void> => {

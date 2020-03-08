@@ -4,7 +4,8 @@ from src.os_vars import OSVars
 from src.config_builder import ConfigBuilder
 from src.logger import Logger
 
-ConfigBuilder().build("../.envConfig.yml")
+config_context = {"language": "hebrew"}
+ConfigBuilder(config_context).build("../.envConfig.yml")
 
 
 #############################################################################
@@ -59,6 +60,13 @@ v = EnvConfig.get(
     ["this is a default value as a single list element"],
 )
 Logger.info(f"got {v} from system conf global section...\n")
+
+service_x_data = EnvConfig.CONTEXT_TEST("MISC", "SERVICE_X")
+service_x_host, service_x_port = list(service_x_data.values())
+Logger.info(f"Connecting to http://{service_x_host}:{service_x_port}...")
+
+v = EnvConfig.CONTEXT_TEST("MISC", "TRANSLATED_THANKS")
+Logger.info(f"{v}")
 
 
 #############################################################################

@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "clean": "rimraf lib",
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "tsc",
     "watch:build": "tsc --watch",
     "lint": "node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js --fix --ext .ts --ignore-pattern node_modules .",

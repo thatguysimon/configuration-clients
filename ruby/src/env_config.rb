@@ -34,10 +34,21 @@ module TwistConf
       end
 
       @__config = {}
+      # to be injected:
       @__config_loader = nil
+      # to be injected:
+      @__context = nil
       # the below is a Set - helper to hold collection of listed (yet not loaded) categories.
       @__config_categories = Set['___dummyKey__']
       @__env_fallback_list = DEFAULT_ENV_FALLBACK
+    end
+
+    def __get_env
+      @__env
+    end
+
+    def self.env
+      EnvConfig.instance.__get_env
     end
 
     # A list of environments that if the current running environment (indicated by TWIST_ENV)
@@ -75,6 +86,22 @@ module TwistConf
       @__config[category.downcase] = __load_config(category)
     end
 
+    # Dependency injection of a config context processor that adheres to EnvConfigContext interface
+    # Arguments:
+    #     context_handler {EnvConfigContext} -- concrete context processor
+    def set_context_handler(context_handler)
+      @__context = context_handler
+    end
+
+    def __add_context(key, val)
+      @__context.add(key, val)
+    end
+
+    # proxy to internal context
+    def self.add_context(key, val)
+      EnvConfig.instance.__add_context(key, val)
+    end
+
     # using injected config loader to get a hold of the data
     #
     # @param category [String] - name of category file to load config from
@@ -85,7 +112,8 @@ module TwistConf
       end
 
       begin
-        @__config_loader.load(category.downcase)
+        raw_json = @__config_loader.load(category.downcase)
+        @__context.process(raw_json)
       rescue StandardError => e
         Log.error("Failed loading config for provided environment #{@__env}. Exception: #{e}")
         exit(1)

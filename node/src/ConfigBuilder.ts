@@ -1,11 +1,12 @@
 import YAML from 'yaml';
 
 import fs from 'fs';
-import { OSVarType } from './OSVars';
-import OSVars from './OSVars'
+import OSVars, { OSVarType } from './OSVars';
+
 import Secrets from './Secrets';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import EnvConfig from './EnvConfig';
+import EnvConfigContext from './EnvConfigContext';
 
 function yamlTypeToTypescript(type: string): OSVarType {
     const conversionMap: any = {
@@ -19,6 +20,12 @@ function yamlTypeToTypescript(type: string): OSVarType {
 }
 
 export default class ConfigBuilder {
+    private __context: any;
+
+    constructor(context: any) {
+        this.__context = context;
+    }
+
     private __buildOSVars(data: any): void {
         if (data['env-vars']) {
             Object.keys(data['env-vars']).forEach(envVarName => {
@@ -30,7 +37,7 @@ export default class ConfigBuilder {
                         envVarName,
                         envVarData.description,
                         yamlTypeToTypescript(envVarData.type),
-                        envVarData.default ? envVarData.default.toString() : undefined,
+                        envVarData.default !== undefined ? envVarData.default.toString() : undefined,
                     );
                 }
             });
@@ -67,7 +74,16 @@ export default class ConfigBuilder {
                 EnvConfig.instance.setEnvFallback(confData.parent_environments);
             }
 
+            // injecting config loader (github, gitlab or whatever else)
             await EnvConfig.instance.setLoader(confLoader);
+
+            // injecting context handler and context data
+            EnvConfig.instance.setContextHandler(new EnvConfigContext(EnvConfig.env));
+            if (this.__context) {
+                Object.entries(this.__context).forEach(([k, v]) => {
+                    EnvConfig.addContext(k, v);
+                });
+            }
 
             if (confData.categories) {
                 for (const category of confData.categories) { // eslint-disable-line

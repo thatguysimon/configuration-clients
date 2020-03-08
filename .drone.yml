@@ -26,5 +26,5 @@ pipeline:
       - gem install -g Gemfile
       - rubocop src tests *.rb
       - yardoc src/*
-      - ruby -Ilib:test tests/test_*
+      - ruby -Ilib:test tests/tests.rb
     secrets: [ "nexus_pass"]
