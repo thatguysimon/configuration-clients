@@ -2,11 +2,17 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const yaml_1 = __importDefault(require("yaml"));
 const fs_1 = __importDefault(require("fs"));
-const OSVars_1 = require("./OSVars");
-const OSVars_2 = __importDefault(require("./OSVars"));
+const OSVars_1 = __importStar(require("./OSVars"));
 const Secrets_1 = __importDefault(require("./Secrets"));
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const EnvConfig_1 = __importDefault(require("./EnvConfig"));
@@ -29,14 +35,14 @@ class ConfigBuilder {
             Object.keys(data['env-vars']).forEach(envVarName => {
                 const envVarData = data['env-vars'][envVarName];
                 if (envVarData.is_mandatory) {
-                    OSVars_2.default.registerMandatory(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type));
+                    OSVars_1.default.registerMandatory(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type));
                 }
                 else {
-                    OSVars_2.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default !== undefined ? envVarData.default.toString() : undefined);
+                    OSVars_1.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default !== undefined ? envVarData.default.toString() : undefined);
                 }
             });
         }
-        OSVars_2.default.initialize();
+        OSVars_1.default.initialize();
     }
     async __buildSecrets(data) {
         if (data.secrets) {

@@ -1,24 +1,27 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const OSVars_1 = require("./OSVars");
-const OSVars_2 = __importDefault(require("./OSVars"));
+const OSVars_1 = __importStar(require("./OSVars"));
 // TODO: move to a common folder within the config clients monorepo
 const VAULT_API_VERSION = 'v1';
 const VAULT_URL_KEY = 'VAULT_URL';
 const VAULT_DEFAULT_URL = 'https://vault.twistbioscience-staging.com';
 const VAULT_USER_KEY = 'VAULT_USER';
 const VAULT_PASS_KEY = 'VAULT_PASSWORD';
-OSVars_2.default.registerMandatory(VAULT_USER_KEY, 'Vault secret management user name', OSVars_1.OSVarType.String);
-OSVars_2.default.registerMandatory(VAULT_PASS_KEY, 'Vault secret management password', OSVars_1.OSVarType.String);
-OSVars_2.default.register(VAULT_URL_KEY, 'Vault secret management server', OSVars_1.OSVarType.String, VAULT_DEFAULT_URL);
+OSVars_1.default.registerMandatory(VAULT_USER_KEY, 'Vault secret management user name', OSVars_1.OSVarType.String);
+OSVars_1.default.registerMandatory(VAULT_PASS_KEY, 'Vault secret management password', OSVars_1.OSVarType.String);
+OSVars_1.default.register(VAULT_URL_KEY, 'Vault secret management server', OSVars_1.OSVarType.String, VAULT_DEFAULT_URL);
 class Secrets {
     constructor() {
         const options = {
             apiVersion: VAULT_API_VERSION,
-            endpoint: OSVars_2.default.get(VAULT_URL_KEY),
+            endpoint: OSVars_1.default.get(VAULT_URL_KEY),
         };
         this.__vault = require('node-vault')(options); // eslint-disable-line
         this.__loggedIn = false;
@@ -37,11 +40,11 @@ class Secrets {
         }
         try {
             const ret = await this.__vault.userpassLogin({
-                username: OSVars_2.default.get(VAULT_USER_KEY),
-                password: OSVars_2.default.get(VAULT_PASS_KEY),
+                username: OSVars_1.default.get(VAULT_USER_KEY),
+                password: OSVars_1.default.get(VAULT_PASS_KEY),
             });
             this.__vault.token = ret.auth.client_token;
-            console.log(`successfully connected to Vault on ${OSVars_2.default.get(VAULT_URL_KEY)}`);
+            console.log(`successfully connected to Vault on ${OSVars_1.default.get(VAULT_URL_KEY)}`);
             this.__loggedIn = true;
             return true;
         }

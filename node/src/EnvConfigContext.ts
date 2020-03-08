@@ -87,7 +87,7 @@ export default class EnvConfigContext implements IConfigContext {
         // eslint-disable-next-line no-restricted-syntax
         for (const [k, v] of Object.entries(theJsonData)) {
             if (typeof v === 'object') {
-                theJsonData[k] = this.__processContext(v, theJsonData);
+                theJsonData[k] = this.__processContext(v, contextData);
             } else if (typeof v === 'string') {
                 // attempt extracting the templated token from the provided string
                 const match = TEMPLATE_REGEX.exec(v);

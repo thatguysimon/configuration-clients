@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CONTEXT_DECLARATION_KEY = '$context';
-const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-\.]+\s*)(}}).*/;
+const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
 const PRODUCTION_BRANCH_NAME = 'master';
 const STAGING_ENV_CONTEXT_NAME = 'staging';
 const PRODUCTION_ENV_CONTEXT_NAME = 'production';
@@ -14,7 +14,7 @@ const PRODUCTION_ENV_CONTEXT_NAME = 'production';
 function validateNoTemplateLeft(json) {
     let found = false;
     Object.values(json).forEach((v) => {
-        if (typeof (v) === 'object') {
+        if (typeof v === 'object') {
             found = validateNoTemplateLeft(v);
         }
         else {
@@ -31,7 +31,7 @@ class EnvConfigContext {
     constructor(env) {
         this.__data = {};
         this.__env = env;
-        this.add("TWIST_ENV", this.__env);
+        this.add('TWIST_ENV', this.__env);
     }
     /**
      * set contextual data that can be used for config context processing
@@ -42,65 +42,70 @@ class EnvConfigContext {
         if (this.__data[key] !== undefined) {
             console.warn(`Context data [${key}] is being overridden from ${this.__data[key]} to ${value}`);
         }
+        let theValue = value;
         // the interpretation of production vs staging is done here.
         // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
         if (key === 'TWIST_ENV') {
             if (value === PRODUCTION_BRANCH_NAME) {
-                value = PRODUCTION_ENV_CONTEXT_NAME;
+                theValue = PRODUCTION_ENV_CONTEXT_NAME;
             }
             else {
-                value = STAGING_ENV_CONTEXT_NAME;
+                theValue = STAGING_ENV_CONTEXT_NAME;
             }
         }
-        console.log(`Adding context: ${key} => ${value}`);
+        console.log(`Adding context: ${key} => ${theValue}`);
         this.__data[key] = value;
     }
     __normalize(returnedJson) {
+        const theReturnedJson = returnedJson;
         // deleting the context declaration from the to-be-consumed config
         if (returnedJson[exports.CONTEXT_DECLARATION_KEY] !== undefined) {
-            delete returnedJson[exports.CONTEXT_DECLARATION_KEY];
+            delete theReturnedJson[exports.CONTEXT_DECLARATION_KEY];
         }
         // ensuring no value is left with templated place holder(ie " {{ key }} ")
         // the below will raise an exception
-        validateNoTemplateLeft(returnedJson);
-        return returnedJson;
+        validateNoTemplateLeft(theReturnedJson);
+        return theReturnedJson;
     }
     __processContext(jsonData, contextData) {
+        const theJsonData = jsonData;
         // traverse the jsonData to look for {{ token }} templates to substitute with value from contextData
-        for (const [k, v] of Object.entries(jsonData)) {
-            if (typeof (v) === 'object') {
-                jsonData[k] = this.__processContext(v, contextData);
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [k, v] of Object.entries(theJsonData)) {
+            if (typeof v === 'object') {
+                theJsonData[k] = this.__processContext(v, contextData);
             }
-            else if (typeof (v) === 'string') {
+            else if (typeof v === 'string') {
                 // attempt extracting the templated token from the provided string
                 const match = TEMPLATE_REGEX.exec(v);
                 // ignore. values that are not templated
                 if (!match || match.length !== 4) {
-                    continue;
+                    continue; // eslint-disable-line no-continue
                 }
                 // the template token lays inside the match.
                 // this is sensitive assumption but it is protected by unit tests! (the regex)
                 const keyword = match[2].trim();
+                console.log(`KEYWORD: ${keyword} CD[k]: ${contextData[keyword]} CD: ${JSON.stringify(contextData)}`);
                 // skip token if context data does not provide value (it will fail later in normalization)
                 if (contextData[keyword] === undefined) {
-                    continue;
+                    continue; // eslint-disable-line no-continue
                 }
                 // for non str value the config data s replaced as is with the provided context data(even if its dict!)
                 // otherwise(string) is replaced "123{{ token  }}789" => "123456789" given contextData["token"] = "456"
-                if (typeof (contextData[keyword]) !== 'string') {
-                    console.log(`replacing config key ${k} value from ${jsonData[k]} to ${contextData[keyword]}`);
-                    jsonData[k] = contextData[keyword];
+                if (typeof contextData[keyword] !== 'string') {
+                    console.log(`replacing config key ${k} value from ${theJsonData[k]} to ${contextData[keyword]}`);
+                    theJsonData[k] = contextData[keyword];
                 }
                 else {
                     const theVal = contextData[keyword];
                     const template = [match[1], match[2], match[3]].join('');
-                    const withTemplate = jsonData[k];
-                    jsonData[k] = jsonData[k].replace(template, theVal);
-                    console.log(`replacing config key ${k} value from ${withTemplate} to ${jsonData[k]}`);
+                    const withTemplate = theJsonData[k];
+                    theJsonData[k] = theJsonData[k].replace(template, theVal);
+                    console.log(`replacing config key ${k} value from ${withTemplate} to ${theJsonData[k]}`);
                 }
             }
         }
-        return jsonData;
+        return theJsonData;
     }
     process(configJson) {
         // ensuring manipulation of copied version, never original
@@ -118,14 +123,17 @@ class EnvConfigContext {
         // calling to add method above) - when found - this is the context vlaues to use when parsing the rest
         // of the json
         const contextDeclaration = jsonCopy[exports.CONTEXT_DECLARATION_KEY] || {};
+        // eslint-disable-next-line no-restricted-syntax
         for (const [contextDeclKey, contextData] of Object.entries(contextDeclaration)) {
+            // eslint-disable-next-line no-restricted-syntax
             for (const [contextDataKey, v] of Object.entries(this.__data)) {
                 console.log(`\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(contextData)} context_data_key: ${contextDataKey} v: ${v}`);
                 const contextValue = v;
-                if (contextDeclKey.toLowerCase() == contextValue.toString().toLowerCase()) {
+                if (contextDeclKey.toLowerCase() === contextValue.toString().toLowerCase()) {
                     const anyContextData = contextData;
                     currentContext = {
-                        ...currentContext, ...anyContextData
+                        ...currentContext,
+                        ...anyContextData,
                     };
                     break;
                 }
@@ -134,7 +142,7 @@ class EnvConfigContext {
         console.log(`detected config context to use: ${JSON.stringify(currentContext)}`);
         // making sure we have context data to work with
         if (Object.keys(currentContext).length === 0) {
-            console.log("could not find context data in respect to provided json!");
+            console.log('could not find context data in respect to provided json!');
             return this.__normalize(jsonCopy);
         }
         // replace the templated values from chosen context

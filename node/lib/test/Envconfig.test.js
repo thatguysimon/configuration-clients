@@ -32,7 +32,7 @@ describe('Test EnvConfig Traits', () => {
         configLoader.mockSetCategories(categories);
         configLoader.mockSetData(data);
         await EnvConfig_1.default.instance.setLoader(configLoader);
-        EnvConfig_1.default.instance.setContextHandler(new EnvConfigContext_1.default("dummyEnv"));
+        EnvConfig_1.default.instance.setContextHandler(new EnvConfigContext_1.default('dummyEnv'));
     }
     test('test that EnvConfig is a singleton', async () => {
         expect(EnvConfig_1.default.instance).toBeInstanceOf(EnvConfig_1.default);

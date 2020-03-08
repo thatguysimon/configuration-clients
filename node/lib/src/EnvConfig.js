@@ -68,7 +68,7 @@ class EnvConfig {
     }
     static addContext(key, value) {
         if (!EnvConfig.instance.__context) {
-            throw new Error("IConfigContext has not been injected to EnvConfig!");
+            throw new Error('IConfigContext has not been injected to EnvConfig!');
         }
         EnvConfig.instance.__context.add(key, value);
     }
