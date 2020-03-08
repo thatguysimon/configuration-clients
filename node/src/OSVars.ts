@@ -197,7 +197,7 @@ export default class OSVars {
 
             console.log(
                 `${mandatorySign[varObj.isMandatory]}${varKey} (${varObj.varType}): ${
-                varObj.description
+                    varObj.description
                 }${defaultValue}`,
             );
         });

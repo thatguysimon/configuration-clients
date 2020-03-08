@@ -22,6 +22,7 @@ class EnvConfig {
     constructor() {
         // - Preventing multi instantiation
         // - initializing member variables with defaults
+        this.__context = undefined;
         // the process working env
         this.__environment = env
             .get(TWIST_ENV_KEY)
@@ -37,6 +38,7 @@ class EnvConfig {
         this.__configJSON = {};
         // the concrete config loader (injected)
         this.__configLoader = undefined;
+        this.__context = undefined;
         // the below is a helper to hold collection of listed (not surely yet loaded) categories.
         this.__configCategories = new Set();
         this.__env_fallback = DEFAULT_ENV_FALLBACK;
@@ -52,6 +54,23 @@ class EnvConfig {
             EnvConfig.__theInstance = new EnvConfig();
         }
         return EnvConfig.__theInstance;
+    }
+    // env source of truth
+    static get env() {
+        return EnvConfig.instance.__environment;
+    }
+    /**
+     * Dependency injection of a config context processor that adheres to IConfigContext interface
+     * @param configContext concrete context processor
+     */
+    setContextHandler(configContext) {
+        this.__context = configContext;
+    }
+    static addContext(key, value) {
+        if (!EnvConfig.instance.__context) {
+            throw new Error("IConfigContext has not been injected to EnvConfig!");
+        }
+        EnvConfig.instance.__context.add(key, value);
     }
     /**
      * @description A list of environments that if the current running environment (indicated by TWIST_ENV)
@@ -141,8 +160,12 @@ class EnvConfig {
         if (!this.__configLoader) {
             throw new Error('Cannot load config without a loader (implementing EnvConfigLoader). please call set_loader respectively');
         }
+        if (!this.__context) {
+            throw new Error('config context is undefined');
+        }
         try {
-            return this.__configLoader.load(category);
+            const rawJson = await this.__configLoader.load(category);
+            return this.__context.process(rawJson);
         }
         catch (ex) {
             console.log(`Failed loading config for provided environment ${this.__environment}. Exception: ${ex}`);

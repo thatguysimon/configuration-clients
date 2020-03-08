@@ -1,5 +1,4 @@
-import { OSVarType } from './OSVars';
-import OSVars from './OSVars'
+import OSVars, { OSVarType } from './OSVars';
 
 // TODO: move to a common folder within the config clients monorepo
 const VAULT_API_VERSION = 'v1';

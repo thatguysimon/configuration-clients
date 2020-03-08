@@ -10,6 +10,7 @@ const OSVars_2 = __importDefault(require("./OSVars"));
 const Secrets_1 = __importDefault(require("./Secrets"));
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const EnvConfig_1 = __importDefault(require("./EnvConfig"));
+const EnvConfigContext_1 = __importDefault(require("./EnvConfigContext"));
 function yamlTypeToTypescript(type) {
     const conversionMap = {
         String: OSVars_1.OSVarType.String,
@@ -20,6 +21,9 @@ function yamlTypeToTypescript(type) {
     return conversionMap[type];
 }
 class ConfigBuilder {
+    constructor(context) {
+        this.__context = context;
+    }
     __buildOSVars(data) {
         if (data['env-vars']) {
             Object.keys(data['env-vars']).forEach(envVarName => {
@@ -28,7 +32,7 @@ class ConfigBuilder {
                     OSVars_2.default.registerMandatory(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type));
                 }
                 else {
-                    OSVars_2.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default ? envVarData.default.toString() : undefined);
+                    OSVars_2.default.register(envVarName, envVarData.description, yamlTypeToTypescript(envVarData.type), envVarData.default !== undefined ? envVarData.default.toString() : undefined);
                 }
             });
         }
@@ -59,7 +63,15 @@ class ConfigBuilder {
             if (confData.parent_environments) {
                 EnvConfig_1.default.instance.setEnvFallback(confData.parent_environments);
             }
+            // injecting config loader (github, gitlab or whatever else)
             await EnvConfig_1.default.instance.setLoader(confLoader);
+            // injecting context handler and context data
+            EnvConfig_1.default.instance.setContextHandler(new EnvConfigContext_1.default(EnvConfig_1.default.env));
+            if (this.__context) {
+                Object.entries(this.__context).forEach(([k, v]) => {
+                    EnvConfig_1.default.addContext(k, v);
+                });
+            }
             if (confData.categories) {
                 for (const category of confData.categories) { // eslint-disable-line
                     await EnvConfig_1.default.instance.requireCategory(category.toLowerCase()); // eslint-disable-line

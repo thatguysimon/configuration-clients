@@ -1,6 +1,7 @@
 import * as env from 'env-var';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import IEnvConfigLoader from './IEnvConfigLoader';
+import IConfigContext from './IConfigContext';
 import flattenJsonKeys from './utils/jsonUtils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -21,6 +22,8 @@ export default class EnvConfig {
 
     // @injectable
     private __configLoader: IEnvConfigLoader | undefined;
+
+    private __context: IConfigContext | undefined = undefined;
 
     private __configCategories: Set<string>;
 
@@ -61,10 +64,32 @@ export default class EnvConfig {
         this.__configJSON = {};
         // the concrete config loader (injected)
         this.__configLoader = undefined;
+        this.__context = undefined;
         // the below is a helper to hold collection of listed (not surely yet loaded) categories.
         this.__configCategories = new Set<string>();
 
         this.__env_fallback = DEFAULT_ENV_FALLBACK;
+    }
+
+    // env source of truth
+    public static get env(): string {
+        return EnvConfig.instance.__environment;
+    }
+
+    /**
+     * Dependency injection of a config context processor that adheres to IConfigContext interface
+     * @param configContext concrete context processor
+     */
+    public setContextHandler(configContext: IConfigContext): void {
+        this.__context = configContext;
+    }
+
+    public static addContext(key: string, value: any): void {
+        if (!EnvConfig.instance.__context) {
+            throw new Error('IConfigContext has not been injected to EnvConfig!');
+        }
+
+        EnvConfig.instance.__context.add(key, value);
     }
 
     /**
@@ -169,8 +194,13 @@ export default class EnvConfig {
             );
         }
 
+        if (!this.__context) {
+            throw new Error('config context is undefined');
+        }
+
         try {
-            return this.__configLoader.load(category);
+            const rawJson: any = await this.__configLoader.load(category);
+            return this.__context.process(rawJson);
         } catch (ex) {
             console.log(`Failed loading config for provided environment ${this.__environment}. Exception: ${ex}`);
         }
