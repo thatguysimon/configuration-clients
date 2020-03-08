@@ -85,7 +85,6 @@ class EnvConfigContext {
                 // the template token lays inside the match.
                 // this is sensitive assumption but it is protected by unit tests! (the regex)
                 const keyword = match[2].trim();
-                console.log(`KEYWORD: ${keyword} CD[k]: ${contextData[keyword]} CD: ${JSON.stringify(contextData)}`);
                 // skip token if context data does not provide value (it will fail later in normalization)
                 if (contextData[keyword] === undefined) {
                     continue; // eslint-disable-line no-continue

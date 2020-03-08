@@ -59,18 +59,18 @@ describe('Test ConfigContext Traits', () => {
             thanks: 'spasibo!',
         };
         expect(actual).toEqual(expected);
-        // const testee2 = new EnvConfigContext('staging');
-        // testee2.add('language', 'hebrew');
-        // const actual2 = testee2.process(MOCK_CONF);
-        // const expected2 = deepCopy(MOCK_CONF);
-        // delete expected2[CONTEXT_DECLARATION_KEY];
-        // expected2.data = {
-        //     str: '__val__',
-        //     mixed_str: 'ABCD__val__ABCD',
-        //     int: 1974,
-        //     thanks: 'toda!',
-        // };
-        // expect(actual2).toEqual(expected2);
+        const testee2 = new EnvConfigContext_1.default('staging');
+        testee2.add('language', 'hebrew');
+        const actual2 = testee2.process(MOCK_CONF);
+        const expected2 = deepCopy(MOCK_CONF);
+        delete expected2[EnvConfigContext_1.CONTEXT_DECLARATION_KEY];
+        expected2.data = {
+            str: '__val__',
+            mixed_str: 'ABCD__val__ABCD',
+            int: 1974,
+            thanks: 'toda!',
+        };
+        expect(actual2).toEqual(expected2);
     });
     test('test validation that when finds template it raise exception', () => {
         let actual;
