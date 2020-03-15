@@ -6,4 +6,6 @@ export default interface IConfigContext {
 
     // add context data
     add(key: string, val: any): void;
+
+    isProduction(): boolean;
 }

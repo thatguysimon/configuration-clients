@@ -61,8 +61,12 @@ class EnvConfigContext:
     def __init__(self, env):
         self.__data = {}
         self.__env = env
+        self.__is_production = False
 
         self.add("TWIST_ENV", self.__env)
+
+    def is_production(self):
+        return self.__is_production
 
     def add(self, key, value):
         """
@@ -82,6 +86,7 @@ class EnvConfigContext:
         if key == "TWIST_ENV":
             if value == PRODUCTION_BRANCH_NAME:
                 value = PRODUCTION_ENV_CONTEXT_NAME
+                self.__is_production = True
             else:
                 value = STAGING_ENV_CONTEXT_NAME
 

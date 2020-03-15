@@ -158,6 +158,14 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
     def env():
         return EnvConfig.instance().__env
 
+    @staticmethod
+    def is_production():
+        return EnvConfig.instance().__context.is_production()
+
+    @staticmethod
+    def is_staging():
+        return not EnvConfig.instance().__context.is_production()
+
     def set_env_fallback(self, fallback_list):
         """
         A list of environments that if the current running environment (indicated by TWIST_ENV)

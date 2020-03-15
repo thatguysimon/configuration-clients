@@ -76,6 +76,20 @@ export default class EnvConfig {
         return EnvConfig.instance.__environment;
     }
 
+    public static get isProduction(): boolean {
+        if (EnvConfig.instance.__context) {
+            return EnvConfig.instance.__context.isProduction();
+        }
+        throw new Error('unknown configuration context!');
+    }
+
+    public static get isStaging(): boolean {
+        if (EnvConfig.instance.__context) {
+            return !EnvConfig.instance.__context.isProduction();
+        }
+        throw new Error('unknown configuration context!');
+    }
+
     /**
      * Dependency injection of a config context processor that adheres to IConfigContext interface
      * @param configContext concrete context processor

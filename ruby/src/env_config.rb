@@ -51,6 +51,14 @@ module TwistConf
       EnvConfig.instance.__get_env
     end
 
+    def self.is_production
+      EnvConfig.instance.__context.is_production
+    end
+
+    def self.is_staging
+      EnvConfig.instance.__context.is_production == false
+    end
+
     # A list of environments that if the current running environment (indicated by TWIST_ENV)
     # is not present (ex. branch does not exist) the list will provide another branch to fallback to.
     # The list will be used from first to last (["ONE", "TWO", "master"] if TWIST_ENV branch doesn't exist, then

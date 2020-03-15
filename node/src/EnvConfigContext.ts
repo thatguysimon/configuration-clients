@@ -34,10 +34,17 @@ export default class EnvConfigContext implements IConfigContext {
 
     private __data: any = {};
 
+    private __is_production: boolean;
+
     constructor(env: string) {
         this.__env = env;
+        this.__is_production = false;
 
         this.add('TWIST_ENV', this.__env);
+    }
+
+    public isProduction(): boolean {
+        return this.__is_production;
     }
 
     /**
@@ -57,6 +64,7 @@ export default class EnvConfigContext implements IConfigContext {
         if (key === 'TWIST_ENV') {
             if (value === PRODUCTION_BRANCH_NAME) {
                 theValue = PRODUCTION_ENV_CONTEXT_NAME;
+                this.__is_production = true;
             } else {
                 theValue = STAGING_ENV_CONTEXT_NAME;
             }

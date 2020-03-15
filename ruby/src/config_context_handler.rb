@@ -45,6 +45,7 @@ class EnvConfigContext
   def initialize(env)
     @__env = env
     @__data = {}
+    @__is_production = false
 
     add('TWIST_ENV', env)
   end
@@ -57,17 +58,20 @@ class EnvConfigContext
     # the interpretation of production vs staging is done here.
     # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
     if key == 'TWIST_ENV'
-      # rubocop:disable Style/ConditionalAssignment
       if value == PRODUCTION_BRANCH_NAME
         value = PRODUCTION_ENV_CONTEXT_NAME
+        @__is_production = true
       else
         value = STAGING_ENV_CONTEXT_NAME
       end
-      # rubocop:enable Style/ConditionalAssignment
     end
 
     Log.debug("Adding context: #{key} => #{value}")
     @__data[key] = value
+  end
+
+  def is_production
+    @__is_production
   end
 
   def __normalize(returned_json)
