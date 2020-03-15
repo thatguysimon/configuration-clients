@@ -9,6 +9,7 @@ from .config_context_handler import EnvConfigContext
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .secrets import Secrets
 from .logger import Logger
+from .common import is_production
 
 yaml_type_to_python = {"String": str, "Bool": bool, "Int": int, "Float": float}
 
@@ -78,7 +79,7 @@ class ConfigBuilder:
         if "required" in secrets_conf:
             # preping the subfolder to fetch secret from (staged / production)
             secret_env = "staged"
-            if EnvConfig.instance().is_production:
+            if is_production():
                 secret_env = "production"
 
             Logger.debug(f"======= Actual Env: {secret_env} ========")
@@ -86,7 +87,7 @@ class ConfigBuilder:
             for secret_category in secrets_conf["required"]:
                 try:
                     secret_key = secrets_conf["required"][secret_category]
-                    secret_path = f"secret/{secret_env}/{secret_category}"
+                    secret_path = f"secret/{secret_env}/{secret_key}"
                     Secrets.instance().require_secret(secret_category, secret_path)
                 except Exception as e:
                     raise Exception(

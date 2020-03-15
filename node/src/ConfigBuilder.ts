@@ -2,7 +2,7 @@ import YAML from 'yaml';
 
 import fs from 'fs';
 import OSVars, { OSVarType } from './OSVars';
-
+import isProduction from './Common';
 import Secrets from './Secrets';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import EnvConfig from './EnvConfig';
@@ -50,7 +50,7 @@ export default class ConfigBuilder {
             const secretsConf = data.secrets;
             // determining the folder from which to pull the secret from ("staged" or "production")
             let secretEnv = 'staged';
-            if (EnvConfig.isProduction) {
+            if (isProduction()) {
                 secretEnv = 'production';
             }
             console.log(`======= Actual Env: ${secretEnv} ========`);

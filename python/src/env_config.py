@@ -18,12 +18,13 @@ import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
 from .logger import Logger
+from .common import ENV_VAR_NAME
 from .dict_utils import flatten_dict
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
-TWIST_ENV_KEY = "TWIST_ENV"
+TWIST_ENV_KEY = ENV_VAR_NAME
 CONFIGURATION_BASE_KEY = "CONFIG_BASE_ENV"
 DEFAULT_ENV_FALLBACK = ["master"]
 
@@ -157,14 +158,6 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
     @staticmethod
     def env():
         return EnvConfig.instance().__env
-
-    @staticmethod
-    def is_production():
-        return EnvConfig.instance().__context.is_production()
-
-    @staticmethod
-    def is_staging():
-        return not EnvConfig.instance().__context.is_production()
 
     def set_env_fallback(self, fallback_list):
         """

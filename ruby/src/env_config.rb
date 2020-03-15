@@ -4,12 +4,13 @@ require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
 require_relative 'utils/logger'
 require_relative 'utils/dict_utils'
+require_relative 'common'
 
 module TwistConf
   #############################################################################
   # GLOBALS and CONSTANTS                                                     #
   #############################################################################
-  TWIST_ENV_KEY = 'TWIST_ENV'
+  TWIST_ENV_KEY = ENV_VAR_NAME
   CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV'
   DEFAULT_ENV_FALLBACK = ['master']
 
@@ -49,14 +50,6 @@ module TwistConf
 
     def self.env
       EnvConfig.instance.__get_env
-    end
-
-    def self.is_production
-      EnvConfig.instance.__context.is_production
-    end
-
-    def self.is_staging
-      EnvConfig.instance.__context.is_production == false
     end
 
     # A list of environments that if the current running environment (indicated by TWIST_ENV)

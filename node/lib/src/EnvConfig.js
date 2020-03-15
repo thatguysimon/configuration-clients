@@ -11,11 +11,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const env = __importStar(require("env-var"));
+const Common_1 = require("./Common");
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const jsonUtils_1 = __importDefault(require("./utils/jsonUtils"));
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: the below should be common to this monorepo (share with with python, ruby etc.)
-const TWIST_ENV_KEY = 'TWIST_ENV';
+const TWIST_ENV_KEY = Common_1.ENV_VAR_NAME;
 const CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV';
 const DEFAULT_ENV_FALLBACK = ['master'];
 class EnvConfig {
@@ -58,18 +59,6 @@ class EnvConfig {
     // env source of truth
     static get env() {
         return EnvConfig.instance.__environment;
-    }
-    static get isProduction() {
-        if (EnvConfig.instance.__context) {
-            return EnvConfig.instance.__context.isProduction();
-        }
-        throw new Error('unknown configuration context!');
-    }
-    static get isStaging() {
-        if (EnvConfig.instance.__context) {
-            return !EnvConfig.instance.__context.isProduction();
-        }
-        throw new Error('unknown configuration context!');
     }
     /**
      * Dependency injection of a config context processor that adheres to IConfigContext interface

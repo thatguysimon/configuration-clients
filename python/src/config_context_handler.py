@@ -14,6 +14,8 @@ Base class and implementation of config context
 import copy
 import re
 from .logger import Logger
+from .common import ENV_VAR_NAME
+from .common import PRODUCTION_BRANCH_NAME
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -21,7 +23,6 @@ from .logger import Logger
 
 CONTEXT_DECLARATION_KEY = "$context"
 TEMPLATE_REGEX = r".*({{)(\s*[\w_\-\.]+\s*)(}}).*"
-PRODUCTION_BRANCH_NAME = "master"
 STAGING_ENV_CONTEXT_NAME = "staging"
 PRODUCTION_ENV_CONTEXT_NAME = "production"
 
@@ -61,12 +62,8 @@ class EnvConfigContext:
     def __init__(self, env):
         self.__data = {}
         self.__env = env
-        self.__is_production = False
 
-        self.add("TWIST_ENV", self.__env)
-
-    def is_production(self):
-        return self.__is_production
+        self.add(ENV_VAR_NAME, self.__env)
 
     def add(self, key, value):
         """
@@ -83,10 +80,9 @@ class EnvConfigContext:
 
         # the interpretation of production vs staging is done here.
         # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-        if key == "TWIST_ENV":
+        if key == ENV_VAR_NAME:
             if value == PRODUCTION_BRANCH_NAME:
                 value = PRODUCTION_ENV_CONTEXT_NAME
-                self.__is_production = True
             else:
                 value = STAGING_ENV_CONTEXT_NAME
 

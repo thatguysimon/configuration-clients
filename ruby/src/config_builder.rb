@@ -5,6 +5,7 @@ require_relative 'env_config_loader_factory'
 require_relative 'env_config'
 require_relative 'secrets'
 require_relative 'config_context_handler'
+require_relative 'common'
 
 module TwistConf
   #############################################################################
@@ -95,7 +96,7 @@ module TwistConf
       return unless secrets_conf['required']
 
       secret_env = 'staged'
-      if EnvConfig.is_production
+      if is_production
         secret_env = 'production'
       end
 

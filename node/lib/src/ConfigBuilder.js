@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const yaml_1 = __importDefault(require("yaml"));
 const fs_1 = __importDefault(require("fs"));
 const OSVars_1 = __importStar(require("./OSVars"));
+const Common_1 = __importDefault(require("./Common"));
 const Secrets_1 = __importDefault(require("./Secrets"));
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const EnvConfig_1 = __importDefault(require("./EnvConfig"));
@@ -49,7 +50,7 @@ class ConfigBuilder {
             const secretsConf = data.secrets;
             // determining the folder from which to pull the secret from ("staged" or "production")
             let secretEnv = 'staged';
-            if (EnvConfig_1.default.isProduction) {
+            if (Common_1.default()) {
                 secretEnv = 'production';
             }
             console.log(`======= Actual Env: ${secretEnv} ========`);
