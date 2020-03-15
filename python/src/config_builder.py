@@ -76,10 +76,18 @@ class ConfigBuilder:
         secrets_conf = data["secrets"]
 
         if "required" in secrets_conf:
+            # preping the subfolder to fetch secret from (staged / production)
+            secret_env = "staged"
+            if EnvConfig.instance().is_production:
+                secret_env = "production"
+
+            Logger.debug(f"======= Actual Env: {secret_env} ========")
+
             for secret_category in secrets_conf["required"]:
                 try:
                     secret_key = secrets_conf["required"][secret_category]
-                    Secrets.instance().require_secret(secret_category, secret_key)
+                    secret_path = f"secret/{secret_env}/{secret_category}"
+                    Secrets.instance().require_secret(secret_category, secret_path)
                 except Exception as e:
                     raise Exception(
                         f"Failed fetching Secrets key {secret_key}. Error: {e}"

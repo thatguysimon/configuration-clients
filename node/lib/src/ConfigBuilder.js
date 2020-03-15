@@ -47,11 +47,18 @@ class ConfigBuilder {
     async __buildSecrets(data) {
         if (data.secrets) {
             const secretsConf = data.secrets;
+            // determining the folder from which to pull the secret from ("staged" or "production")
+            let secretEnv = 'staged';
+            if (EnvConfig_1.default.isProduction) {
+                secretEnv = 'production';
+            }
+            console.log(`======= Actual Env: ${secretEnv} ========`);
             if (secretsConf.required) {
                 for (const [secretCategory, anySecretKey] of Object.entries(secretsConf.required)) { // eslint-disable-line
                     // all required / declared secrets must exists upon conf initialization
-                    const secretKey = anySecretKey;
+                    let secretKey = anySecretKey;
                     try {
+                        secretKey = `secret/${secretEnv}/${secretKey}`;
                         await Secrets_1.default.instance.requireSecret(secretCategory, secretKey); // eslint-disable-line
                     }
                     catch (ex) {

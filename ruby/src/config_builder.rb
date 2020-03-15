@@ -94,10 +94,19 @@ module TwistConf
 
       return unless secrets_conf['required']
 
+      secret_env = 'staged'
+      if EnvConfig.is_production
+        secret_env = 'production'
+      end
+
+      Log.debug("======= Actual Env: #{secret_env} ========")
+
       secrets_conf['required'].each do |secret_element|
         # rubocop:disable Style/RedundantBegin
         begin
-          Secrets.instance.require_secret(secret_element[0], secret_element[1])
+          secret_key = "secret/#{secret_env}/#{secret_element[1]}"
+          secret_category = secret_element[0]
+          Secrets.instance.require_secret(secret_category, secret_key)
         rescue StandardError => e
           Log.error("Failed fetching Secrets key #{secret_element[1]}. Error: #{e}")
           exit(1)
