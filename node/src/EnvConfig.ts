@@ -1,4 +1,5 @@
 import * as env from 'env-var';
+import { ENV_VAR_NAME } from './Common';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import IEnvConfigLoader from './IEnvConfigLoader';
 import IConfigContext from './IConfigContext';
@@ -7,7 +8,7 @@ import flattenJsonKeys from './utils/jsonUtils';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // TODO: the below should be common to this monorepo (share with with python, ruby etc.)
-const TWIST_ENV_KEY = 'TWIST_ENV';
+const TWIST_ENV_KEY = ENV_VAR_NAME;
 const CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV';
 const DEFAULT_ENV_FALLBACK = ['master'];
 

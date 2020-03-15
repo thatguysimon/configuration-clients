@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const yaml_1 = __importDefault(require("yaml"));
 const fs_1 = __importDefault(require("fs"));
 const OSVars_1 = __importStar(require("./OSVars"));
+const Common_1 = __importDefault(require("./Common"));
 const Secrets_1 = __importDefault(require("./Secrets"));
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const EnvConfig_1 = __importDefault(require("./EnvConfig"));
@@ -47,11 +48,18 @@ class ConfigBuilder {
     async __buildSecrets(data) {
         if (data.secrets) {
             const secretsConf = data.secrets;
+            // determining the folder from which to pull the secret from ("staged" or "production")
+            let secretEnv = 'staged';
+            if (Common_1.default()) {
+                secretEnv = 'production';
+            }
+            console.log(`======= Actual Env: ${secretEnv} ========`);
             if (secretsConf.required) {
                 for (const [secretCategory, anySecretKey] of Object.entries(secretsConf.required)) { // eslint-disable-line
                     // all required / declared secrets must exists upon conf initialization
-                    const secretKey = anySecretKey;
+                    let secretKey = anySecretKey;
                     try {
+                        secretKey = `secret/${secretEnv}/${secretKey}`;
                         await Secrets_1.default.instance.requireSecret(secretCategory, secretKey); // eslint-disable-line
                     }
                     catch (ex) {

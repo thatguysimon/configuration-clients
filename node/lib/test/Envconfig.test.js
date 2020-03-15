@@ -86,4 +86,4 @@ describe('Test EnvConfig Traits', () => {
         expect(actual).toEqual(expected);
     });
 });
-//# sourceMappingURL=EnvConfig.test.js.map
+//# sourceMappingURL=Envconfig.test.js.map

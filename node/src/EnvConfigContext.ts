@@ -1,8 +1,8 @@
 import IConfigContext from './IConfigContext';
+import { PRODUCTION_BRANCH_NAME, ENV_VAR_NAME } from './Common';
 
 export const CONTEXT_DECLARATION_KEY = '$context';
 const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
-const PRODUCTION_BRANCH_NAME = 'master';
 const STAGING_ENV_CONTEXT_NAME = 'staging';
 const PRODUCTION_ENV_CONTEXT_NAME = 'production';
 
@@ -37,7 +37,7 @@ export default class EnvConfigContext implements IConfigContext {
     constructor(env: string) {
         this.__env = env;
 
-        this.add('TWIST_ENV', this.__env);
+        this.add(ENV_VAR_NAME, this.__env);
     }
 
     /**
@@ -54,7 +54,7 @@ export default class EnvConfigContext implements IConfigContext {
 
         // the interpretation of production vs staging is done here.
         // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-        if (key === 'TWIST_ENV') {
+        if (key === ENV_VAR_NAME) {
             if (value === PRODUCTION_BRANCH_NAME) {
                 theValue = PRODUCTION_ENV_CONTEXT_NAME;
             } else {
@@ -63,7 +63,7 @@ export default class EnvConfigContext implements IConfigContext {
         }
 
         console.log(`Adding context: ${key} => ${theValue}`);
-        this.__data[key] = value;
+        this.__data[key] = theValue;
     }
 
     __normalize(returnedJson: any): any {

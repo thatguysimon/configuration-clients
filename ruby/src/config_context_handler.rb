@@ -8,6 +8,7 @@
 # IMPORT MODULES                                                            #
 #############################################################################
 require_relative 'utils/logger'
+require_relative 'common'
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -15,7 +16,6 @@ require_relative 'utils/logger'
 
 CONTEXT_DECLARATION_KEY = '$context'
 TEMPLATE_REGEX = /.*({{)(\s*[\w_\-\.]+\s*)(}}).*/
-PRODUCTION_BRANCH_NAME = 'master'
 STAGING_ENV_CONTEXT_NAME = 'staging'
 PRODUCTION_ENV_CONTEXT_NAME = 'production'
 
@@ -46,7 +46,7 @@ class EnvConfigContext
     @__env = env
     @__data = {}
 
-    add('TWIST_ENV', env)
+    add(ENV_VAR_NAME, env)
   end
 
   def add(key, value)
@@ -56,7 +56,7 @@ class EnvConfigContext
 
     # the interpretation of production vs staging is done here.
     # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-    if key == 'TWIST_ENV'
+    if key == ENV_VAR_NAME
       # rubocop:disable Style/ConditionalAssignment
       if value == PRODUCTION_BRANCH_NAME
         value = PRODUCTION_ENV_CONTEXT_NAME

@@ -4,12 +4,13 @@ require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
 require_relative 'utils/logger'
 require_relative 'utils/dict_utils'
+require_relative 'common'
 
 module TwistConf
   #############################################################################
   # GLOBALS and CONSTANTS                                                     #
   #############################################################################
-  TWIST_ENV_KEY = 'TWIST_ENV'
+  TWIST_ENV_KEY = ENV_VAR_NAME
   CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV'
   DEFAULT_ENV_FALLBACK = ['master']
 

@@ -18,12 +18,13 @@ import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
 from .logger import Logger
+from .common import ENV_VAR_NAME
 from .dict_utils import flatten_dict
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
-TWIST_ENV_KEY = "TWIST_ENV"
+TWIST_ENV_KEY = ENV_VAR_NAME
 CONFIGURATION_BASE_KEY = "CONFIG_BASE_ENV"
 DEFAULT_ENV_FALLBACK = ["master"]
 
