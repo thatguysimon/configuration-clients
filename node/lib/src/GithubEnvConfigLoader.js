@@ -54,7 +54,7 @@ class GithubEnvConfigLoader {
         }
         else {
             // otherwise fetch from secrets
-            const common = await Secrets_1.default.instance.get('common');
+            const common = await Secrets_1.default.get('common');
             githubToken = common[GIT_CONF_TOKEN_KEY];
         }
         if (githubToken === undefined || githubToken.trim() === '') {
