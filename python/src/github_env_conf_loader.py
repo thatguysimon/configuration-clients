@@ -71,7 +71,7 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             github_conf_token = os.environ[GIT_CONF_TOKEN_KEY]
         else:
             # otherwise fetch from secrets
-            common = Secrets.instance().get_by_path("secret/common")
+            common = Secrets.instance().get("common")
             github_conf_token = common[GIT_CONF_TOKEN_KEY]
 
         if github_conf_token is None or github_conf_token == "":
