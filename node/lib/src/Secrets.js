@@ -65,6 +65,7 @@ class Secrets {
             return this.__pathToSecrets[pathToSecret];
         }
         try {
+            console.log(`Fetching secret from ${pathToSecret}`);
             const secret = await this.__vault.read(pathToSecret);
             // using vault v2 the below is the new way to fetch a secret
             // secret = self.__client.secrets.kv.v2.read_secret_version(path)

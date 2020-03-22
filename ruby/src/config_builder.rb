@@ -95,13 +95,15 @@ module TwistConf
 
       return unless secrets_conf['required']
 
-      secret_env = 'staged'
-      if is_production
-        secret_env = 'production'
-      end
+      # actual context is the ROLE of the environment vs its name.
+      # production is production, qa is qa, dev is dev but staging and
+      # all whats different than the aforementioned is staging!
+      # adhering to the dynamic env plan. see common.rb
+      secret_env = get_contextual_env
 
       Log.debug("======= Actual Env: #{secret_env} ========")
 
+      secret_key = ''
       secrets_conf['required'].each do |secret_element|
         # rubocop:disable Style/RedundantBegin
         begin
@@ -109,7 +111,7 @@ module TwistConf
           secret_category = secret_element[0]
           Secrets.instance.require_secret(secret_category, secret_key)
         rescue StandardError => e
-          Log.error("Failed fetching Secrets key #{secret_element[1]}. Error: #{e}")
+          Log.error("Failed fetching Secrets key from #{secret_key}. Error: #{e}")
           exit(1)
         end
         # rubocop:enable Style/RedundantBegin

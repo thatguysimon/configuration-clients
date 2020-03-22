@@ -15,7 +15,7 @@ import copy
 import re
 from .logger import Logger
 from .common import ENV_VAR_NAME
-from .common import PRODUCTION_BRANCH_NAME
+from .common import get_contextual_env
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -23,8 +23,6 @@ from .common import PRODUCTION_BRANCH_NAME
 
 CONTEXT_DECLARATION_KEY = "$context"
 TEMPLATE_REGEX = r".*({{)(\s*[\w_\-\.]+\s*)(}}).*"
-STAGING_ENV_CONTEXT_NAME = "staging"
-PRODUCTION_ENV_CONTEXT_NAME = "production"
 
 
 def validate_no_template_left(json):
@@ -81,10 +79,7 @@ class EnvConfigContext:
         # the interpretation of production vs staging is done here.
         # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
         if key == ENV_VAR_NAME:
-            if value == PRODUCTION_BRANCH_NAME:
-                value = PRODUCTION_ENV_CONTEXT_NAME
-            else:
-                value = STAGING_ENV_CONTEXT_NAME
+            value = get_contextual_env()
 
         Logger.debug(f"Adding context: {key} => {value}")
         self.__data[key] = value

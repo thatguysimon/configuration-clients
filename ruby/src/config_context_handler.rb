@@ -16,8 +16,6 @@ require_relative 'common'
 
 CONTEXT_DECLARATION_KEY = '$context'
 TEMPLATE_REGEX = /.*({{)(\s*[\w_\-\.]+\s*)(}}).*/
-STAGING_ENV_CONTEXT_NAME = 'staging'
-PRODUCTION_ENV_CONTEXT_NAME = 'production'
 
 # validation of a dictionary -
 # making sure no templated token is left unreplaced in any of the json value leafs.
@@ -57,13 +55,7 @@ class EnvConfigContext
     # the interpretation of production vs staging is done here.
     # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
     if key == ENV_VAR_NAME
-      # rubocop:disable Style/ConditionalAssignment
-      if value == PRODUCTION_BRANCH_NAME
-        value = PRODUCTION_ENV_CONTEXT_NAME
-      else
-        value = STAGING_ENV_CONTEXT_NAME
-      end
-      # rubocop:enable Style/ConditionalAssignment
+      value = get_contextual_env
     end
 
     Log.debug("Adding context: #{key} => #{value}")

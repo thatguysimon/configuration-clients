@@ -5,14 +5,16 @@
 #############################################################################
 import unittest
 import copy
-from mock import Mock
+from mock import Mock, patch
 from src.config_context_handler import EnvConfigContext
 from src.config_context_handler import CONTEXT_DECLARATION_KEY
 from src.config_context_handler import validate_no_template_left
-
+from src.common import ENV_VAR_NAME
 from src.logger import Logger
 
 Logger.instance = Mock()
+
+ENV_NAME = "dummy_env_name"
 
 MOCK_CONF_NO_CONTEXT = {"mitzi": " miao "}
 MOCK_CONF_WITH_CONTEXT_REF = {"mitzi": " {{ miao }} "}
@@ -39,8 +41,9 @@ MOCK_CONF = {
 
 
 class EnvConfigContextTester(unittest.TestCase):
+    @patch.dict("os.environ", {ENV_VAR_NAME: ENV_NAME})
     def test_no_context_in_conf_yields_original_data(self):
-        testee = EnvConfigContext("dummy_env_name")
+        testee = EnvConfigContext(ENV_NAME)
         testee.add("mitzi", "woofwoof")
 
         actual = testee.process(MOCK_CONF_NO_CONTEXT)
@@ -52,8 +55,9 @@ class EnvConfigContextTester(unittest.TestCase):
             "expected to get the original provided json which was without context but got something else ",
         )
 
+    @patch.dict("os.environ", {ENV_VAR_NAME: ENV_NAME})
     def test_context_without_ref_in_conf_yields_original_data(self):
-        testee = EnvConfigContext("dummy_env_name")
+        testee = EnvConfigContext(ENV_NAME)
         testee.add("mitzi", "woofwoof")
 
         actual = testee.process(MOCK_CONF_NO_CONTEXT_REF)
@@ -66,6 +70,7 @@ class EnvConfigContextTester(unittest.TestCase):
             "expected to get the original provided json which was without context but got something else ",
         )
 
+    @patch.dict("os.environ", {ENV_VAR_NAME: ENV_NAME})
     def test_context_and_data_yield_modified_version(self):
         testee = EnvConfigContext("staging")
         testee.add("language", "russian")
