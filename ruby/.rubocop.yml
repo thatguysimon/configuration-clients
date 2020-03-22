@@ -4,10 +4,10 @@
 AllCops:
   TargetRubyVersion: 2.6.3
   Exclude:
-    - 'test/stubs/*'
-    - 'test/fixtures/**/*'
-    - 'bin/*'
-    - 'tmp/**/*'
+    - "test/stubs/*"
+    - "test/fixtures/**/*"
+    - "bin/*"
+    - "tmp/**/*"
 
 Layout/LineLength:
   Max: 125
@@ -16,7 +16,18 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Max: 30
 Metrics/BlockLength:
-  ExcludedMethods: ['scope', 'namespace', 'resource', 'draw', 'included', 'describe', 'before', 'define', 'factory']
+  ExcludedMethods:
+    [
+      "scope",
+      "namespace",
+      "resource",
+      "draw",
+      "included",
+      "describe",
+      "before",
+      "define",
+      "factory",
+    ]
 Metrics/AbcSize:
   Max: 45
 Metrics/CyclomaticComplexity:
@@ -42,7 +53,7 @@ Style/NonNilCheck:
   Enabled: false
 Style/BlockDelimiters:
   Exclude:
-    - 'tests/**/*'
+    - "tests/**/*"
 Style/MixinUsage:
   Enabled: false
 Style/NegatedUnless:
@@ -51,15 +62,17 @@ Style/NegatedIf:
   Enabled: false
 Style/Next:
   Enabled: false
+Style/WordArray:
+  Enabled: false
 
 Naming/PredicateName:
   Enabled: false
 Naming/AccessorMethodName:
   Enabled: false
 # Rails/DynamicFindBy:
-  # Enabled: false
+# Enabled: false
 # Rails/FindBy:
-  # Enabled: false
+# Enabled: false
 # Rails/FindEach:
 #   Enabled: false
 # Rails/Delegate:

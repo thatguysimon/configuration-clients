@@ -55,7 +55,7 @@ class GithubEnvConfigLoader < EnvConfigLoader
       github_conf_token = ENV[GIT_CONF_TOKEN_KEY]
     else
       # otherwise fetch from secrets
-      common = Secrets.instance.get('common')
+      common = Secrets.get('common')
       github_conf_token = common.fetch(:GIT_CONFIG_TOKEN)
     end
 

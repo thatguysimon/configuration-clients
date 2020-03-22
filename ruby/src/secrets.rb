@@ -86,6 +86,7 @@ module TwistConf
         # Note: Using puts since Rails logger won't yet be initialized
         raise "Failed fetching secret #{path_to_secret} from Vault. exception #{e} - attempt #{attempt}" if e
 
+        Log.debug("Fetching secret from #{path_to_secret}")
         secret_hash = Vault.logical.read(path_to_secret).data
       end
       @__path_to_secret[path_to_secret] = secret_hash
