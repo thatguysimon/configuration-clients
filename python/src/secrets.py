@@ -118,6 +118,8 @@ class Secrets:
                 """
             )
 
+        Logger.debug(f"Fetching secret from {path_to_secret}")
+
         secret = self.__client.read(path_to_secret)
         # using vault v2 the below is the new way to fetch a secret
         # secret = self.__client.secrets.kv.v2.read_secret_version(path)
