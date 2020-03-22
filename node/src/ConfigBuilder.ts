@@ -2,7 +2,7 @@ import YAML from 'yaml';
 
 import fs from 'fs';
 import OSVars, { OSVarType } from './OSVars';
-import isProduction from './Common';
+import { getContextualEnv } from './Common';
 import Secrets from './Secrets';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import EnvConfig from './EnvConfig';
@@ -49,10 +49,10 @@ export default class ConfigBuilder {
         if (data.secrets) {
             const secretsConf = data.secrets;
             // determining the folder from which to pull the secret from ("staged" or "production")
-            let secretEnv = 'staged';
-            if (isProduction()) {
-                secretEnv = 'production';
-            }
+            // actual context is the ROLE of the environment vs its name.
+            // production is production, qa is qa, dev is dev but staging and all whats different than the aforementioned is staging!
+            // adhering to the dynamic env plan. see Common.ts
+            const secretEnv = getContextualEnv();
             console.log(`======= Actual Env: ${secretEnv} ========`);
 
             if (secretsConf.required) {

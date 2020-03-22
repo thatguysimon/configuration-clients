@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const yaml_1 = __importDefault(require("yaml"));
 const fs_1 = __importDefault(require("fs"));
 const OSVars_1 = __importStar(require("./OSVars"));
-const Common_1 = __importDefault(require("./Common"));
+const Common_1 = require("./Common");
 const Secrets_1 = __importDefault(require("./Secrets"));
 const EnvConfigLoaderFactory_1 = __importDefault(require("./EnvConfigLoaderFactory"));
 const EnvConfig_1 = __importDefault(require("./EnvConfig"));
@@ -49,10 +49,10 @@ class ConfigBuilder {
         if (data.secrets) {
             const secretsConf = data.secrets;
             // determining the folder from which to pull the secret from ("staged" or "production")
-            let secretEnv = 'staged';
-            if (Common_1.default()) {
-                secretEnv = 'production';
-            }
+            // actual context is the ROLE of the environment vs its name.
+            // production is production, qa is qa, dev is dev but staging and all whats different than the aforementioned is staging!
+            // adhering to the dynamic env plan. see Common.ts
+            const secretEnv = Common_1.getContextualEnv();
             console.log(`======= Actual Env: ${secretEnv} ========`);
             if (secretsConf.required) {
                 for (const [secretCategory, anySecretKey] of Object.entries(secretsConf.required)) { // eslint-disable-line

@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Common_1 = require("./Common");
 exports.CONTEXT_DECLARATION_KEY = '$context';
 const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
-const STAGING_ENV_CONTEXT_NAME = 'staging';
-const PRODUCTION_ENV_CONTEXT_NAME = 'production';
 /**
  * json validation -
    making sure no templated token is left unreplaced in any of the json value leafs.
@@ -46,12 +44,7 @@ class EnvConfigContext {
         // the interpretation of production vs staging is done here.
         // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
         if (key === Common_1.ENV_VAR_NAME) {
-            if (value === Common_1.PRODUCTION_BRANCH_NAME) {
-                theValue = PRODUCTION_ENV_CONTEXT_NAME;
-            }
-            else {
-                theValue = STAGING_ENV_CONTEXT_NAME;
-            }
+            theValue = Common_1.getContextualEnv();
         }
         console.log(`Adding context: ${key} => ${theValue}`);
         this.__data[key] = theValue;

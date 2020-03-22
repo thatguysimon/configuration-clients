@@ -1,10 +1,8 @@
 import IConfigContext from './IConfigContext';
-import { PRODUCTION_BRANCH_NAME, ENV_VAR_NAME } from './Common';
+import { getContextualEnv, ENV_VAR_NAME } from './Common';
 
 export const CONTEXT_DECLARATION_KEY = '$context';
 const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
-const STAGING_ENV_CONTEXT_NAME = 'staging';
-const PRODUCTION_ENV_CONTEXT_NAME = 'production';
 
 /**
  * json validation -
@@ -54,12 +52,9 @@ export default class EnvConfigContext implements IConfigContext {
 
         // the interpretation of production vs staging is done here.
         // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
+        // or other (qa, dev, staging) - see Common.ts
         if (key === ENV_VAR_NAME) {
-            if (value === PRODUCTION_BRANCH_NAME) {
-                theValue = PRODUCTION_ENV_CONTEXT_NAME;
-            } else {
-                theValue = STAGING_ENV_CONTEXT_NAME;
-            }
+            theValue = getContextualEnv();
         }
 
         console.log(`Adding context: ${key} => ${theValue}`);
