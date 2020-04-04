@@ -13,10 +13,13 @@ Gem::Specification.new do |s|
     'src/abstract_env_config_loader.rb',
     'src/env_config_loader_factory.rb',
     'src/github_env_conf_loader.rb',
+    'src/config_context_handler.rb',
     'src/os_vars.rb',
     'src/secrets.rb',
+    'src/common.rb',
     'src/utils/logger.rb',
     'src/utils/type_utils.rb',
+    'src/utils/dict_utils.rb',
     'Gemfile',
     'Gemfile.lock'
   ]
