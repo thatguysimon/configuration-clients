@@ -17,6 +17,8 @@ GIT_CONF_TOKEN_KEY = 'GIT_CONFIG_TOKEN'
 # IMPLEMENTATION                                                            #
 #############################################################################
 
+include TwistConf
+
 class GithubEnvConfigLoader < EnvConfigLoader
   def initialize
     super
