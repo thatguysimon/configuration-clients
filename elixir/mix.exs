@@ -37,7 +37,7 @@ defmodule ConfigClients.Mixfile do
       {:distillery, "~> 2.0.3", runtime: false},
       {:ex_doc, "~> 0.18.2", only: :dev},
       {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
-      {:httpoison, "~> 1.6.2"},
+      {:httpoison, "~> 0.13"},
     ]
   end
 
