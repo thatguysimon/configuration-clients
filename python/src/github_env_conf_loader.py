@@ -103,8 +103,9 @@ class GithubEnvConfigLoader(EnvConfigLoader):
             response = requests.get(github_url, headers=headers)
 
             if response.status_code == 200:
-                Logger.debug(
-                    f"branch {candidate_env} is verified. Using configuration from {candidate_env}"
+                commit_hash = response.json()["commit"]["sha"][:6]
+                Logger.info(
+                    f"Using configuration branch {candidate_env} with commit hash: {commit_hash}"
                 )
                 self._env = candidate_env
                 return True

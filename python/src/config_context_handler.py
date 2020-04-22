@@ -58,10 +58,17 @@ class EnvConfigContext:
     """
 
     def __init__(self, env):
-        self.__data = {}
+        # app_context_data is context added by application to dynamic use in conjunction with conf json $context
+        self.__app_context_data = {}
         self.__env = env
 
+        # Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging"...)
         self.add(ENV_VAR_NAME, self.__env)
+
+        # Adding "ENV_NAME" as context variable referencing the env name (prefix "dynamic-" excluded)
+        # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
+        env_name_without_dynamic_part = re.sub(r"^dynamic-", "", self.__env)
+        self.add("ENV_NAME", env_name_without_dynamic_part)
 
     def add(self, key, value):
         """
@@ -71,9 +78,9 @@ class EnvConfigContext:
             key {str} -- name of context data
             value {any} -- value of context data. can be str int or anything dictated in context declaration
         """
-        if key in self.__data:
+        if key in self.__app_context_data:
             Logger.debug(
-                f"Context data [{key}] is being overriden from {self.__data[key]} to {value}"
+                f"Context data [{key}] is being overriden from {self.__app_context_data[key]} to {value}"
             )
 
         # the interpretation of production vs staging is done here.
@@ -82,7 +89,7 @@ class EnvConfigContext:
             value = get_contextual_env()
 
         Logger.debug(f"Adding context: {key} => {value}")
-        self.__data[key] = value
+        self.__app_context_data[key] = value
 
     def __normalize(self, returned_json):
         # deleting the context declaration from the to-be-consumed config
@@ -132,9 +139,6 @@ class EnvConfigContext:
     def process(self, config_json):
         # ensuring manipulation of copied version, never original
         copy_json = copy.deepcopy(config_json)
-        # in case of no contextual declaration, return the provided json as is.
-        if CONTEXT_DECLARATION_KEY not in copy_json:
-            return self.__normalize(copy_json)
 
         current_context = {}
 
@@ -145,9 +149,13 @@ class EnvConfigContext:
         # look for the context key in data (which is affected by TWIST_ENV but any app provided context keys when
         # calling to add method above) - when found - this is the context vlaues to use when parsing the rest
         # of the json
-        context_decleration = copy_json[CONTEXT_DECLARATION_KEY] or {}
+        context_decleration = (
+            copy_json[CONTEXT_DECLARATION_KEY]
+            if CONTEXT_DECLARATION_KEY in copy_json
+            else {}
+        )
         for context_decl_key, context_data in context_decleration.items():
-            for context_data_key, v in self.__data.items():
+            for context_data_key, v in self.__app_context_data.items():
                 # print(
                 #     f"\n ===> context_decl_key: {context_decl_key} context_data: {context_data} context_data_key: {context_data_key} v: {v}"
                 # )
@@ -155,12 +163,15 @@ class EnvConfigContext:
                     current_context = {**current_context, **context_data}
                     break
 
-        Logger.debug(f"detected config context to use: {current_context}")
+        # merging app data context into context found in config json context
+        for app_context_key, context_data in self.__app_context_data.items():
+            if app_context_key in current_context:
+                raise Exception(
+                    f"{app_context_key} is already defined by config $context, use another key name"
+                )
+            current_context[app_context_key] = context_data
 
-        # making sure we have context data to work with
-        if len(current_context.items()) == 0:
-            Logger.debug("could not find context data in respect to provided json!")
-            return self.__normalize(copy_json)
+        Logger.debug(f"detected config context to use: {current_context}")
 
         # replace the templated valued from chosen context
         processed_json = self.__process_context(copy_json, current_context)

@@ -60,6 +60,10 @@ Log.info("got #{v} from system conf global section...\n")
 service_x_data = EnvConfig.get('CONTEXT_TEST', 'MISC', 'SERVICE_X')
 Log.info("Connecting to http://#{service_x_data['HOST']}:#{service_x_data['PORT']}...")
 
+# the below demonstrates internal URL that is using the ENV_NAME
+internal_svc_url = EnvConfig.get('CONTEXT_TEST', 'MISC', 'INTERNAL_SERVICE_URL')
+Log.info("Connecting internal env service on http://#{internal_svc_url}...")
+
 v = EnvConfig.get('CONTEXT_TEST', 'MISC', 'TRANSLATED_THANKS')
 Log.info("translated text: #{v}")
 

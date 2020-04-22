@@ -42,14 +42,20 @@ end
 class EnvConfigContext
   def initialize(env)
     @__env = env
-    @__data = {}
+    @__app_context_data = {}
 
+    # Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging", "dev", "qa")
     add(ENV_VAR_NAME, env)
+
+    # Adding "ENV_NAME" as context variable referencing the actual env name (prefix "dynamic-" excluded)
+    # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
+    env_name_without_dynamic_part = env.gsub(/^dynamic-/, '')
+    add('ENV_NAME', env_name_without_dynamic_part)
   end
 
   def add(key, value)
-    if @__data[key]
-      Log.debug("Context data [#{key}] is being overriden from #{@__data[key]} to #{value}")
+    if @__app_context_data[key]
+      Log.debug("Context data [#{key}] is being overriden from #{@__app_context_data[key]} to #{value}")
     end
 
     # the interpretation of production vs staging is done here.
@@ -59,7 +65,7 @@ class EnvConfigContext
     end
 
     Log.debug("Adding context: #{key} => #{value}")
-    @__data[key] = value
+    @__app_context_data[key] = value
   end
 
   def __normalize(returned_json)
@@ -120,11 +126,6 @@ class EnvConfigContext
     # ensuring manipulation of copied version, never original
     json_copy = Marshal.load(Marshal.dump(config_json))
 
-    # in case of no contextual declaration, return the provided json as is.
-    if json_copy[CONTEXT_DECLARATION_KEY].nil?
-      return __normalize(json_copy)
-    end
-
     current_context = {}
 
     # per context for:
@@ -137,7 +138,7 @@ class EnvConfigContext
     context_decleration = json_copy[CONTEXT_DECLARATION_KEY] || {}
     context_decleration.each do |context_decl_key, context_data|
       # rubocop:disable Lint/UnusedBlockArgument
-      @__data.each do |context_data_key, v|
+      @__app_context_data.each do |context_data_key, v|
         # puts "\n ===> context_decl_key: #{context_decl_key} context_data: " \
         # "#{context_data} context_data_key: #{context_data_key} v: #{v}"
 
@@ -152,13 +153,16 @@ class EnvConfigContext
       # rubocop:enable Lint/UnusedBlockArgument
     end
 
-    Log.debug("detected config context to use: #{current_context}")
+    # merging app data context into context found in config json context
+    @__app_context_data.each do |app_context_key, context_data|
+      if !current_context[app_context_key].nil?
+        raise "#{app_context_key} is already defined by config $context, use another key name"
+      end
 
-    # making sure we have context data to work with
-    if current_context.keys.empty?
-      Log.debug('could not find context data in respect to provided json!')
-      return __normalize(json_copy)
+      current_context[app_context_key] = context_data
     end
+
+    Log.debug("detected config context to use: #{current_context}")
 
     # replace the templated valued from chosen context
     processed_json = __process_context(json_copy, current_context)

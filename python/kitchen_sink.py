@@ -65,6 +65,10 @@ service_x_data = EnvConfig.CONTEXT_TEST("MISC", "SERVICE_X")
 service_x_host, service_x_port = list(service_x_data.values())
 Logger.info(f"Connecting to http://{service_x_host}:{service_x_port}...")
 
+# the below demonstrates internal URL that is using the ENV_NAME
+internal_svc_url = EnvConfig.CONTEXT_TEST("MISC", "INTERNAL_SERVICE_URL")
+Logger.info(f"Connecting internal env service on http://{internal_svc_url}...")
+
 v = EnvConfig.CONTEXT_TEST("MISC", "TRANSLATED_THANKS")
 Logger.info(f"{v}")
 
