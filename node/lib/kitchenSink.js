@@ -51,6 +51,9 @@ async function demoConfig() {
     // using contextual config
     const { HOST, PORT } = await EnvConfig_1.default.get('CONTEXT_TEST', 'MISC', 'SERVICE_X');
     console.log(`Connecting to http://${HOST}:${PORT}...`);
+    // the below demonstrates internal URL that is using the ENV_NAME
+    const internalSvcURL = await EnvConfig_1.default.get('CONTEXT_TEST', 'MISC', 'INTERNAL_SERVICE_URL');
+    console.log(`Connecting internal env service on http://${internalSvcURL}...`);
     v = await EnvConfig_1.default.get('CONTEXT_TEST', 'MISC', 'TRANSLATED_THANKS');
     console.log(`translated text: ${v}`);
     // the below should fail and exit the process

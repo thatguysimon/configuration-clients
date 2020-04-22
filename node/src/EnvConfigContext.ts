@@ -30,12 +30,19 @@ export function validateNoTemplateLeft(json: any): boolean {
 export default class EnvConfigContext implements IConfigContext {
     private __env: string;
 
-    private __data: any = {};
+    // app_context_data is context added by application to dynamic use in conjunction with conf json $context
+    private __app_context_data: any = {};
 
     constructor(env: string) {
         this.__env = env;
 
+        // Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging", "dev", "qa")
         this.add(ENV_VAR_NAME, this.__env);
+
+        // Adding "ENV_NAME" as context variable referencing the env name(prefix "dynamic-" excluded)
+        // to be used when referencing ingress like mailer - my - dyna - env.twistbioscience - dev.com
+        const envNameWithoutDynamicPart = env.replace(/^dynamic-/, '');
+        this.add('ENV_NAME', envNameWithoutDynamicPart);
     }
 
     /**
@@ -44,8 +51,8 @@ export default class EnvConfigContext implements IConfigContext {
      * @param value value of context data. can be str int or anything dictated in context declaration
      */
     add(key: string, value: any): void {
-        if (this.__data[key] !== undefined) {
-            console.warn(`Context data [${key}] is being overridden from ${this.__data[key]} to ${value}`);
+        if (this.__app_context_data[key] !== undefined) {
+            console.warn(`Context data [${key}] is being overridden from ${this.__app_context_data[key]} to ${value}`);
         }
 
         let theValue = value;
@@ -58,7 +65,7 @@ export default class EnvConfigContext implements IConfigContext {
         }
 
         console.log(`Adding context: ${key} => ${theValue}`);
-        this.__data[key] = theValue;
+        this.__app_context_data[key] = theValue;
     }
 
     __normalize(returnedJson: any): any {
@@ -122,12 +129,7 @@ export default class EnvConfigContext implements IConfigContext {
         // ensuring manipulation of copied version, never original
         const jsonCopy: any = JSON.parse(JSON.stringify(configJson));
 
-        // in case of no contextual declaration, return the provided json as is.
-        if (jsonCopy[CONTEXT_DECLARATION_KEY] === undefined) {
-            return this.__normalize(jsonCopy);
-        }
-
-        let currentContext = {};
+        let currentContext: any = {};
 
         // per context for:
         // env_name: { ..} AND / OR
@@ -140,7 +142,7 @@ export default class EnvConfigContext implements IConfigContext {
         // eslint-disable-next-line no-restricted-syntax
         for (const [contextDeclKey, contextData] of Object.entries(contextDeclaration)) {
             // eslint-disable-next-line no-restricted-syntax
-            for (const [contextDataKey, v] of Object.entries(this.__data)) {
+            for (const [contextDataKey, v] of Object.entries(this.__app_context_data)) {
                 console.log(
                     `\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(
                         contextData,
@@ -158,13 +160,16 @@ export default class EnvConfigContext implements IConfigContext {
             }
         }
 
-        console.log(`detected config context to use: ${JSON.stringify(currentContext)}`);
-
-        // making sure we have context data to work with
-        if (Object.keys(currentContext).length === 0) {
-            console.log('could not find context data in respect to provided json!');
-            return this.__normalize(jsonCopy);
+        // merging app data context into context found in config json context
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [appContextKey, contextData] of Object.entries(this.__app_context_data)) {
+            if (currentContext[appContextKey] !== undefined) {
+                throw new Error(`${appContextKey} is already defined by config $context, use another key name`);
+            }
+            currentContext[appContextKey] = contextData;
         }
+
+        console.log(`detected config context to use: ${JSON.stringify(currentContext)}`);
 
         // replace the templated values from chosen context
         const processedJson = this.__processContext(jsonCopy, currentContext);
