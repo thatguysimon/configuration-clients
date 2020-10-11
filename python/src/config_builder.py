@@ -119,7 +119,7 @@ class ConfigBuilder:
 
         print(f"Attempting to read env config yaml from {path}")
         env_file = open(path, "r")
-        data = yaml.load(env_file, Loader=yaml.CLoader)
+        data = yaml.load(env_file, Loader=yaml.Loader)
         # print(f"yaml data is {data}")
 
         self.__build_logger(data)

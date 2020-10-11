@@ -1,6 +1,7 @@
 import os
 
-ENV_VAR_NAME = "TWIST_ENV"
+ENV_VAR_NAME = "TWIST_ENV"  # os var name holding the twist runing env
+ENVS_VAULT_KEY = "envs"  # key in secret json/dict refering to env overriding value
 
 PRODUCTION_ENV_CONTEXT_NAME = "production"
 DEVELOPMENT_ENV_CONTEXT_NAME = "dev"

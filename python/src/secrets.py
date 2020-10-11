@@ -13,6 +13,9 @@ encapsulation to secret management api using Vault
 import hvac
 from .os_vars import OSVars
 from .logger import Logger
+from .dict_utils import override_dict
+
+from .common import ENV_VAR_NAME, ENVS_VAULT_KEY
 
 # TODO: move to a common folder within the config clients monorepo
 VAULT_URL_KEY = "VAULT_URL"
@@ -94,10 +97,22 @@ class Secrets:
         Logger.debug(f"connected to vault on {vault_url}")
         return True
 
-    # ensuring secret exists + preload
+    def __perform_override(self, secret, path_to_secret):
+        twist_env = OSVars.get(ENV_VAR_NAME)
+
+        if ENVS_VAULT_KEY in secret and twist_env in secret[ENVS_VAULT_KEY]:
+            Logger.info(f"SECRET:: overriding env secret from {path_to_secret}/{ENVS_VAULT_KEY}/{twist_env}")
+            overriding = secret[ENVS_VAULT_KEY][twist_env]
+            secret[ENVS_VAULT_KEY] = None
+            secret = override_dict(secret, overriding)
+        return secret
+
+    # ensuring secret exists + preload + inheritance
     def require_secret(self, secret_category, path_to_secret):
+
         try:
             secret = self.get_by_path(path_to_secret)
+            secret = self.__perform_override(secret, path_to_secret)
             self.__cache[secret_category] = secret
             return True
         except Exception as ex:
