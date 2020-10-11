@@ -1,4 +1,6 @@
 import OSVars, { OSVarType } from './OSVars';
+import { jsonOverride } from './utils/jsonUtils';
+import { ENVS_VAULT_KEY, ENV_VAR_NAME } from './Common';
 
 // TODO: move to a common folder within the config clients monorepo
 const VAULT_API_VERSION = 'v1';
@@ -9,6 +11,7 @@ const VAULT_PASS_KEY = 'VAULT_PASSWORD';
 
 OSVars.registerMandatory(VAULT_USER_KEY, 'Vault secret management user name', OSVarType.String);
 OSVars.registerMandatory(VAULT_PASS_KEY, 'Vault secret management password', OSVarType.String);
+OSVars.registerMandatory(ENV_VAR_NAME, 'Twist running environment name', OSVarType.String);
 
 OSVars.register(VAULT_URL_KEY, 'Vault secret management server', OSVarType.String, VAULT_DEFAULT_URL);
 
@@ -66,9 +69,23 @@ export default class Secrets {
         }
     }
 
+    private __performOverride(secret: any, pathToSecret: string): any {
+        const twistEnv: string = OSVars.get(ENV_VAR_NAME);
+        let result = JSON.parse(JSON.stringify(secret));
+
+        if (ENVS_VAULT_KEY in result && twistEnv in result[ENVS_VAULT_KEY]) {
+            console.log(`SECRET:: overriding env secret from ${pathToSecret}/${ENVS_VAULT_KEY}/${twistEnv}`);
+            const overriding: any = result[ENVS_VAULT_KEY][twistEnv];
+            delete result[ENVS_VAULT_KEY];
+            result = jsonOverride(result, overriding);
+        }
+        return result;
+    }
+
     // ensuring secret exists + preload
     public async requireSecret(secretCategory: string, pathToSecret: string): Promise<boolean> {
-        const secret: any = await this.getByPath(pathToSecret);
+        let secret: any = await this.getByPath(pathToSecret);
+        secret = this.__performOverride(secret, pathToSecret);
         this.__secrets[secretCategory] = secret;
         return true;
     }

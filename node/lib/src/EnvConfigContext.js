@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateNoTemplateLeft = exports.CONTEXT_DECLARATION_KEY = void 0;
 const Common_1 = require("./Common");
 exports.CONTEXT_DECLARATION_KEY = '$context';
 const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
