@@ -6,6 +6,7 @@ PRODUCTION_BRANCH_NAME = 'master'
 QA_BRANCH_NAME = 'qa'
 STAGING_BRANCH_NAME = 'staging'
 ENV_VAR_NAME = 'TWIST_ENV'
+ENVS_VAULT_KEY = 'envs' # key in secret json/dict refering to env overriding value
 
 # while we might end up using a different contextual environments pipeline
 # (for example: staging -> production or qa -> staging -> production )
