@@ -2,6 +2,7 @@ require 'singleton'
 require 'vault'
 require_relative 'os_vars'
 require_relative 'utils/logger'
+require_relative 'utils/dict_utils'
 
 module TwistConf
   #############################################################################
@@ -14,6 +15,7 @@ module TwistConf
   VAULT_DEFAULT_URL = 'https://vault.twistbioscience-staging.com'
   VAULT_USER_KEY = 'VAULT_USER'
   VAULT_PASS_KEY = 'VAULT_PASSWORD'
+  ENVS_VAULT_KEY = 'envs'
 
   #############################################################################
   # IMPLEMENTATION                                                            #
@@ -65,9 +67,25 @@ module TwistConf
       end
     end
 
+    def __perform_override(secret, path_to_secret)
+      twist_env = OSVars.get('TWIST_ENV')
+      result = nil
+
+      if !secret[ENVS_VAULT_KEY.to_sym].nil? && !secret[ENVS_VAULT_KEY.to_sym][twist_env.to_sym].nil?
+        Log.info("SECRET:: overriding env secret from #{path_to_secret}/#{ENVS_VAULT_KEY}/#{twist_env}")
+        overriding = secret[ENVS_VAULT_KEY.to_sym][twist_env.to_sym]
+        result = override_dict(secret, overriding)
+        result.delete(ENVS_VAULT_KEY.to_sym)
+      else
+        result = secret
+      end
+      result
+    end
+
     # ensuring secret exists + preload
     def require_secret(secret_category, path_to_secret)
       secret = get_by_path(path_to_secret)
+      secret = Hash[__perform_override(secret, path_to_secret)]
       @__secrets[secret_category] = secret
       true
     rescue StandardError => e

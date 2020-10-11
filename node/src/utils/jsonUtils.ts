@@ -39,3 +39,22 @@ export default function flattenJsonKeys(data: unknown): any {
 // console.log(`flat: ${JSON.stringify(flattenJson(test))}`)
 // output:
 // flat: {"family.father.age":500,"family.father.name":"joe","family.father.job.title":"chef","family.father.job.work.place":"ny","family.mother":"mama"}
+
+
+export function jsonOverride(target:any, source:any):any {
+    const result = JSON.parse(JSON.stringify(target)); // deep copying target
+
+    for (const [key, value] of Object.entries(source)) {
+        if (result.hasOwnProperty(key)) {
+            if (typeof result[key] !== 'object') {
+                result[key] = value;
+            } else {
+                result[key] = jsonOverride(result[key], value);
+            }
+        } else {
+            result[key] = value;
+        }
+    }
+
+    return result;
+}

@@ -45,6 +45,8 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/MutableConstant:
   Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
 Style/Alias:

@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = void 0;
 exports.PRODUCTION_BRANCH_NAME = 'master';
 exports.ENV_VAR_NAME = 'TWIST_ENV';
+exports.ENVS_VAULT_KEY = 'envs';
 exports.PRODUCTION_ENV_CONTEXT_NAME = 'production';
 exports.DEVELOPMENT_ENV_CONTEXT_NAME = 'dev';
 exports.QA_ENV_CONTEXT_NAME = 'qa';

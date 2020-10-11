@@ -1,13 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const OSVars_1 = __importStar(require("./OSVars"));
+const jsonUtils_1 = require("./utils/jsonUtils");
+const Common_1 = require("./Common");
 // TODO: move to a common folder within the config clients monorepo
 const VAULT_API_VERSION = 'v1';
 const VAULT_URL_KEY = 'VAULT_URL';
@@ -16,6 +30,7 @@ const VAULT_USER_KEY = 'VAULT_USER';
 const VAULT_PASS_KEY = 'VAULT_PASSWORD';
 OSVars_1.default.registerMandatory(VAULT_USER_KEY, 'Vault secret management user name', OSVars_1.OSVarType.String);
 OSVars_1.default.registerMandatory(VAULT_PASS_KEY, 'Vault secret management password', OSVars_1.OSVarType.String);
+OSVars_1.default.registerMandatory(Common_1.ENV_VAR_NAME, 'Twist running environment name', OSVars_1.OSVarType.String);
 OSVars_1.default.register(VAULT_URL_KEY, 'Vault secret management server', OSVars_1.OSVarType.String, VAULT_DEFAULT_URL);
 class Secrets {
     constructor() {
@@ -52,9 +67,21 @@ class Secrets {
             throw new Error(`failed login to Vault. Check your environment config file for vault user and password: ${ex}`);
         }
     }
+    __performOverride(secret, pathToSecret) {
+        const twistEnv = OSVars_1.default.get(Common_1.ENV_VAR_NAME);
+        let result = JSON.parse(JSON.stringify(secret));
+        if (Common_1.ENVS_VAULT_KEY in result && twistEnv in result[Common_1.ENVS_VAULT_KEY]) {
+            console.log(`SECRET:: overriding env secret from ${pathToSecret}/${Common_1.ENVS_VAULT_KEY}/${twistEnv}`);
+            const overriding = result[Common_1.ENVS_VAULT_KEY][twistEnv];
+            delete result[Common_1.ENVS_VAULT_KEY];
+            result = jsonUtils_1.jsonOverride(result, overriding);
+        }
+        return result;
+    }
     // ensuring secret exists + preload
     async requireSecret(secretCategory, pathToSecret) {
-        const secret = await this.getByPath(pathToSecret);
+        let secret = await this.getByPath(pathToSecret);
+        secret = this.__performOverride(secret, pathToSecret);
         this.__secrets[secretCategory] = secret;
         return true;
     }

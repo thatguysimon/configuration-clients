@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.OSVarType = void 0;
 const typeUtils_1 = require("./utils/typeUtils");
 const DUMP_CONFIG_ENV_VAR = '__DUMP_CONFIG';
 const PRINT_CONFIG_USAGE_ENV_VAR = '__CONFIG_USAGE';

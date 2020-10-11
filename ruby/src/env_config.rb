@@ -151,14 +151,12 @@ module TwistConf
     end
 
     def __to_flat_map(category = nil)
-      # rubocop:disable Style/ConditionalAssignment
       data_to_flatten_out = nil
       if category.nil?
         data_to_flatten_out = @__config
       else
         data_to_flatten_out = @__config[category.downcase]
       end
-      # rubocop:enable Style/ConditionalAssignment
 
       flatten_dict(data_to_flatten_out)
     end
