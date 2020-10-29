@@ -21,7 +21,7 @@ import traceback
 #############################################################################
 FORMATTER = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
 
-log_levels_map = {"debug": 10, "info": 20, "warning": 30, "error": 40, "critical": 50}
+log_levels_map = {"none": 0, "debug": 10, "info": 20, "warning": 30, "error": 40, "critical": 50}
 
 
 # if env var is provided, console logs will get colored (warning - not to be used with log aggregator (ex. elastic)
@@ -100,7 +100,7 @@ class Logger:
     # calling the low level logger module along with the app preference of using it.
     def __build_logger(self):
         global log_levels_map
-        self.__logger = logging.getLogger()
+        self.__logger = logging.getLogger("twist-conf")
 
         # 1st priority to LOG_LEVEL defined in process env
         if "CONFIG_LOG_LEVEL" in os.environ:
