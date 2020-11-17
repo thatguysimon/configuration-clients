@@ -42,5 +42,6 @@ def get_contextual_env
     end
   end
 
-  STAGING_ENV_CONTEXT_NAME
+  # default env context for all dynamic branches
+  DEVELOPMENT_ENV_CONTEXT_NAME
 end

@@ -45,4 +45,5 @@ def get_contextual_env():
         if actual_branch_name in context_related_branch_names:
             return context_name
 
-    return STAGING_ENV_CONTEXT_NAME
+    # default env context for dynamic branches
+    return DEVELOPMENT_ENV_CONTEXT_NAME

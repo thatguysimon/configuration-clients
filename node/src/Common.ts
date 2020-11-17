@@ -34,7 +34,8 @@ export default function isProduction(): boolean {
 
 export function getContextualEnv() {
     const actualBranchName: string = process.env[ENV_VAR_NAME] || '';
-    let result = STAGING_ENV_CONTEXT_NAME;
+    // the default env context for dynamic env (non-production)
+    let result = DEVELOPMENT_ENV_CONTEXT_NAME;
     Object.entries(ENV_CONTEXT_TO_BRANCH_NAME_MAPPING).forEach(([contextName, contextRelatedBranchNames]) => {
         if (contextRelatedBranchNames.includes(actualBranchName)) {
             result = contextName;
