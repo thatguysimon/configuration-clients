@@ -1,4 +1,4 @@
-export const PRODUCTION_BRANCH_NAME = 'master';
+export const PRODUCTION_BRANCH_NAME = 'production';
 export const ENV_VAR_NAME = 'TWIST_ENV';
 export const ENVS_VAULT_KEY = 'envs';
 export const PRODUCTION_ENV_CONTEXT_NAME = 'production';
