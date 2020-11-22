@@ -138,7 +138,8 @@ export default class OSVars {
     ) {
         // sanity checks...
         if (varKey in this.__vars) {
-            this.__criticalFault(`os var ${varKey} is already registered!`);
+            console.log(`Warning: os var ${varKey} is already registered!`);
+            return;
         }
 
         if (defaultValue !== undefined && isMandatory) {

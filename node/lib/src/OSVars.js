@@ -100,7 +100,8 @@ class OSVars {
     __register(varKey, varDescription, varType = OSVarType.String, isMandatory = false, defaultValue) {
         // sanity checks...
         if (varKey in this.__vars) {
-            this.__criticalFault(`os var ${varKey} is already registered!`);
+            console.log(`Warning: os var ${varKey} is already registered!`);
+            return;
         }
         if (defaultValue !== undefined && isMandatory) {
             this.__criticalFault(`defining var ${varKey} as mandatory with default value doesn't make sense!`);

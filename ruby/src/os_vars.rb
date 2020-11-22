@@ -104,7 +104,7 @@ module TwistConf
     def __register(var_key, var_description, var_type = String, is_mandatory = false, default_value = nil)
       # sanity checks...
       unless @__vars[var_key].nil?
-        __critical_fault("os var #{var_key} is already registered!")
+        puts "os var #{var_key} is already registered!"
       end
 
       # another sanity check...

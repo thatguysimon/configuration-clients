@@ -141,7 +141,8 @@ class OSVars:
     ):
         # sanity checks...
         if var_key in self.__vars:
-            self.__critical_fault(f"os var {var_key} is already registered!")
+            print(f"Warning: os var {var_key} is already registered!")
+            return
 
         if default_value is not None and is_mandatory is True:
             self.__critical_fault(
