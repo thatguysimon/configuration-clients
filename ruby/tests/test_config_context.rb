@@ -27,6 +27,20 @@ MOCK_CONF = {
   }
 }
 
+MOCK_COMPOSITE_CONF = {
+  CONTEXT_DECLARATION_KEY => {
+    'staging' => { 'test_str' => 'oren', 'test_int' => 1974 },
+    'russian' => { 'thanks' => 'spasibo!' },
+    'hebrew' => { 'thanks' => 'toda!' }
+  },
+  'data' => {
+    'str' => '{{ test_str }}',
+    'mixed_str' => 'ABCD{{    test_str}}ABCD',
+    'int' => '{{test_int}}',
+    'thanks' => '{{ test_str }}, {{thanks}}'
+  }
+}
+
 #############################################################################
 # TEST IMPLEMENTATION                                                       #
 #############################################################################
@@ -89,6 +103,25 @@ class TestConfigContext < Minitest::Test
       'mixed_str' => 'ABCD__val__ABCD',
       'int' => 1974,
       'thanks' => 'toda!'
+    }
+
+    assert_equal expected, actual
+  end
+
+  def test_context_and_composite_data_yield_modified_version
+    testee = EnvConfigContext.new('staging')
+    testee.add('language', 'russian')
+
+    actual = testee.process(MOCK_COMPOSITE_CONF)
+    expected = deep_copy(MOCK_COMPOSITE_CONF)
+    expected[CONTEXT_DECLARATION_KEY].clear
+    expected.delete(CONTEXT_DECLARATION_KEY)
+
+    expected['data'] = {
+      'str' => 'oren',
+      'mixed_str' => 'ABCDorenABCD',
+      'int' => 1974,
+      'thanks' => 'oren, spasibo!'
     }
 
     assert_equal expected, actual
