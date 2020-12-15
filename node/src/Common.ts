@@ -1,4 +1,4 @@
-export const PRODUCTION_BRANCH_NAME = 'master';
+export const PRODUCTION_BRANCH_NAME = 'production';
 export const ENV_VAR_NAME = 'TWIST_ENV';
 export const ENVS_VAULT_KEY = 'envs';
 export const PRODUCTION_ENV_CONTEXT_NAME = 'production';
@@ -28,6 +28,14 @@ const ENV_CONTEXT_TO_BRANCH_NAME_MAPPING = {
     [STAGING_ENV_CONTEXT_NAME]: [STAGING_BRANCH_NAME],
 };
 
+const FIXED_ENVS = [
+    PRODUCTION_ENV_CONTEXT_NAME,
+    DEVELOPMENT_ENV_CONTEXT_NAME,
+    'develop',
+    QA_ENV_CONTEXT_NAME,
+    STAGING_ENV_CONTEXT_NAME,
+];
+
 export default function isProduction(): boolean {
     return process.env[ENV_VAR_NAME] === PRODUCTION_BRANCH_NAME;
 }
@@ -42,4 +50,8 @@ export function getContextualEnv() {
         }
     });
     return result;
+}
+
+export function isFixedEnv(envName: string): boolean {
+    return FIXED_ENVS.includes(envName);
 }

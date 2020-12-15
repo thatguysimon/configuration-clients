@@ -15,6 +15,7 @@ import copy
 import re
 from .logger import Logger
 from .common import ENV_VAR_NAME
+from .common import FIXED_ENVS
 from .common import get_contextual_env
 
 #############################################################################
@@ -22,7 +23,7 @@ from .common import get_contextual_env
 #############################################################################
 
 CONTEXT_DECLARATION_KEY = "$context"
-TEMPLATE_REGEX = r".*({{)(\s*[\w_\-\.]+\s*)(}}).*"
+TEMPLATE_REGEX = r"(?:[^{]*)({{)(\s*[\w_\-\.]+\s*)(}}).*"
 
 
 def validate_no_template_left(json):
@@ -66,9 +67,14 @@ class EnvConfigContext:
         self.add(ENV_VAR_NAME, self.__env)
 
         # Adding "ENV_NAME" as context variable referencing the env name (prefix "dynamic-" excluded)
-        # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
         env_name_without_dynamic_part = re.sub(r"^dynamic-", "", self.__env)
+        # print(f"self.__env: {self.__env}, env_name_without_dynamic_part: {env_name_without_dynamic_part}")
         self.add("ENV_NAME", env_name_without_dynamic_part)
+
+        # Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
+        # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
+        env_name_for_domain = f"-{env_name_without_dynamic_part}" if self.__env not in FIXED_ENVS else ""
+        self.add("ENV_NAME_FOR_DOMAIN", env_name_for_domain)
 
     def add(self, key, value):
         """
@@ -110,30 +116,36 @@ class EnvConfigContext:
             elif isinstance(v, str):
                 # attempt extracting the templated token from the provided string
                 match = re.search(TEMPLATE_REGEX, v)
-                # ignore values that are not templated
-                if match is None:
-                    continue
-                # the template token lays inside the match.
-                # this is sensitive assumption but it is protected by unit tests! (the regex)
-                keyword = match.groups()[1].strip()
-                # skip token if context data does not provide value (it will fail later in normalization)
-                if keyword not in context_data:
-                    continue
-                # for non str value the config data s replaced as is with the provided context data (even if its dict!)
-                # otherwise (string) is replaced "123{{ token  }}789" => "123456789" given context_data["token"] = "456"
-                if isinstance(context_data[keyword], str) is False:
-                    Logger.debug(
-                        f"replacing config key {k} value from {json_data[k]} to {context_data[keyword]}"
-                    )
-                    json_data[k] = context_data[keyword]
-                else:
-                    the_val = context_data[keyword]
-                    template = "".join(match.groups())
-                    with_template = json_data[k]
-                    json_data[k] = json_data[k].replace(template, the_val)
-                    Logger.debug(
-                        f"replacing config key {k} value from {with_template} to {json_data[k]}"
-                    )
+
+                while (match is not None):
+                    # Logger.debug(f"for v: {v} match: {match} and groups: {match.groups()}")
+                    # the template token lays inside the match.
+                    # this is sensitive assumption but it is protected by unit tests! (the regex)
+                    keyword = match.groups()[1].strip()
+                    # skip token if context data does not provide value (it will fail later in normalization)
+                    if keyword not in context_data:
+                        break
+                    # for non str value the config data is replaced as is with the provided context data (even if its dict!)
+                    # otherwise (string) is replaced "123{{ token  }}789" => "123456789" given context_data["token"] = "456"
+                    if isinstance(context_data[keyword], str) is False:
+                        Logger.debug(
+                            f"replacing config key {k} value from {json_data[k]} to {context_data[keyword]}"
+                        )
+                        json_data[k] = context_data[keyword]
+                        # assuming no composite var/token in a non str value
+                        break
+                    else:
+                        the_val = context_data[keyword]
+                        template = "".join(match.groups())
+                        with_template = json_data[k]
+                        json_data[k] = json_data[k].replace(template, the_val)
+                        # trying to find a next token if exists (ex. "Hello {{ FIRST_NAME }} {{ LAST_NAME }}")
+                        match = re.search(TEMPLATE_REGEX, json_data[k])
+                        # want to print once per cycle
+                        if match is None:
+                            Logger.debug(
+                                f"replacing config key {k} value from {with_template} to {json_data[k]}"
+                            )
         return json_data
 
     def process(self, config_json):

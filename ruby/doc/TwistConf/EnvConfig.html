@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: TwistConf::EnvConfig
+  
+    &mdash; Documentation by YARD 0.9.24
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "TwistConf::EnvConfig";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (E)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../TwistConf.html" title="TwistConf (module)">TwistConf</a></span></span>
+     &raquo; 
+    <span class="title">EnvConfig</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: TwistConf::EnvConfig
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">TwistConf::EnvConfig</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  <dl>
+      <dt>Includes:</dt>
+      <dd>Singleton</dd>
+  </dl>
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>src/env_config.rb</dd>
+  </dl>
+  
+</div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#add_context-class_method" title="add_context (class method)">.<strong>add_context</strong>(key, val)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>proxy to internal context.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#env-class_method" title="env (class method)">.<strong>env</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get-class_method" title="get (class method)">.<strong>get</strong>(category, section = nil, key = nil, default_value = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>helper static function for easier access (EnvConfig.get).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_flat_map-class_method" title="to_flat_map (class method)">.<strong>to_flat_map</strong>(category = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>helper to flatten all nested keys into simple flat map.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__add_context-instance_method" title="#__add_context (instance method)">#<strong>__add_context</strong>(key, val)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__get-instance_method" title="#__get (instance method)">#<strong>__get</strong>(category, section = nil, key = nil, default_value = nil)  &#x21d2; any </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>main config accessor function.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__get_env-instance_method" title="#__get_env (instance method)">#<strong>__get_env</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__load_categories-instance_method" title="#__load_categories (instance method)">#<strong>__load_categories</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__load_config-instance_method" title="#__load_config (instance method)">#<strong>__load_config</strong>(category)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>using injected config loader to get a hold of the data.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__load_configuration_category-instance_method" title="#__load_configuration_category (instance method)">#<strong>__load_configuration_category</strong>(category_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#__to_flat_map-instance_method" title="#__to_flat_map (instance method)">#<strong>__to_flat_map</strong>(category = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>  &#x21d2; EnvConfig </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of EnvConfig.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inject_loader-instance_method" title="#inject_loader (instance method)">#<strong>inject_loader</strong>(config_loader = nil)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Dependency injection of a config loader that adheres to the EnvConfigLoader interface.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#require_category-instance_method" title="#require_category (instance method)">#<strong>require_category</strong>(category)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_context_handler-instance_method" title="#set_context_handler (instance method)">#<strong>set_context_handler</strong>(context_handler)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Dependency injection of a config context processor that adheres to EnvConfigContext interface Arguments:     context_handler <span class='object_link'><a href="../EnvConfigContext.html" title="EnvConfigContext (class)">EnvConfigContext</a></span> – concrete context processor.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_env_fallback-instance_method" title="#set_env_fallback (instance method)">#<strong>set_env_fallback</strong>(fallback_list)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>  &#x21d2; <tt><span class='object_link'><a href="" title="TwistConf::EnvConfig (class)">EnvConfig</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a new instance of EnvConfig.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 27</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
+  <span class='ivar'>@__env</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="OSVars.html" title="TwistConf::OSVars (class)">OSVars</a></span></span><span class='period'>.</span><span class='id identifier rubyid_get'><span class='object_link'><a href="OSVars.html#get-class_method" title="TwistConf::OSVars.get (method)">get</a></span></span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="../TwistConf.html#TWIST_ENV_KEY-constant" title="TwistConf::TWIST_ENV_KEY (constant)">TWIST_ENV_KEY</a></span></span><span class='rparen'>)</span>
+
+  <span class='comment'># someone is overriding the running environment to pull config from somewhere else
+</span>  <span class='kw'>if</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../TwistConf.html#CONFIGURATION_BASE_KEY-constant" title="TwistConf::CONFIGURATION_BASE_KEY (constant)">CONFIGURATION_BASE_KEY</a></span></span><span class='rbracket'>]</span>
+    <span class='ivar'>@__env</span> <span class='op'>=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../TwistConf.html#CONFIGURATION_BASE_KEY-constant" title="TwistConf::CONFIGURATION_BASE_KEY (constant)">CONFIGURATION_BASE_KEY</a></span></span><span class='rbracket'>]</span>
+    <span class='const'><span class='object_link'><a href="../Log.html" title="Log (class)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_info'><span class='object_link'><a href="../Log.html#info-class_method" title="Log.info (method)">info</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**** !!! PULLING CONFIGURATION from </span><span class='embexpr_beg'>#{</span><span class='ivar'>@__env</span><span class='embexpr_end'>}</span><span class='tstring_content'> instead of </span><span class='embexpr_beg'>#{</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../TwistConf.html#TWIST_ENV_KEY-constant" title="TwistConf::TWIST_ENV_KEY (constant)">TWIST_ENV_KEY</a></span></span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>
+    because overriding </span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../TwistConf.html#CONFIGURATION_BASE_KEY-constant" title="TwistConf::CONFIGURATION_BASE_KEY (constant)">CONFIGURATION_BASE_KEY</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'> is provided</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='ivar'>@__config</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='comment'># to be injected:
+</span>  <span class='ivar'>@__config_loader</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='comment'># to be injected:
+</span>  <span class='ivar'>@__context</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='comment'># the below is a Set - helper to hold collection of listed (yet not loaded) categories.
+</span>  <span class='ivar'>@__config_categories</span> <span class='op'>=</span> <span class='const'>Set</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>___dummyKey__</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='ivar'>@__env_fallback_list</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../TwistConf.html#DEFAULT_ENV_FALLBACK-constant" title="TwistConf::DEFAULT_ENV_FALLBACK (constant)">DEFAULT_ENV_FALLBACK</a></span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="add_context-class_method">
+  
+    .<strong>add_context</strong>(key, val)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>proxy to internal context</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+102
+103
+104</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 102</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_context'>add_context</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="" title="TwistConf::EnvConfig (class)">EnvConfig</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid___add_context'>__add_context</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="env-class_method">
+  
+    .<strong>env</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+51
+52
+53</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 51</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_env'>env</span>
+  <span class='const'><span class='object_link'><a href="" title="TwistConf::EnvConfig (class)">EnvConfig</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid___get_env'>__get_env</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get-class_method">
+  
+    .<strong>get</strong>(category, section = nil, key = nil, default_value = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>helper static function for easier access (EnvConfig.get)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 165</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='comma'>,</span> <span class='id identifier rubyid_section'>section</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_default_value'>default_value</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="" title="TwistConf::EnvConfig (class)">EnvConfig</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid___get'>__get</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='comma'>,</span> <span class='id identifier rubyid_section'>section</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_default_value'>default_value</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_flat_map-class_method">
+  
+    .<strong>to_flat_map</strong>(category = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>helper to flatten all nested keys into simple flat map</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149
+150
+151</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 149</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_flat_map'>to_flat_map</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="" title="TwistConf::EnvConfig (class)">EnvConfig</a></span></span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid___to_flat_map'>__to_flat_map</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="__add_context-instance_method">
+  
+    #<strong>__add_context</strong>(key, val)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+97
+98
+99</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 97</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___add_context'>__add_context</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+  <span class='ivar'>@__context</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__get-instance_method">
+  
+    #<strong>__get</strong>(category, section = nil, key = nil, default_value = nil)  &#x21d2; <tt>any</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>main config accessor function</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>category</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><ul><li>
+<p>category name (in actuality the config json file name w/o suffix and uppercased)</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>section</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><ul><li>
+<p>name of section within the configuration Hash (json)</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>key</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><ul><li>
+<p>name of key within section</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>default_value</span>
+      
+      
+        <span class='type'>(<tt>any</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><ul><li>
+<p>value to return when above references to config (section + key) isnt found</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>any</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>default or actual value (can be any primitive type or a Hash representing the whole config json)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 177</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___get'>__get</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='comma'>,</span> <span class='id identifier rubyid_section'>section</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_default_value'>default_value</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='comment'># detecting the first access ever to this instance,
+</span>  <span class='comment'># it requires that we set a loader and initialize current environment configuration section (json files)
+</span>  <span class='kw'>if</span> <span class='ivar'>@__config_loader</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_inject_loader'>inject_loader</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># allowing caller to send uppercased category names
+</span>  <span class='id identifier rubyid_category'>category</span> <span class='op'>=</span> <span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
+
+  <span class='comment'># category is being accessed for the first time, load it
+</span>  <span class='kw'>if</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid___load_config'>__load_config</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># someone wants to get a hold of the entire category config
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_section'>section</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>return</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># someone wants to get a hold of an entire section structure
+</span>  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_section'>section</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_section'>section</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>return</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_section'>section</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># missing section
+</span>  <span class='kw'>if</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_section'>section</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_default_value'>default_value</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># missing key in section
+</span>  <span class='kw'>if</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_section'>section</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_default_value'>default_value</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># actual config indicated data
+</span>  <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_section'>section</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__get_env-instance_method">
+  
+    #<strong>__get_env</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 47</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___get_env'>__get_env</span>
+  <span class='ivar'>@__env</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__load_categories-instance_method">
+  
+    #<strong>__load_categories</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+124
+125
+126
+127
+128
+129
+130</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 124</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___load_categories'>__load_categories</span>
+  <span class='id identifier rubyid_categories'>categories</span> <span class='op'>=</span> <span class='ivar'>@__config_loader</span><span class='period'>.</span><span class='id identifier rubyid_list_categories'>list_categories</span>
+  <span class='id identifier rubyid_categories'>categories</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_category'>category</span><span class='op'>|</span>
+    <span class='id identifier rubyid_normalized_category'>normalized_category</span> <span class='op'>=</span> <span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.json</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span>
+    <span class='id identifier rubyid___load_configuration_category'>__load_configuration_category</span><span class='lparen'>(</span><span class='id identifier rubyid_normalized_category'>normalized_category</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__load_config-instance_method">
+  
+    #<strong>__load_config</strong>(category)  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>using injected config loader to get a hold of the data</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>category</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><ul><li>
+<p>name of category file to load config from</p>
+</li></ul>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 110</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___load_config'>__load_config</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@__config_loader</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Cannot load config without a loader (implementing EnvConfigLoader). please set loader respectively</span><span class='tstring_end'>&#39;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_raw_json'>raw_json</span> <span class='op'>=</span> <span class='ivar'>@__config_loader</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='rparen'>)</span>
+    <span class='ivar'>@__context</span><span class='period'>.</span><span class='id identifier rubyid_process'>process</span><span class='lparen'>(</span><span class='id identifier rubyid_raw_json'>raw_json</span><span class='rparen'>)</span>
+  <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+    <span class='const'><span class='object_link'><a href="../Log.html" title="Log (class)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_error'><span class='object_link'><a href="../Log.html#error-class_method" title="Log.error (method)">error</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Failed loading config for provided environment </span><span class='embexpr_beg'>#{</span><span class='ivar'>@__env</span><span class='embexpr_end'>}</span><span class='tstring_content'>. Exception: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_exit'>exit</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__load_configuration_category-instance_method">
+  
+    #<strong>__load_configuration_category</strong>(category_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 132</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___load_configuration_category'>__load_configuration_category</span><span class='lparen'>(</span><span class='id identifier rubyid_category_name'>category_name</span><span class='rparen'>)</span>
+  <span class='comment'># _dynamic_get_func = EnvConfig.__generate_get_function(category_name)
+</span>  <span class='comment'># create a dynamic method based on loaded category name
+</span>  <span class='comment'># setattr(EnvConfig, category_name, _dynamic_get_func)
+</span>  <span class='comment'># make the above added method as static so one can call also directly (eg. EnvConf.SYSTEM)
+</span>  <span class='comment'># setattr(
+</span>  <span class='comment'>#     EnvConfig,
+</span>  <span class='comment'>#     category_name,
+</span>  <span class='comment'>#     staticmethod(getattr(EnvConfig.instance(), category_name)),
+</span>  <span class='comment'># )
+</span>
+  <span class='comment'># add the new category to the set so we know it exists
+</span>  <span class='ivar'>@__config_categories</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span><span class='lparen'>(</span><span class='id identifier rubyid_category_name'>category_name</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="../Log.html" title="Log (class)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug'><span class='object_link'><a href="../Log.html#debug-class_method" title="Log.debug (method)">debug</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Configuration category </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_category_name'>category_name</span><span class='embexpr_end'>}</span><span class='tstring_content'> listed</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="__to_flat_map-instance_method">
+  
+    #<strong>__to_flat_map</strong>(category = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 153</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid___to_flat_map'>__to_flat_map</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data_to_flatten_out'>data_to_flatten_out</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_data_to_flatten_out'>data_to_flatten_out</span> <span class='op'>=</span> <span class='ivar'>@__config</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_data_to_flatten_out'>data_to_flatten_out</span> <span class='op'>=</span> <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_flatten_dict'><span class='object_link'><a href="../top-level-namespace.html#flatten_dict-instance_method" title="#flatten_dict (method)">flatten_dict</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_data_to_flatten_out'>data_to_flatten_out</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inject_loader-instance_method">
+  
+    #<strong>inject_loader</strong>(config_loader = nil)  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>Dependency injection of a config loader that adheres to the EnvConfigLoader interface</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>config_loader</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../EnvConfigLoader.html" title="EnvConfigLoader (class)">EnvConfigLoader</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>– the concrete configuration loader</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 69</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inject_loader'>inject_loader</span><span class='lparen'>(</span><span class='id identifier rubyid_config_loader'>config_loader</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='comment'># has anyone provided his loader implementation, use it, otherwise the factory will do.
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_config_loader'>config_loader</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_config_loader'>config_loader</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../EnvConfigLoaderFactory.html" title="EnvConfigLoaderFactory (class)">EnvConfigLoaderFactory</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='period'>.</span><span class='id identifier rubyid_get_loader'><span class='object_link'><a href="../EnvConfigLoaderFactory.html#get_loader-instance_method" title="EnvConfigLoaderFactory#get_loader (method)">get_loader</a></span></span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_env_exists'>env_exists</span> <span class='op'>=</span> <span class='id identifier rubyid_config_loader'>config_loader</span><span class='period'>.</span><span class='id identifier rubyid_set_env'>set_env</span><span class='lparen'>(</span><span class='ivar'>@__env</span><span class='comma'>,</span> <span class='ivar'>@__env_fallback_list</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_env_exists'>env_exists</span> <span class='op'>==</span> <span class='kw'>false</span>
+    <span class='const'><span class='object_link'><a href="../Log.html" title="Log (class)">Log</a></span></span><span class='period'>.</span><span class='id identifier rubyid_error'><span class='object_link'><a href="../Log.html#error-class_method" title="Log.error (method)">error</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>could not find configuration env using the following fallback list: </span><span class='embexpr_beg'>#{</span><span class='lbracket'>[</span><span class='ivar'>@__env</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@__env_fallback_list</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_exit'>exit</span><span class='lparen'>(</span><span class='int'>1</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='ivar'>@__config_loader</span> <span class='op'>=</span> <span class='id identifier rubyid_config_loader'>config_loader</span>
+  <span class='comment'># for the first time, query all environment existing categories.
+</span>  <span class='id identifier rubyid___load_categories'>__load_categories</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="require_category-instance_method">
+  
+    #<strong>require_category</strong>(category)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+85
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 85</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_require_category'>require_category</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid___load_configuration_category'>__load_configuration_category</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+  <span class='ivar'>@__config</span><span class='lbracket'>[</span><span class='id identifier rubyid_category'>category</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid___load_config'>__load_config</span><span class='lparen'>(</span><span class='id identifier rubyid_category'>category</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_context_handler-instance_method">
+  
+    #<strong>set_context_handler</strong>(context_handler)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Dependency injection of a config context processor that adheres to EnvConfigContext interface Arguments:</p>
+
+<pre class="code ruby"><code class="ruby">context_handler {EnvConfigContext} -- concrete context processor
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+93
+94
+95</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 93</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_context_handler'>set_context_handler</span><span class='lparen'>(</span><span class='id identifier rubyid_context_handler'>context_handler</span><span class='rparen'>)</span>
+  <span class='ivar'>@__context</span> <span class='op'>=</span> <span class='id identifier rubyid_context_handler'>context_handler</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_env_fallback-instance_method">
+  
+    #<strong>set_env_fallback</strong>(fallback_list)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>fallback_list</span>
+      
+      
+        <span class='type'>(<tt>list</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>– list of branch names to fallback to</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+61
+62
+63</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/env_config.rb', line 61</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_env_fallback'>set_env_fallback</span><span class='lparen'>(</span><span class='id identifier rubyid_fallback_list'>fallback_list</span><span class='rparen'>)</span>
+  <span class='ivar'>@__env_fallback_list</span> <span class='op'>=</span> <span class='id identifier rubyid_fallback_list'>fallback_list</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Tue Dec 15 10:55:58 2020 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.24 (ruby-2.6.3).
+</div>
+
+    </div>
+  </body>
+</html>

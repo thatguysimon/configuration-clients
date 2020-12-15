@@ -1,8 +1,8 @@
 import IConfigContext from './IConfigContext';
-import { getContextualEnv, ENV_VAR_NAME } from './Common';
+import { getContextualEnv, ENV_VAR_NAME, isFixedEnv } from './Common';
 
 export const CONTEXT_DECLARATION_KEY = '$context';
-const TEMPLATE_REGEX = /.*({{)(\s*[\w_\-.]+\s*)(}}).*/;
+const TEMPLATE_REGEX = /(?:[^{]*)({{)(\s*[\w_\-.]+\s*)(}}).*/;
 
 /**
  * json validation -
@@ -43,6 +43,14 @@ export default class EnvConfigContext implements IConfigContext {
         // to be used when referencing ingress like mailer - my - dyna - env.twistbioscience - dev.com
         const envNameWithoutDynamicPart = env.replace(/^dynamic-/, '');
         this.add('ENV_NAME', envNameWithoutDynamicPart);
+
+        // Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
+        // to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
+        let envNameForDomain = `-${envNameWithoutDynamicPart}`;
+        if (isFixedEnv(this.__env)) {
+            envNameForDomain = '';
+        }
+        this.add('ENV_NAME_FOR_DOMAIN', envNameForDomain);
     }
 
     /**
@@ -92,33 +100,46 @@ export default class EnvConfigContext implements IConfigContext {
                 theJsonData[k] = this.__processContext(v, contextData);
             } else if (typeof v === 'string') {
                 // attempt extracting the templated token from the provided string
-                const match = TEMPLATE_REGEX.exec(v);
+                let match = TEMPLATE_REGEX.exec(v);
 
-                // ignore. values that are not templated
-                if (!match || match.length !== 4) {
-                    continue; // eslint-disable-line no-continue
-                }
+                // looping in order to find and convert multiple tokens (ex. "Hello {{ FIRST_NAME }} {{ LAST_NAME }}")
+                while (match !== null) {
+                    // Logger.debug(f"for v: {v} match: {match} and groups: {match.groups()}")
 
-                // the template token lays inside the match.
-                // this is sensitive assumption but it is protected by unit tests! (the regex)
-                const keyword = match[2].trim();
+                    // ignore. values that are not templated
+                    if (!match || match.length !== 4) {
+                        continue; // eslint-disable-line no-continue
+                    }
 
-                // skip token if context data does not provide value (it will fail later in normalization)
-                if (contextData[keyword] === undefined) {
-                    continue; // eslint-disable-line no-continue
-                }
+                    // the template token lays inside the match.
+                    // this is sensitive assumption but it is protected by unit tests! (the regex)
+                    const keyword = match[2].trim();
 
-                // for non str value the config data s replaced as is with the provided context data(even if its dict!)
-                // otherwise(string) is replaced "123{{ token  }}789" => "123456789" given contextData["token"] = "456"
-                if (typeof contextData[keyword] !== 'string') {
-                    console.log(`replacing config key ${k} value from ${theJsonData[k]} to ${contextData[keyword]}`);
-                    theJsonData[k] = contextData[keyword];
-                } else {
-                    const theVal = contextData[keyword];
-                    const template = [match[1], match[2], match[3]].join('');
-                    const withTemplate = theJsonData[k];
-                    theJsonData[k] = theJsonData[k].replace(template, theVal);
-                    console.log(`replacing config key ${k} value from ${withTemplate} to ${theJsonData[k]}`);
+                    // skip token if context data does not provide value (it will fail later in normalization)
+                    if (contextData[keyword] === undefined) {
+                        break; // eslint-disable-line no-continue
+                    }
+
+                    // for non str value the config data s replaced as is with the provided context data(even if its dict!)
+                    // otherwise(string) is replaced "123{{ token  }}789" => "123456789" given contextData["token"] = "456"
+                    if (typeof contextData[keyword] !== 'string') {
+                        console.log(
+                            `replacing config key ${k} value from ${theJsonData[k]} to ${contextData[keyword]}`,
+                        );
+                        theJsonData[k] = contextData[keyword];
+                        break; // assuming no composite var/token in a non str value
+                    } else {
+                        const theVal = contextData[keyword];
+                        const template = [match[1], match[2], match[3]].join('');
+                        const withTemplate = theJsonData[k];
+                        theJsonData[k] = theJsonData[k].replace(template, theVal);
+                        // trying to find a next token if exists (ex. "Hello {{ FIRST_NAME }} {{ LAST_NAME }}")
+                        match = TEMPLATE_REGEX.exec(theJsonData[k]);
+                        // want to print once per cycle
+                        if (match === null) {
+                            console.log(`replacing config key ${k} value from ${withTemplate} to ${theJsonData[k]}`);
+                        }
+                    }
                 }
             }
         }
