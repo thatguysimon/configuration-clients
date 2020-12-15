@@ -68,7 +68,6 @@ class EnvConfigContext:
 
         # Adding "ENV_NAME" as context variable referencing the env name (prefix "dynamic-" excluded)
         env_name_without_dynamic_part = re.sub(r"^dynamic-", "", self.__env)
-        # print(f"self.__env: {self.__env}, env_name_without_dynamic_part: {env_name_without_dynamic_part}")
         self.add("ENV_NAME", env_name_without_dynamic_part)
 
         # Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
