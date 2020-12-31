@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = void 0;
+exports.isFixedEnv = exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = void 0;
 exports.PRODUCTION_BRANCH_NAME = 'production';
 exports.ENV_VAR_NAME = 'TWIST_ENV';
 exports.ENVS_VAULT_KEY = 'envs';
@@ -29,6 +29,13 @@ const ENV_CONTEXT_TO_BRANCH_NAME_MAPPING = {
     [exports.QA_ENV_CONTEXT_NAME]: [exports.QA_BRANCH_NAME],
     [exports.STAGING_ENV_CONTEXT_NAME]: [exports.STAGING_BRANCH_NAME],
 };
+const FIXED_ENVS = [
+    exports.PRODUCTION_ENV_CONTEXT_NAME,
+    exports.DEVELOPMENT_ENV_CONTEXT_NAME,
+    'develop',
+    exports.QA_ENV_CONTEXT_NAME,
+    exports.STAGING_ENV_CONTEXT_NAME,
+];
 function isProduction() {
     return process.env[exports.ENV_VAR_NAME] === exports.PRODUCTION_BRANCH_NAME;
 }
@@ -45,4 +52,8 @@ function getContextualEnv() {
     return result;
 }
 exports.getContextualEnv = getContextualEnv;
+function isFixedEnv(envName) {
+    return FIXED_ENVS.includes(envName);
+}
+exports.isFixedEnv = isFixedEnv;
 //# sourceMappingURL=Common.js.map

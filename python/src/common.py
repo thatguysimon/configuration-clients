@@ -11,6 +11,8 @@ PRODUCTION_BRANCH_NAME = "production"
 QA_BRANCH_NAME = "qa"
 STAGING_BRANCH_NAME = "staging"
 
+FIXED_ENVS = [PRODUCTION_ENV_CONTEXT_NAME, DEVELOPMENT_ENV_CONTEXT_NAME, "develop", QA_ENV_CONTEXT_NAME, STAGING_ENV_CONTEXT_NAME]
+
 # while we might end up using a different contextual environments pipeline (for example: staging -> production or qa -> staging -> production )
 # the below is a tool to defining the actual context based on branch name.add()
 # Based on the current logic implemented via config-context, the below suggests that:

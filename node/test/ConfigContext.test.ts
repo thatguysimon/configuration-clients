@@ -20,6 +20,20 @@ const MOCK_CONF = {
     },
 };
 
+const MOCK_COMPOSITE_CONF = {
+    [CONTEXT_DECLARATION_KEY]: {
+        staging: { test_str: 'oren', test_int: 1974 },
+        russian: { thanks: 'spasibo!' },
+        hebrew: { thanks: 'toda!' },
+    },
+    data: {
+        str: '{{ test_str }}',
+        mixed_str: 'ABCD{{    test_str}}ABCD',
+        int: '{{test_int}}',
+        thanks: '{{ test_str }}, {{thanks}}',
+    },
+};
+
 function deepCopy(json: any): any {
     return JSON.parse(JSON.stringify(json));
 }
@@ -78,6 +92,24 @@ describe('Test ConfigContext Traits', (): void => {
         };
 
         expect(actual2).toEqual(expected2);
+    });
+
+    test('test context and composite data yield modified version', (): void => {
+        const testee = new EnvConfigContext('staging');
+        testee.add('language', 'russian');
+
+        const actual = testee.process(MOCK_COMPOSITE_CONF);
+        const expected = deepCopy(MOCK_COMPOSITE_CONF);
+        delete expected[CONTEXT_DECLARATION_KEY];
+
+        expected.data = {
+            str: 'oren',
+            mixed_str: 'ABCDorenABCD',
+            int: 1974,
+            thanks: 'oren, spasibo!',
+        };
+
+        expect(actual).toEqual(expected);
     });
 
     test('test validation that when finds template it raise exception', (): void => {

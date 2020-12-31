@@ -71,6 +71,11 @@
   
   
   
+  <dl>
+      <dt>Includes:</dt>
+      <dd><span class='object_link'><a href="TwistConf.html" title="TwistConf (module)">TwistConf</a></span></dd>
+  </dl>
+  
   
 
   
@@ -82,9 +87,11 @@
 <p class="children">
   
     
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="TwistConf.html" title="TwistConf (module)">TwistConf</a></span>
+    
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="EnvConfig.html" title="EnvConfig (class)">EnvConfig</a></span>, <span class='object_link'><a href="EnvConfigLoader.html" title="EnvConfigLoader (class)">EnvConfigLoader</a></span>, <span class='object_link'><a href="EnvConfigLoaderFactory.html" title="EnvConfigLoaderFactory (class)">EnvConfigLoaderFactory</a></span>, <span class='object_link'><a href="GithubEnvConfigLoader.html" title="GithubEnvConfigLoader (class)">GithubEnvConfigLoader</a></span>, <span class='object_link'><a href="OSVars.html" title="OSVars (class)">OSVars</a></span>, <span class='object_link'><a href="Secrets.html" title="Secrets (class)">Secrets</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="EnvConfigContext.html" title="EnvConfigContext (class)">EnvConfigContext</a></span>, <span class='object_link'><a href="EnvConfigLoader.html" title="EnvConfigLoader (class)">EnvConfigLoader</a></span>, <span class='object_link'><a href="EnvConfigLoaderFactory.html" title="EnvConfigLoaderFactory (class)">EnvConfigLoaderFactory</a></span>, <span class='object_link'><a href="GithubEnvConfigLoader.html" title="GithubEnvConfigLoader (class)">GithubEnvConfigLoader</a></span>, <span class='object_link'><a href="Log.html" title="Log (class)">Log</a></span>
     
   
 </p>
@@ -97,11 +104,51 @@
 
     <dl class="constants">
       
-        <dt id="TWIST_ENV_KEY-constant" class="">TWIST_ENV_KEY =
+        <dt id="PRODUCTION_ENV_CONTEXT_NAME-constant" class="">PRODUCTION_ENV_CONTEXT_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>production</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="DEVELOPMENT_ENV_CONTEXT_NAME-constant" class="">DEVELOPMENT_ENV_CONTEXT_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>dev</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="QA_ENV_CONTEXT_NAME-constant" class="">QA_ENV_CONTEXT_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>qa</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="STAGING_ENV_CONTEXT_NAME-constant" class="">STAGING_ENV_CONTEXT_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>staging</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="PRODUCTION_BRANCH_NAME-constant" class="">PRODUCTION_BRANCH_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>master</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="QA_BRANCH_NAME-constant" class="">QA_BRANCH_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>qa</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="STAGING_BRANCH_NAME-constant" class="">STAGING_BRANCH_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>staging</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="ENV_VAR_NAME-constant" class="">ENV_VAR_NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TWIST_ENV</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="ENVS_VAULT_KEY-constant" class="">ENVS_VAULT_KEY =
           <div class="docstring">
   <div class="discussion">
     
-<p>GLOBALS and CONSTANTS                                                     #</p>
+<p>key in secret json/dict refering to env overriding value</p>
 
 
   </div>
@@ -111,7 +158,73 @@
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TWIST_ENV</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>envs</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="ENV_CONTEXT_TO_BRANCH_NAME_MAPPING-constant" class="">ENV_CONTEXT_TO_BRANCH_NAME_MAPPING =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>while we might end up using a different contextual environments pipeline (for example: staging -&gt; production or qa -&gt; staging -&gt; production ) the below is a tool to defining the actual context based on branch name.add() Based on the current logic implemented via config-context, the below suggests that:</p>
+
+<p>“production” branch is production “dev” or “develop” branch names are dev “qa” branch name is qa “staging” is the branch name and SO ARE ALL THE REST (anything other than production, dev, develop, qa) is staging!</p>
+
+<p>the context is majorly used in order to determine the below functionality:</p>
+<ol><li>
+<p>what vault name to pull secrets from (secret/staged/* vs secret/qa/* etc)</p>
+</li><li>
+<p>Legacy hard coded conditions refering to different env based behavior.</p>
+</li><li>
+<p>Cluster to apply deployment to (yet not impl)</p>
+</li></ol>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='const'><span class='object_link'><a href="top-level-namespace.html#PRODUCTION_ENV_CONTEXT_NAME-constant" title="PRODUCTION_ENV_CONTEXT_NAME (constant)">PRODUCTION_ENV_CONTEXT_NAME</a></span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="top-level-namespace.html#PRODUCTION_BRANCH_NAME-constant" title="PRODUCTION_BRANCH_NAME (constant)">PRODUCTION_BRANCH_NAME</a></span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='const'><span class='object_link'><a href="top-level-namespace.html#DEVELOPMENT_ENV_CONTEXT_NAME-constant" title="DEVELOPMENT_ENV_CONTEXT_NAME (constant)">DEVELOPMENT_ENV_CONTEXT_NAME</a></span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>dev</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>develop</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='const'><span class='object_link'><a href="top-level-namespace.html#QA_ENV_CONTEXT_NAME-constant" title="QA_ENV_CONTEXT_NAME (constant)">QA_ENV_CONTEXT_NAME</a></span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="top-level-namespace.html#QA_BRANCH_NAME-constant" title="QA_BRANCH_NAME (constant)">QA_BRANCH_NAME</a></span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='const'><span class='object_link'><a href="top-level-namespace.html#STAGING_ENV_CONTEXT_NAME-constant" title="STAGING_ENV_CONTEXT_NAME (constant)">STAGING_ENV_CONTEXT_NAME</a></span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="top-level-namespace.html#STAGING_BRANCH_NAME-constant" title="STAGING_BRANCH_NAME (constant)">STAGING_BRANCH_NAME</a></span></span><span class='rbracket'>]</span>
+<span class='rbrace'>}</span></pre></dd>
+      
+        <dt id="FIXED_ENVS-constant" class="">FIXED_ENVS =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="top-level-namespace.html#PRODUCTION_BRANCH_NAME-constant" title="PRODUCTION_BRANCH_NAME (constant)">PRODUCTION_BRANCH_NAME</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="top-level-namespace.html#DEVELOPMENT_ENV_CONTEXT_NAME-constant" title="DEVELOPMENT_ENV_CONTEXT_NAME (constant)">DEVELOPMENT_ENV_CONTEXT_NAME</a></span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>develop</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="top-level-namespace.html#QA_BRANCH_NAME-constant" title="QA_BRANCH_NAME (constant)">QA_BRANCH_NAME</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="top-level-namespace.html#STAGING_BRANCH_NAME-constant" title="STAGING_BRANCH_NAME (constant)">STAGING_BRANCH_NAME</a></span></span><span class='rbracket'>]</span></pre></dd>
+      
+        <dt id="CONTEXT_DECLARATION_KEY-constant" class="">CONTEXT_DECLARATION_KEY =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>IMPLEMENTATION                                                            #</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$context</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="TEMPLATE_REGEX-constant" class="">TEMPLATE_REGEX =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(?:[^{]*)({{)(\s*[\w_\-\.]+\s*)(}}).*</span><span class='regexp_end'>/</span></span></pre></dd>
+      
+        <dt id="LOADERS_MAP-constant" class="">LOADERS_MAP =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>github</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'><span class='object_link'><a href="GithubEnvConfigLoader.html" title="GithubEnvConfigLoader (class)">GithubEnvConfigLoader</a></span></span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>default</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'><span class='object_link'><a href="GithubEnvConfigLoader.html" title="GithubEnvConfigLoader (class)">GithubEnvConfigLoader</a></span></span>
+<span class='rbrace'>}</span></pre></dd>
       
         <dt id="TWIST_GITHUB_ACCOUNT-constant" class="">TWIST_GITHUB_ACCOUNT =
           <div class="docstring">
@@ -139,67 +252,26 @@
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GIT_CONFIG_TOKEN</span><span class='tstring_end'>&#39;</span></span></pre></dd>
       
-        <dt id="DUMP_CONFIG_ENV_VAR-constant" class="">DUMP_CONFIG_ENV_VAR =
-          <div class="docstring">
-  <div class="discussion">
-    
-<p>supposedly, the only unregistered / declared env vars!</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>__DUMP_CONFIG</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="PRINT_CONFIG_USAGE_ENV_VAR-constant" class="">PRINT_CONFIG_USAGE_ENV_VAR =
+        <dt id="LOG_LEVEL_STRING_TO_ENUM-constant" class="">LOG_LEVEL_STRING_TO_ENUM =
           
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>__CONFIG_USAGE</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="VAULT_API_VERSION-constant" class="">VAULT_API_VERSION =
-          <div class="docstring">
-  <div class="discussion">
-    
-<p>TODO: move to a common folder within the config clients monorepo</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>v1</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="VAULT_URL_KEY-constant" class="">VAULT_URL_KEY =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>VAULT_URL</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="VAULT_DEFAULT_URL-constant" class="">VAULT_DEFAULT_URL =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://vault.twistbioscience-staging.com</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="VAULT_USER_KEY-constant" class="">VAULT_USER_KEY =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>VAULT_USER</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="VAULT_PASS_KEY-constant" class="">VAULT_PASS_KEY =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>VAULT_PASSWORD</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>info</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'>Logger</span><span class='op'>::</span><span class='const'>INFO</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>debug</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'>Logger</span><span class='op'>::</span><span class='const'>DEBUG</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>warning</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'>Logger</span><span class='op'>::</span><span class='const'>WARN</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>error</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'>Logger</span><span class='op'>::</span><span class='const'>ERROR</span>
+<span class='rbrace'>}</span></pre></dd>
       
     </dl>
   
 
 
+
+  
+  
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="TwistConf.html" title="TwistConf (module)">TwistConf</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="TwistConf.html#CONFIGURATION_BASE_KEY-constant" title="TwistConf::CONFIGURATION_BASE_KEY (constant)">TwistConf::CONFIGURATION_BASE_KEY</a></span>, <span class='object_link'><a href="TwistConf.html#DEFAULT_ENV_FALLBACK-constant" title="TwistConf::DEFAULT_ENV_FALLBACK (constant)">TwistConf::DEFAULT_ENV_FALLBACK</a></span>, <span class='object_link'><a href="TwistConf.html#DUMP_CONFIG_ENV_VAR-constant" title="TwistConf::DUMP_CONFIG_ENV_VAR (constant)">TwistConf::DUMP_CONFIG_ENV_VAR</a></span>, <span class='object_link'><a href="TwistConf.html#PRINT_CONFIG_USAGE_ENV_VAR-constant" title="TwistConf::PRINT_CONFIG_USAGE_ENV_VAR (constant)">TwistConf::PRINT_CONFIG_USAGE_ENV_VAR</a></span>, <span class='object_link'><a href="TwistConf.html#TWIST_ENV_KEY-constant" title="TwistConf::TWIST_ENV_KEY (constant)">TwistConf::TWIST_ENV_KEY</a></span>, <span class='object_link'><a href="TwistConf.html#VAULT_API_VERSION-constant" title="TwistConf::VAULT_API_VERSION (constant)">TwistConf::VAULT_API_VERSION</a></span>, <span class='object_link'><a href="TwistConf.html#VAULT_DEFAULT_URL-constant" title="TwistConf::VAULT_DEFAULT_URL (constant)">TwistConf::VAULT_DEFAULT_URL</a></span>, <span class='object_link'><a href="TwistConf.html#VAULT_PASS_KEY-constant" title="TwistConf::VAULT_PASS_KEY (constant)">TwistConf::VAULT_PASS_KEY</a></span>, <span class='object_link'><a href="TwistConf.html#VAULT_URL_KEY-constant" title="TwistConf::VAULT_URL_KEY (constant)">TwistConf::VAULT_URL_KEY</a></span>, <span class='object_link'><a href="TwistConf.html#VAULT_USER_KEY-constant" title="TwistConf::VAULT_USER_KEY (constant)">TwistConf::VAULT_USER_KEY</a></span>, <span class='object_link'><a href="TwistConf.html#YAML_TYPE_TO_RUBY-constant" title="TwistConf::YAML_TYPE_TO_RUBY (constant)">TwistConf::YAML_TYPE_TO_RUBY</a></span></p>
 
 
 
@@ -237,10 +309,130 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#flatten_dict-instance_method" title="#flatten_dict (instance method)">#<strong>flatten_dict</strong>(hash)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#get_contextual_env-instance_method" title="#get_contextual_env (instance method)">#<strong>get_contextual_env</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#is_production-instance_method" title="#is_production (instance method)">#<strong>is_production</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#override_dict-instance_method" title="#override_dict (instance method)">#<strong>override_dict</strong>(target, source)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>test = {   &#39;family&#39; =&gt; {     &#39;father&#39;: {       &#39;age&#39;: 500,       &#39;name&#39;: &#39;joe&#39;,       &#39;job&#39;: {         &#39;title&#39;: &#39;chef&#39;,         &#39;work&#39;: {           &#39;place&#39;: &#39;ny&#39;         }       }     },     &#39;mother&#39;: &#39;mama&#39;   } }.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="top-level-namespace.html#validate_no_template_left-instance_method" title="#validate_no_template_left (instance method)">#<strong>validate_no_template_left</strong>(json)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>validation of a dictionary - making sure no templated token is left unreplaced in any of the json value leafs.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
+  
+  
+  
+  
+  
+  
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
@@ -365,12 +557,296 @@
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="flatten_dict-instance_method">
+  
+    #<strong>flatten_dict</strong>(hash)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/utils/dict_utils.rb', line 1</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_flatten_dict'>flatten_dict</span><span class='lparen'>(</span><span class='id identifier rubyid_hash'>hash</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='period'>.</span><span class='id identifier rubyid_each_with_object'>each_with_object</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_h'>h</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
+      <span class='id identifier rubyid_flatten_dict'>flatten_dict</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_h_k'>h_k</span><span class='comma'>,</span> <span class='id identifier rubyid_h_v'>h_v</span><span class='op'>|</span>
+        <span class='id identifier rubyid_h'>h</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_k'>k</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_h_k'>h_k</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_h_v'>h_v</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_h'>h</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_v'>v</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_contextual_env-instance_method">
+  
+    #<strong>get_contextual_env</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/common.rb', line 38</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_get_contextual_env'>get_contextual_env</span>
+  <span class='id identifier rubyid_actual_branch_name'>actual_branch_name</span> <span class='op'>=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="#ENV_VAR_NAME-constant" title="ENV_VAR_NAME (constant)">ENV_VAR_NAME</a></span></span><span class='rbracket'>]</span>
+
+  <span class='const'><span class='object_link'><a href="#ENV_CONTEXT_TO_BRANCH_NAME_MAPPING-constant" title="ENV_CONTEXT_TO_BRANCH_NAME_MAPPING (constant)">ENV_CONTEXT_TO_BRANCH_NAME_MAPPING</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_context_name'>context_name</span><span class='comma'>,</span> <span class='id identifier rubyid_context_related_branch_names'>context_related_branch_names</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_context_related_branch_names'>context_related_branch_names</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_actual_branch_name'>actual_branch_name</span><span class='rparen'>)</span>
+      <span class='kw'>return</span> <span class='id identifier rubyid_context_name'>context_name</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># default env context for all dynamic branches
+</span>  <span class='const'><span class='object_link'><a href="#DEVELOPMENT_ENV_CONTEXT_NAME-constant" title="DEVELOPMENT_ENV_CONTEXT_NAME (constant)">DEVELOPMENT_ENV_CONTEXT_NAME</a></span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="is_production-instance_method">
+  
+    #<strong>is_production</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+34
+35
+36</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/common.rb', line 34</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_is_production'>is_production</span>
+  <span class='const'>ENV</span><span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="#ENV_VAR_NAME-constant" title="ENV_VAR_NAME (constant)">ENV_VAR_NAME</a></span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="#PRODUCTION_BRANCH_NAME-constant" title="PRODUCTION_BRANCH_NAME (constant)">PRODUCTION_BRANCH_NAME</a></span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="override_dict-instance_method">
+  
+    #<strong>override_dict</strong>(target, source)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>test = {</p>
+
+<pre class="code ruby"><code class="ruby">&#39;family&#39; =&gt; {
+  &#39;father&#39;: {
+    &#39;age&#39;: 500,
+    &#39;name&#39;: &#39;joe&#39;,
+    &#39;job&#39;: {
+      &#39;title&#39;: &#39;chef&#39;,
+      &#39;work&#39;: {
+        &#39;place&#39;: &#39;ny&#39;
+      }
+    }
+  },
+  &#39;mother&#39;: &#39;mama&#39;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>puts “flat: #flatten_dict(test)” output: flat: :“family.father.name”=&gt;“joe”, :“family.father.job.title”=&gt;“chef”, :“family.father.job.work.place”=&gt;“ny”, :“family.mother”=&gt;“mama”</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/utils/dict_utils.rb', line 34</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_override_dict'>override_dict</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='comma'>,</span> <span class='id identifier rubyid_source'>source</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_target'>target</span><span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_source'>source</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+      <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_v'>v</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_override_dict'>override_dict</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_v'>v</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_result'>result</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="validate_no_template_left-instance_method">
+  
+    #<strong>validate_no_template_left</strong>(json)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>validation of a dictionary - making sure no templated token is left unreplaced in any of the json value leafs. Arguments:</p>
+
+<pre class="code ruby"><code class="ruby">json {dict} -- the validated dictionary
+</code></pre>
+
+<p>Raises:</p>
+
+<pre class="code ruby"><code class="ruby">Exception: describing the unreplaced template
+</code></pre>
+
+<p>Returns:</p>
+
+<pre class="code ruby"><code class="ruby">[bool] -- False - all ok, Exception otherwise
+</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'src/config_context_handler.rb', line 28</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_validate_no_template_left'>validate_no_template_left</span><span class='lparen'>(</span><span class='id identifier rubyid_json'>json</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_found'>found</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_json'>json</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_found'>found</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_no_template_left'>validate_no_template_left</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_found'>found</span> <span class='op'>=</span> <span class='op'>!</span><span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#TEMPLATE_REGEX-constant" title="TEMPLATE_REGEX (constant)">TEMPLATE_REGEX</a></span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_raise'>raise</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>could not find a context data for templated value: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_v'>v</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='op'>!</span><span class='id identifier rubyid_found'>found</span>
+  <span class='kw'>end</span>
+  <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
       <div id="footer">
-  Generated on Tue Feb  4 14:50:22 2020 by
+  Generated on Tue Dec 15 10:55:58 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.6.3).
 </div>

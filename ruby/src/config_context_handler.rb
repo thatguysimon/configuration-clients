@@ -15,7 +15,7 @@ require_relative 'common'
 #############################################################################
 
 CONTEXT_DECLARATION_KEY = '$context'
-TEMPLATE_REGEX = /.*({{)(\s*[\w_\-\.]+\s*)(}}).*/
+TEMPLATE_REGEX = /(?:[^{]*)({{)(\s*[\w_\-\.]+\s*)(}}).*/
 
 # validation of a dictionary -
 # making sure no templated token is left unreplaced in any of the json value leafs.
@@ -48,9 +48,17 @@ class EnvConfigContext
     add(ENV_VAR_NAME, env)
 
     # Adding "ENV_NAME" as context variable referencing the actual env name (prefix "dynamic-" excluded)
-    # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
     env_name_without_dynamic_part = env.gsub(/^dynamic-/, '')
     add('ENV_NAME', env_name_without_dynamic_part)
+
+    # Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
+    # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
+    env_name_for_domain = "-#{env_name_without_dynamic_part}"
+    if FIXED_ENVS.include?(env)
+      env_name_for_domain = ''
+    end
+
+    add('ENV_NAME_FOR_DOMAIN', env_name_for_domain)
   end
 
   def add(key, value)
@@ -91,27 +99,31 @@ class EnvConfigContext
         # attempt extracting the templated token from the provided string
         match = v.match(TEMPLATE_REGEX)
 
-        # ignore values that are not templated
-        next if !match
+        while match
+          # the template token lays inside the match.
+          # this is sensitive assumption but it is protected by unit tests! (the regex)
+          keyword = match.captures[1].strip
 
-        # the template token lays inside the match.
-        # this is sensitive assumption but it is protected by unit tests! (the regex)
-        keyword = match.captures[1].strip
+          # skip token if context data does not provide value (it will fail later in normalization)
+          break if context_data[keyword].nil?
 
-        # skip token if context data does not provide value (it will fail later in normalization)
-        next if context_data[keyword].nil?
-
-        # for non str value the config data s replaced as is with the provided context data (even if its dict!)
-        # otherwise (string) is replaced "123{{ token  }}789" => "123456789" given context_data["token"] = "456"
-        if context_data[keyword].is_a?(String)
-          the_val = context_data[keyword]
-          template = match.captures.join
-          with_template = json_data[k]
-          json_data[k] = json_data[k].gsub(template, the_val)
-          Log.debug("replacing config key #{k} value from #{with_template} to #{json_data[k]}")
-        else
-          Log.debug("replacing config key #{k} value from #{json_data[k]} to #{context_data[keyword]}")
-          json_data[k] = context_data[keyword]
+          # for non str value the config data s replaced as is with the provided context data (even if its dict!)
+          # otherwise (string) is replaced "123{{ token  }}789" => "123456789" given context_data["token"] = "456"
+          if context_data[keyword].is_a?(String)
+            the_val = context_data[keyword]
+            template = match.captures.join
+            with_template = json_data[k]
+            json_data[k] = json_data[k].gsub(template, the_val)
+            # trying to find a next token if exists (ex. "Hello {{ FIRST_NAME }} {{ LAST_NAME }}")
+            match = json_data[k].match(TEMPLATE_REGEX)
+            # want to print once per cycle
+            Log.debug("replacing config key #{k} value from #{with_template} to #{json_data[k]}") if !match
+          else
+            Log.debug("replacing config key #{k} value from #{json_data[k]} to #{context_data[keyword]}")
+            json_data[k] = context_data[keyword]
+            # assuming no composite var/token in a non str value
+            break
+          end
         end
       end
     end
