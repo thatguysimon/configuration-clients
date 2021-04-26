@@ -77,6 +77,10 @@ export default class ConfigBuilder {
 
             const confLoader = new EnvConfigLoaderFactory().getLoader(confData.provider);
 
+            if (confData.version) {
+                confLoader.setVersion(confData.version);
+            }
+
             if (confData.parent_environments) {
                 EnvConfig.instance.setEnvFallback(confData.parent_environments);
             }

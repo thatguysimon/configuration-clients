@@ -118,8 +118,19 @@ class GithubEnvConfigLoader < EnvConfigLoader
   def __get_file_content(file_path, branch_name)
     github_conf_token = GithubEnvConfigLoader.__get_github_token
 
+    folder = ''
+    puts "env is  >>>> #{@environment} conf version: #{@version}"
+
+    # in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
+    if @version == 2
+      folder = @environment + '/'
+      if folder.match(/^dynamic-/)
+        folder = 'dev/' # TODO: should be base
+      end
+    end
+
     github_base_url = 'raw.githubusercontent.com'
-    github_path = "/#{TWIST_GITHUB_ACCOUNT}/#{CONFIGURATION_REPO}/#{branch_name}/#{file_path.downcase}"
+    github_path = "/#{TWIST_GITHUB_ACCOUNT}/#{CONFIGURATION_REPO}/#{branch_name}/#{folder}#{file_path.downcase}"
 
     headers = {
       'Accept-Encoding' => 'text',

@@ -10,18 +10,28 @@ const GIT_CONF_TOKEN_KEY = 'GIT_CONFIG_TOKEN';
 
 export default class GithubEnvConfigLoader implements IEnvConfigLoader {
     private __environment: string;
+    private __version: Number;
 
     private __fallbackList: Array<string>;
 
     constructor() {
         this.__environment = '';
         this.__fallbackList = [];
+        this.__version = 1;
     }
 
     public async setEnv(environment: string, fallback: Array<string>): Promise<boolean> {
         this.__environment = environment;
         this.__fallbackList = fallback;
         return this.__verifyEnvOrFallback();
+    }
+
+    public setVersion(version: Number): void {
+        this.__version = version;
+    }
+
+    public getVersion(): Number {
+        return this.__version;
     }
 
     /**
@@ -166,7 +176,18 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
     private async __getFileContent(filePath: string, branchName: string): Promise<any> {
         const githubToken = await GithubEnvConfigLoader.__getGithubToken();
 
-        const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${filePath}`;
+        let folder = "";
+        console.log(`env is  >>>> ${this.__environment} conf version: ${this.__version}`);
+        
+        // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
+        if (this.__version == 2) {
+            folder = this.__environment + "/";
+            if (folder.startsWith('dynamic-')){
+                folder = "dev/" // TODO: should be base
+            }
+        }
+
+        const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${folder}${filePath}`;
 
         const headers = {
             'Accept-Encoding': 'gzip, deflate',

@@ -125,7 +125,16 @@ class GithubEnvConfigLoader(EnvConfigLoader):
     def __get_file_content(self, file_path, branch_name):
         github_conf_token = GithubEnvConfigLoader.__get_github_token()
 
-        github_url = f"https://raw.githubusercontent.com/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/{branch_name}/{file_path}"
+        folder = ""
+        print (f"env is  >>>> {self._env} conf version: {self._version}")
+        
+        # in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
+        if self._version == 2:
+            folder = self._env + "/"
+            if folder.startswith('dynamic-'):
+                folder = "dev/" # TODO: should be base
+
+        github_url = f"https://raw.githubusercontent.com/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/{branch_name}/{folder}{file_path}"
         file_path = urllib.parse.quote(file_path, safe="")
 
         headers = {

@@ -9,4 +9,10 @@ export default interface IEnvConfigLoader {
 
     // set env is expected to validate environment existence and set it as active for rest of its operation
     setEnv(environment: string, fallback: Array<string>): Promise<boolean>;
+
+    // set the configuration version
+    setVersion(version: Number): void;
+
+    // get the configuration version
+    getVersion(): Number;
 }

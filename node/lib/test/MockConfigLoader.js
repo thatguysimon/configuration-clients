@@ -5,12 +5,19 @@ class MockConfigLoader {
         this.__categories = [];
         this.__env = '';
         this.__fallback = [];
+        this.__version = 1;
     }
     async setEnv(env, fallback) {
         this.__env = env;
         this.__fallback = fallback;
         console.log(`env is ${this.__env} and fb: ${this.__fallback}`);
         return true;
+    }
+    setVersion(version) {
+        this.__version = version;
+    }
+    getVersion() {
+        return this.__version;
     }
     async load(category) {
         try {

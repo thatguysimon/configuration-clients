@@ -33,6 +33,9 @@ class EnvConfigLoader(ABC):
         self._fallback_list = fallback_list
         return self.verify_env_or_fallback()
 
+    def set_version(self, version):
+        self._version = version
+
     @abstractmethod
     def verify_env_or_fallback(self):
         """

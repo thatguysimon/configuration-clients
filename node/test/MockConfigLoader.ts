@@ -7,11 +7,14 @@ export default class MockConfigLoader implements IEnvConfigLoader {
 
     private __env: string;
 
+    private __version: Number;
+
     private __fallback: Array<string>;
 
     constructor() {
         this.__env = '';
         this.__fallback = [];
+        this.__version = 1;
     }
 
     public async setEnv(env: string, fallback: Array<string>): Promise<boolean> {
@@ -19,6 +22,14 @@ export default class MockConfigLoader implements IEnvConfigLoader {
         this.__fallback = fallback;
         console.log(`env is ${this.__env} and fb: ${this.__fallback}`);
         return true;
+    }
+
+    public setVersion(version: Number) :void {
+        this.__version = version;
+    }
+
+    public getVersion():Number {
+        return this.__version;
     }
 
     public async load(category: string): Promise<any> {
