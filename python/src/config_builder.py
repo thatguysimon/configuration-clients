@@ -46,7 +46,7 @@ class ConfigBuilder:
             return
 
         conf_data = data["config"]
-            
+
         conf_provider_name = None
         if "provider" in conf_data:
             conf_provider_name = conf_data["provider"]
@@ -56,7 +56,7 @@ class ConfigBuilder:
         conf_version = 1
         if "version" in conf_data:
             conf_version = conf_data["version"]
-        
+
         conf_loader.set_version(conf_version)
 
         if "parent_environments" in conf_data:

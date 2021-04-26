@@ -65,10 +65,10 @@ module TwistConf
       conf_loader = factory.get_loader(conf_provider_name)
 
       conf_version = 1
-      if conf_data["version"]
-        conf_version = conf_data["version"]
+      if conf_data['version']
+        conf_version = conf_data['version']
       end
-      
+
       conf_loader.set_version(conf_version)
 
       if conf_data['parent_environments']

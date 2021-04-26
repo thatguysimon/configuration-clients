@@ -10,7 +10,8 @@ const GIT_CONF_TOKEN_KEY = 'GIT_CONFIG_TOKEN';
 
 export default class GithubEnvConfigLoader implements IEnvConfigLoader {
     private __environment: string;
-    private __version: Number;
+
+    private __version: number;
 
     private __fallbackList: Array<string>;
 
@@ -26,11 +27,11 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
         return this.__verifyEnvOrFallback();
     }
 
-    public setVersion(version: Number): void {
+    public setVersion(version: number): void {
         this.__version = version;
     }
 
-    public getVersion(): Number {
+    public getVersion(): number {
         return this.__version;
     }
 
@@ -176,14 +177,12 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
     private async __getFileContent(filePath: string, branchName: string): Promise<any> {
         const githubToken = await GithubEnvConfigLoader.__getGithubToken();
 
-        let folder = "";
-        console.log(`env is  >>>> ${this.__environment} conf version: ${this.__version}`);
-        
+        let folder = '';
         // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
-        if (this.__version == 2) {
-            folder = this.__environment + "/";
-            if (folder.startsWith('dynamic-')){
-                folder = "dev/" // TODO: should be base
+        if (this.__version === 2) {
+            folder = `${this.__environment}/`;
+            if (folder.startsWith('dynamic-')) {
+                folder = 'dev/'; // TODO: should be base
             }
         }
 

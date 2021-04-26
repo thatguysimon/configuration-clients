@@ -119,8 +119,6 @@ class GithubEnvConfigLoader < EnvConfigLoader
     github_conf_token = GithubEnvConfigLoader.__get_github_token
 
     folder = ''
-    puts "env is  >>>> #{@environment} conf version: #{@version}"
-
     # in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
     if @version == 2
       folder = @environment + '/'

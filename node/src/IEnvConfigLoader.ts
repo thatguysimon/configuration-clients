@@ -11,8 +11,8 @@ export default interface IEnvConfigLoader {
     setEnv(environment: string, fallback: Array<string>): Promise<boolean>;
 
     // set the configuration version
-    setVersion(version: Number): void;
+    setVersion(version: number): void;
 
     // get the configuration version
-    getVersion(): Number;
+    getVersion(): number;
 }

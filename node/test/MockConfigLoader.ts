@@ -7,7 +7,7 @@ export default class MockConfigLoader implements IEnvConfigLoader {
 
     private __env: string;
 
-    private __version: Number;
+    private __version: number;
 
     private __fallback: Array<string>;
 
@@ -24,11 +24,11 @@ export default class MockConfigLoader implements IEnvConfigLoader {
         return true;
     }
 
-    public setVersion(version: Number) :void {
+    public setVersion(version: number): void {
         this.__version = version;
     }
 
-    public getVersion():Number {
+    public getVersion(): number {
         return this.__version;
     }
 

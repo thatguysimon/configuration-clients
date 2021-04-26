@@ -143,13 +143,12 @@ class GithubEnvConfigLoader {
      */
     async __getFileContent(filePath, branchName) {
         const githubToken = await GithubEnvConfigLoader.__getGithubToken();
-        let folder = "";
-        console.log(`env is  >>>> ${this.__environment} conf version: ${this.__version}`);
+        let folder = '';
         // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
-        if (this.__version == 2) {
-            folder = this.__environment + "/";
+        if (this.__version === 2) {
+            folder = `${this.__environment}/`;
             if (folder.startsWith('dynamic-')) {
-                folder = "dev/"; // TODO: should be base
+                folder = 'dev/'; // TODO: should be base
             }
         }
         const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${folder}${filePath}`;
