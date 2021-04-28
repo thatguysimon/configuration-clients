@@ -1,5 +1,5 @@
 require 'yaml'
-require "rubygems"
+require 'rubygems'
 require_relative 'utils/logger'
 require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
