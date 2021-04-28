@@ -88,6 +88,7 @@ class ConfigBuilder {
             const confLoader = new EnvConfigLoaderFactory_1.default().getLoader(confData.provider);
             if (confData.version) {
                 confLoader.setVersion(confData.version);
+                console.log(`Using configuration v${confData.version}`);
             }
             if (confData.parent_environments) {
                 EnvConfig_1.default.instance.setEnvFallback(confData.parent_environments);

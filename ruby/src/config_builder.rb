@@ -1,5 +1,4 @@
 require 'yaml'
-require 'rubygems'
 require_relative 'utils/logger'
 require_relative 'os_vars'
 require_relative 'env_config_loader_factory'
@@ -60,9 +59,6 @@ module TwistConf
         return
       end
 
-      spec = Gem::Specification::load('./configuration-client.gemspec')
-      Log.info("Configuration Client version #{spec.version}")
-
       conf_data = data['config']
       conf_provider_name = conf_data['provider']
       factory = EnvConfigLoaderFactory.new
@@ -71,6 +67,7 @@ module TwistConf
       conf_version = 1
       if conf_data['version']
         conf_version = conf_data['version']
+        Log.info("Using configuration v#{conf_version}")
       end
 
       conf_loader.set_version(conf_version)

@@ -56,6 +56,7 @@ class ConfigBuilder:
         conf_version = 1
         if "version" in conf_data:
             conf_version = conf_data["version"]
+            Logger.info(f"Using configuration v{conf_version}")
 
         conf_loader.set_version(conf_version)
 

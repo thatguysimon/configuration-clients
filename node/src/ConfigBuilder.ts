@@ -79,6 +79,7 @@ export default class ConfigBuilder {
 
             if (confData.version) {
                 confLoader.setVersion(confData.version);
+                console.log(`Using configuration v${confData.version}`)
             }
 
             if (confData.parent_environments) {
