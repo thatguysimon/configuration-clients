@@ -51,6 +51,8 @@ Style/ConditionalAssignment:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/ColonMethodCall:
+  Enabled: false
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 Style/NonNilCheck:
