@@ -14,11 +14,18 @@ class GithubEnvConfigLoader {
     constructor() {
         this.__environment = '';
         this.__fallbackList = [];
+        this.__version = 1;
     }
     async setEnv(environment, fallback) {
         this.__environment = environment;
         this.__fallbackList = fallback;
         return this.__verifyEnvOrFallback();
+    }
+    setVersion(version) {
+        this.__version = version;
+    }
+    getVersion() {
+        return this.__version;
     }
     /**
      * for lazy loading single category configuration
@@ -136,7 +143,15 @@ class GithubEnvConfigLoader {
      */
     async __getFileContent(filePath, branchName) {
         const githubToken = await GithubEnvConfigLoader.__getGithubToken();
-        const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${filePath}`;
+        let folder = '';
+        // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
+        if (this.__version === 2) {
+            folder = `${this.__environment}/`;
+            if (folder.startsWith('dynamic-')) {
+                folder = 'dev/'; // TODO: should be base
+            }
+        }
+        const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${folder}${filePath}`;
         const headers = {
             'Accept-Encoding': 'gzip, deflate',
             Accept: '*/*',

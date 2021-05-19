@@ -6,6 +6,10 @@ class EnvConfigLoader
     verify_env_or_fallback
   end
 
+  def set_version(version)
+    @version = version
+  end
+
   # expected to verify existence and validity of @env and fallback to other env in list
   def verify_env_or_fallback
     raise NotImplementedError
